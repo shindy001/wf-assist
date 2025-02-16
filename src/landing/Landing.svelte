@@ -1,44 +1,69 @@
 ﻿<script lang="ts">
-    import {Background, Controls, type Edge, MiniMap, type Node, Position, SvelteFlow,} from '@xyflow/svelte';
+    import {
+        Background,
+        Controls,
+        type Edge,
+        MiniMap,
+        type Node,
+        Position,
+        SvelteFlow,
+        useEdges,
+        useNodes
+    } from '@xyflow/svelte';
     import '@xyflow/svelte/dist/style.css';
     import {FlowNodeType} from "../components/FlowNodeType";
     import UrlActionNode from "../components/UrlActionNode.svelte";
+    import {useFlowDataStore} from "../stores/flowDataStore";
+
+    const flowDataStore = useFlowDataStore();
+    const initialData = flowDataStore.getData();
+
+    const currentNodes = $derived(useNodes());
+    const currentEdges = $derived(useEdges());
+
+    $effect(() => {
+        const data = {
+            nodes: currentNodes.current,
+            edges: currentEdges.current,
+        }
+        flowDataStore.setData(data);
+    });
 
     const additionalFlowNodes = {
         [FlowNodeType.UrlAction]: UrlActionNode,
     };
 
-    const initialNodes: Node[] = [
+    const initialNodes: Node[] = initialData?.nodes ?? [
         {
             id: '1',
             type: 'input',
-            data: { label: 'An input node' },
-            position: { x: 0, y: 50 },
+            data: {label: 'An input node'},
+            position: {x: 0, y: 50},
             sourcePosition: Position.Right,
         },
         {
             id: '2',
             type: FlowNodeType.UrlAction,
             data: {},
-            position: { x: 300, y: 50 },
+            position: {x: 300, y: 50},
         },
         {
             id: '3',
             type: FlowNodeType.Output,
-            data: { label: 'Output A' },
-            position: { x: 650, y: 25 },
+            data: {label: 'Output A'},
+            position: {x: 650, y: 25},
             targetPosition: Position.Left,
         },
         {
             id: '4',
             type: FlowNodeType.Output,
-            data: { label: 'Output B' },
-            position: { x: 650, y: 100 },
+            data: {label: 'Output B'},
+            position: {x: 650, y: 100},
             targetPosition: Position.Left,
         },
     ];
 
-    const initialEdges: Edge[] = [
+    const initialEdges: Edge[] = initialData?.edges ?? [
         {
             id: 'e1-2',
             source: '1',
@@ -69,10 +94,9 @@
             bind:edges
             nodeTypes={additionalFlowNodes}
             fitView
-
     >
-        <Controls showLock={false} />
-        <Background />
-        <MiniMap />
+        <Controls showLock={false}/>
+        <Background/>
+        <MiniMap/>
     </SvelteFlow>
 </div>
