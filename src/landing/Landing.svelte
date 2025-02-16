@@ -5,21 +5,30 @@
         type Edge,
         MiniMap,
         type Node,
-        Position,
         SvelteFlow,
         useEdges,
-        useNodes
+        useNodes,
+        useSvelteFlow
     } from '@xyflow/svelte';
     import '@xyflow/svelte/dist/style.css';
     import {FlowNodeType} from "../components/FlowNodeType";
     import UrlActionNode from "../components/UrlActionNode.svelte";
     import {useFlowDataStore} from "../stores/flowDataStore";
-
-    const flowDataStore = useFlowDataStore();
-    const initialData = flowDataStore.getData();
+    import {useDragAndDrop} from "../components/DragAndDropProvider.svelte";
 
     const currentNodes = $derived(useNodes());
     const currentEdges = $derived(useEdges());
+    const {screenToFlowPosition} = $derived(useSvelteFlow());
+    const type = useDragAndDrop();
+
+    const flowDataStore = useFlowDataStore();
+    const initialData = flowDataStore.getData();
+    const additionalFlowNodes = {
+        [FlowNodeType.UrlAction]: UrlActionNode,
+    };
+
+    let nodes = $state.raw<Node[]>(initialData?.nodes ?? []);
+    let edges = $state.raw<Edge[]>(initialData?.edges ?? []);
 
     $effect(() => {
         const data = {
@@ -29,63 +38,36 @@
         flowDataStore.setData(data);
     });
 
-    const additionalFlowNodes = {
-        [FlowNodeType.UrlAction]: UrlActionNode,
+    const onDragOver = (event: DragEvent) => {
+        event.preventDefault();
+
+        if (event.dataTransfer) {
+            event.dataTransfer.dropEffect = 'move';
+        }
     };
 
-    const initialNodes: Node[] = initialData?.nodes ?? [
-        {
-            id: '1',
-            type: 'input',
-            data: {label: 'An input node'},
-            position: {x: 0, y: 50},
-            sourcePosition: Position.Right,
-        },
-        {
-            id: '2',
-            type: FlowNodeType.UrlAction,
-            data: {},
-            position: {x: 300, y: 50},
-        },
-        {
-            id: '3',
-            type: FlowNodeType.Output,
-            data: {label: 'Output A'},
-            position: {x: 650, y: 25},
-            targetPosition: Position.Left,
-        },
-        {
-            id: '4',
-            type: FlowNodeType.Output,
-            data: {label: 'Output B'},
-            position: {x: 650, y: 100},
-            targetPosition: Position.Left,
-        },
-    ];
+    const onDrop = (event: DragEvent) => {
+        event.preventDefault();
 
-    const initialEdges: Edge[] = initialData?.edges ?? [
-        {
-            id: 'e1-2',
-            source: '1',
-            target: '2',
-            animated: true,
-        },
-        {
-            id: 'e2a-3',
-            source: '2',
-            target: '3',
-            animated: true,
-        },
-        {
-            id: 'e2b-4',
-            source: '2',
-            target: '4',
-            animated: true,
-        },
-    ];
+        if (!type.current) {
+            return;
+        }
 
-    let nodes = $state.raw<Node[]>(initialNodes);
-    let edges = $state.raw<Edge[]>(initialEdges);
+        const position = screenToFlowPosition({
+            x: event.clientX,
+            y: event.clientY,
+        });
+
+        const newNode = {
+            id: `${Math.random()}`,
+            type: type.current,
+            position,
+            data: {label: `${type.current} node`},
+            origin: [0.5, 0.0],
+        } satisfies Node;
+
+        nodes = [...nodes, newNode];
+    };
 </script>
 
 <div class="w-full h-full">
@@ -94,6 +76,8 @@
             bind:edges
             nodeTypes={additionalFlowNodes}
             fitView
+            ondragover={onDragOver}
+            ondrop={onDrop}
     >
         <Controls showLock={false}/>
         <Background/>
