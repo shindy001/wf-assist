@@ -71,7 +71,7 @@
             fitView
 
     >
-        <Controls />
+        <Controls showLock={false} />
         <Background />
         <MiniMap />
     </SvelteFlow>
