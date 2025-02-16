@@ -2,14 +2,14 @@
     import {useDragAndDrop} from "./DragAndDropProvider.svelte";
     import {FlowNodeType} from "../models/flowNodeType";
 
-    const type = useDragAndDrop();
+    const dragAndDropContext = useDragAndDrop();
 
     const onDragStart = (event: DragEvent, nodeType: string) => {
         if (!event.dataTransfer) {
             return null;
         }
 
-        type.current = nodeType;
+        dragAndDropContext.nodeType = nodeType;
         event.dataTransfer.effectAllowed = "move";
     };
 </script>

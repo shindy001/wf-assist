@@ -1,20 +1,22 @@
 ﻿<script module lang="ts">
+    import {getContext} from "svelte";
+
     export const useDragAndDrop = () => {
-        return getContext('DragAndDrop') as { current: string | null };
+        return getContext('DragAndDrop') as { nodeType: string | null };
     }
 </script>
 
 <script lang="ts">
-    import {getContext, onDestroy, setContext, type Snippet} from "svelte";
+    import {onDestroy, setContext, type Snippet} from "svelte";
 
     let {children}: { children: Snippet } = $props();
     let dragAndDropType = $state(null);
 
     setContext('DragAndDrop', {
-        set current(value) {
+        set nodeType(value) {
             dragAndDropType = value;
         },
-        get current() {
+        get nodeType() {
             return dragAndDropType;
         }
     });

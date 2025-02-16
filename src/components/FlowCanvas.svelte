@@ -19,7 +19,7 @@
     const currentNodes = $derived(useNodes());
     const currentEdges = $derived(useEdges());
     const {screenToFlowPosition} = $derived(useSvelteFlow());
-    const type = useDragAndDrop();
+    const dragAndDropContext = useDragAndDrop();
 
     const flowDataStore = useFlowDataStore();
     const initialData = flowDataStore.getData();
@@ -49,7 +49,7 @@
     const onDrop = (event: DragEvent) => {
         event.preventDefault();
 
-        if (!type.current) {
+        if (!dragAndDropContext.nodeType) {
             return;
         }
 
@@ -60,9 +60,9 @@
 
         const newNode = {
             id: `${Math.random()}`,
-            type: type.current,
+            type: dragAndDropContext.nodeType,
             position,
-            data: {label: `${type.current} node`},
+            data: {label: `${dragAndDropContext.nodeType} node`},
             origin: [0.5, 0.0],
         } satisfies Node;
 
