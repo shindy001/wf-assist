@@ -1,6 +1,6 @@
 ﻿<script lang="ts">
     import {useDragAndDrop} from "./DragAndDropProvider.svelte";
-    import {FlowNodeType} from "./FlowNodeType";
+    import {FlowNodeType} from "../models/flowNodeType";
 
     const type = useDragAndDrop();
 

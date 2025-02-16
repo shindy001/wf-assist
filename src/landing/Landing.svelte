@@ -11,7 +11,7 @@
         useSvelteFlow
     } from '@xyflow/svelte';
     import '@xyflow/svelte/dist/style.css';
-    import {FlowNodeType} from "../components/FlowNodeType";
+    import {FlowNodeType} from "../models/flowNodeType";
     import UrlActionNode from "../components/UrlActionNode.svelte";
     import {useFlowDataStore} from "../stores/flowDataStore";
     import {useDragAndDrop} from "../components/DragAndDropProvider.svelte";
