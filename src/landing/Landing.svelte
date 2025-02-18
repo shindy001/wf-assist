@@ -7,7 +7,7 @@
 
 <SvelteFlowProvider>
     <DragAndDropProvider>
-        <FlowSidebar class="absolute z-10 w-full"></FlowSidebar>
+        <FlowSidebar class="absolute"></FlowSidebar>
         <FlowCanvas/>
     </DragAndDropProvider>
 </SvelteFlowProvider>

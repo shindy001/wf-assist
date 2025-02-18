@@ -12,76 +12,24 @@
         dragAndDropContext.nodeType = nodeType;
         event.dataTransfer.effectAllowed = "move";
     };
+
+    const nodeTypes = [...Object.values(FlowNodeType)];
 </script>
 
-<div class={$$props.class}>
-    <aside>
-        <div class="label">You can drag these nodes to the pane below.</div>
-        <div class="nodes-container">
-            <div
-                    role="listitem"
-                    class="input-node node"
-                    on:dragstart={(event) => onDragStart(event, FlowNodeType.UrlAction)}
-                    draggable={true}
-            >
-                UrlAction Node
-            </div>
-            <div
-                    role="listitem"
-                    class="input-node node"
-                    on:dragstart={(event) => onDragStart(event, FlowNodeType.Input)}
-                    draggable={true}
-            >
-                Input Node
-            </div>
-            <div
-                    role="listitem"
-                    class="default-node node"
-                    on:dragstart={(event) => onDragStart(event, FlowNodeType.Default)}
-                    draggable={true}
-            >
-                Default Node
-            </div>
-            <div
-                    role="listitem"
-                    class="output-node node"
-                    on:dragstart={(event) => onDragStart(event, FlowNodeType.Output)}
-                    draggable={true}
-            >
-                Output Node
-            </div>
+<div class={[$$props.class, "w-[400px] h-full bg-white z-1"]}>
+    <aside class="p-4 flex flex-col content-center items-center">
+        <h1 class="text-lg mb-3">You can drag these nodes to the canvas.</h1>
+        <hr class="h-[1px] w-full text-gray-200">
+        <div class="w-full flex flex-wrap gap-3 px-2 py-4 rounded-md ">
+            {#each nodeTypes as nodeType}
+                <div
+                        role="listitem"
+                        class="p-4 bg-gray-200 hover:bg-gray-300 rounded-md font-[#222428] cursor-grab translate-px"
+                        on:dragstart={(event) => onDragStart(event, nodeType)}
+                        draggable={true}
+                >{nodeType}</div>
+            {/each}
         </div>
+        <hr class="h-[1px] w-full text-gray-200">
     </aside>
 </div>
-
-<style>
-    aside {
-        width: 100%;
-        background: #fff;
-        font-size: 12px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .label {
-        margin: 1rem 0;
-        font-size: 0.9rem;
-    }
-
-    .nodes-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .node {
-        margin: 0.5rem;
-        border: 1px solid #111;
-        padding: 0.5rem 1rem;
-        font-weight: 700;
-        border-radius: 5px;
-        cursor: grab;
-    }
-</style>
