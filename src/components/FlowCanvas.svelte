@@ -79,7 +79,7 @@
             ondragover={onDragOver}
             ondrop={onDrop}
     >
-        <Controls showLock={false}/>
+        <Controls showLock={false} position="top-right"/>
         <Background/>
         <MiniMap/>
     </SvelteFlow>
