@@ -15,6 +15,7 @@
     import UrlActionNode from "./UrlActionNode.svelte";
     import {useFlowDataStore} from "../stores/flowDataStore";
     import {useDragAndDrop} from "./DragAndDropProvider.svelte";
+    import {useFlowDataProcessor} from "../processors/flowDataProcessor";
 
     const currentNodes = $derived(useNodes());
     const currentEdges = $derived(useEdges());
@@ -22,6 +23,7 @@
     const dragAndDropContext = useDragAndDrop();
 
     const flowDataStore = useFlowDataStore();
+    const flowDataProcessor = useFlowDataProcessor();
     const initialData = flowDataStore.getData();
     const additionalFlowNodes = {
         [FlowNodeType.UrlAction]: UrlActionNode,
@@ -36,6 +38,9 @@
             edges: currentEdges.current,
         }
         flowDataStore.setData(data);
+        console.log(data);
+        const nodeExecutionOrder = flowDataProcessor.calculateNodeExecutionOrder(data);
+        console.log(nodeExecutionOrder);
     });
 
     const onDragOver = (event: DragEvent) => {
