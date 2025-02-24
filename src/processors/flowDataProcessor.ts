@@ -1,29 +1,19 @@
-﻿import {FlowNodeType} from "../models/flowNodeType";
-import type {FlowData} from "../stores/flowDataStore";
+﻿import type {FlowData} from "../stores/flowDataStore";
 
 export function useFlowDataProcessor() {
 
-    // TODO - use types for flow order calculation
-    const buildDependencyGraph = (data: FlowData) => {
-        const inputNodes = data.nodes.filter(x => x.type === FlowNodeType.Input);
-
-        if (inputNodes.length <= 0) {
-            console.error("Cannot process graph, there is no input node");
-            return {graph: [], inDegree: []};
-        }
-
-        if (inputNodes.length > 1) {
-            console.error("Cannot process graph, there are multiple input nodes");
-            return {graph: [], inDegree: []};
-        }
-
-        if (!data.edges.find(x => x.source === inputNodes[0]?.id)) {
-            console.error("Cannot process graph, input node is not connected");
-            return {graph: [], inDegree: []};
-        }
-
-        let graph: any = {};
-        let inDegree: any = {};
+    /**
+     * Converts FlowData to graph of node dependencies and inDegree (incoming edges)
+     * @param {FlowData} data - collection of nodes and edges of flow diagram
+     * @returns { graph: { [key: string]: string[] }, inDegree: { [key: string]: number }} - execution order of nodeIds
+     */
+    const buildDependencyGraph = (data: FlowData):
+        {
+            graph: { [key: string]: string[] },
+            inDegree: { [key: string]: number }
+        } => {
+        let graph: { [key: string]: string[] } = {};
+        let inDegree: { [key: string]: number } = {};
 
         data.nodes.forEach(node => {
             graph[node.id] = [];
@@ -39,13 +29,16 @@ export function useFlowDataProcessor() {
     }
 
     return {
-        // uses Kahn’s Algorithm to topologically order the graph nodes, https://en.wikipedia.org/wiki/Topological_sorting
-        // TODO - use types
-        calculateNodeExecutionOrder: (data: FlowData) => {
+        /**
+         * Uses Kahn’s Algorithm to topologically order the graph nodes - https://en.wikipedia.org/wiki/Topological_sorting
+         * @param {FlowData} data - collection of nodes and edges of flow diagram
+         * @returns {string[]} - execution order of nodeIds
+         */
+        calculateNodeExecutionOrder: (data: FlowData): string[] => {
             const {graph, inDegree} = buildDependencyGraph(data);
 
-            let queue: any = [];
-            let order: any = [];
+            let queue: string[] = [];
+            let order: string[] = [];
 
             Object.keys(inDegree).forEach(nodeId => {
                 if (inDegree[nodeId] === 0) {
@@ -54,7 +47,7 @@ export function useFlowDataProcessor() {
             });
 
             while (queue.length > 0) {
-                let current = queue.shift();
+                let current = queue.shift()!;
                 order.push(current);
 
                 graph[current].forEach((nodeId: any) => {
