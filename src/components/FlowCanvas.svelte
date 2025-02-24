@@ -1,15 +1,5 @@
 ﻿<script lang="ts">
-    import {
-        Background,
-        Controls,
-        type Edge,
-        MiniMap,
-        type Node,
-        SvelteFlow,
-        useEdges,
-        useNodes,
-        useSvelteFlow
-    } from '@xyflow/svelte';
+    import {Background, Controls, type Edge, MiniMap, type Node, SvelteFlow, useSvelteFlow} from '@xyflow/svelte';
     import '@xyflow/svelte/dist/style.css';
     import {FlowNodeType} from "../models/flowNodeType";
     import UrlActionNode from "./UrlActionNode.svelte";
@@ -17,11 +7,8 @@
     import {useDragAndDrop} from "./DragAndDropProvider.svelte";
     import {useFlowDataProcessor} from "../processors/flowDataProcessor";
 
-    const currentNodes = $derived(useNodes());
-    const currentEdges = $derived(useEdges());
     const {screenToFlowPosition} = $derived(useSvelteFlow());
     const dragAndDropContext = useDragAndDrop();
-
     const flowDataStore = useFlowDataStore();
     const flowDataProcessor = useFlowDataProcessor();
     const initialData = flowDataStore.getData();
@@ -31,16 +18,27 @@
 
     let nodes = $state.raw<Node[]>(initialData?.nodes ?? []);
     let edges = $state.raw<Edge[]>(initialData?.edges ?? []);
+    const saveRateLimitInMilliseconds = 1000;
+    let canSaveFlow = true;
 
     $effect(() => {
+        // Leave data outside if statement to force svelte to evaluate effect on nodes/edges change
         const data = {
-            nodes: currentNodes.current,
-            edges: currentEdges.current,
+            nodes: nodes,
+            edges: edges,
         }
-        flowDataStore.setData(data);
-        console.log(data);
-        const nodeExecutionOrder = flowDataProcessor.calculateNodeExecutionOrder(data);
-        console.log(nodeExecutionOrder);
+
+        if (canSaveFlow) {
+            canSaveFlow = false;
+            flowDataStore.setData(data);
+            const nodeExecutionOrder = flowDataProcessor.calculateNodeExecutionOrder(data);
+            console.log(nodeExecutionOrder);
+
+            // Rate limit the saves
+            setTimeout(() => {
+                canSaveFlow = true;
+            }, saveRateLimitInMilliseconds);
+        }
     });
 
     const onDragOver = (event: DragEvent) => {
@@ -68,7 +66,7 @@
             type: dragAndDropContext.nodeType,
             position,
             data: {label: `${dragAndDropContext.nodeType} node`},
-            origin: [0.5, 0.0],
+            origin: [0.5, 0.5],
         } satisfies Node;
 
         nodes = [...nodes, newNode];
