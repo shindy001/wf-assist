@@ -2,7 +2,7 @@
     import {Background, Controls, type Edge, MiniMap, type Node, SvelteFlow, useSvelteFlow} from '@xyflow/svelte';
     import '@xyflow/svelte/dist/style.css';
     import {FlowNodeType} from "../models/flowNodeType";
-    import UrlActionNode from "./UrlActionNode.svelte";
+    import RequestNode from "./Nodes/RequestNode.svelte";
     import {useFlowDataStore} from "../stores/flowDataStore";
     import {useDragAndDrop} from "./DragAndDropProvider.svelte";
     import {useFlowDataProcessor} from "../processors/flowDataProcessor";
@@ -13,7 +13,7 @@
     const flowDataProcessor = useFlowDataProcessor();
     const initialData = flowDataStore.getData();
     const additionalFlowNodes = {
-        [FlowNodeType.UrlAction]: UrlActionNode,
+        [FlowNodeType.Request]: RequestNode,
     };
 
     let nodes = $state.raw<Node[]>(initialData?.nodes ?? []);

@@ -9,5 +9,5 @@
     Output = "output",
 
     // Custom node types
-    UrlAction = "urlAction",
+    Request = "request",
 }
