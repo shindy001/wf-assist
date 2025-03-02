@@ -25,3 +25,27 @@ body {
 textarea {
     resize: both;
 }
+
+.input-flow-pin.svelte-flow__handle,
+.output-flow-pin.svelte-flow__handle {
+    width: 16px;
+    height: 16px;
+    border-radius: 0;
+    border: none;
+    background: white no-repeat center center fixed url('data:image/svg+xml,<svg class="text-gray-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 16 4-4-4-4m6 8 4-4-4-4"/></svg>')
+}
+
+.node-pin {
+    width: 10px;
+    height: 10px;
+    background: #00a3e9;
+    border: 1px solid #00a3e9;
+}
+
+.node-pin.svelte-flow__handle-right {
+    transform: translate(0, -50%);
+}
+
+.node-pin.svelte-flow__handle-left {
+    transform: translate(0, -50%);
+}

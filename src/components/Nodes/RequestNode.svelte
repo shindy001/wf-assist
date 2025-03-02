@@ -6,7 +6,6 @@
         url: string,
         requestType: string,
         requestBody: string,
-        usingResultHandle: boolean,
     }, FlowNodeType.Request>;
 </script>
 
@@ -25,42 +24,44 @@
 
 <NodeWrapper label="Request">
     <div class="flex-col space-y-2">
-        <div class="p-2 w-full">
+        <div class="w-full p-1">
             <div class="relative">
-                <Handle id="input-flow" class="!w-4 !h-4" type="target" position={Position.Left}/>
-                <Handle id="output-flow" class="!w-4 !h-4" type="source" position={Position.Right}/>
+                <Handle id="input" class="input-flow-pin" type="target" position={Position.Left}/>
+                <Handle id="output" class="output-flow-pin" type="source" position={Position.Right}/>
             </div>
         </div>
-        
-        <div class="flex gap-2">
-            <p>Url:</p>
-            <input bind:value={urlInputText} onchange={() => updateNodeData(id, { url: urlInputText })}
-                   class="rounded-sm w-full focus:outline-0 focus:bg-gray-100" placeholder="Enter a url..."/>
-        </div>
 
-        <div class="flex gap-2">
-            <p>Type:</p>
-            <select bind:value={selectedRequestType}
+        <fieldset class="daisyui-fieldset">
+            <legend class="daisyui-fieldset-legend">Url</legend>
+            <input class="daisyui-input" placeholder="Enter a url..." bind:value={urlInputText}
+                   onchange={() => updateNodeData(id, { url: urlInputText })}/>
+        </fieldset>
+
+        <fieldset class="daisyui-fieldset">
+            <legend class="daisyui-fieldset-legend">Type</legend>
+            <select class="daisyui-select" bind:value={selectedRequestType}
                     onchange={() => updateNodeData(id, { requestType: selectedRequestType })}>
                 {#each requestTypes as requestType}
                     <option value={requestType}>{requestType}</option>
                 {/each}
             </select>
-        </div>
+        </fieldset>
+
         {#if selectedRequestType !== "GET" }
-            <div class="flex gap-2">
-                <p>Body: </p>
-                <textarea
-                        class="nodrag min-w-72 w-full text-nowrap rounded-sm focus:outline-0 bg-gray-50 focus:bg-gray-100"
-                        rows="5"
-                        bind:value={requestBodyInputText}
-                        onchange={() => updateNodeData(id, { requestBody: requestBodyInputText })}></textarea>
-            </div>
+            <fieldset class="daisyui-fieldset">
+                <legend class="daisyui-fieldset-legend">Body</legend>
+                <textarea class="nodrag daisyui-textarea min-w-72 w-full text-nowrap"
+                          placeholder="Contents (JSON, XML, etc.)..."
+                          bind:value={requestBodyInputText}
+                          onchange={() => updateNodeData(id, { requestBody: requestBodyInputText })}></textarea>
+            </fieldset>
         {/if}
         <hr class="text-gray-100">
-        <div class="relative flex justify-end">
-            <p class="mr-4">Result value</p>
-            <Handle id="result" class="!w-2 !h-2" type="source" position={Position.Right}/>
+        <div class="">
+            <div class="relative flex justify-end">
+                <p class="mr-4">Result value</p>
+                <Handle id="result" class="node-pin" type="source" position={Position.Right}/>
+            </div>
         </div>
     </div>
 </NodeWrapper>
