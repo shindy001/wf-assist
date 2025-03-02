@@ -5,7 +5,8 @@
     export type UrlActionNodeType = Node<{
         url: string,
         requestType: string,
-        requestBody: string
+        requestBody: string,
+        usingResultHandle: boolean,
     }, FlowNodeType.Request>;
 </script>
 
@@ -23,9 +24,14 @@
 </script>
 
 <NodeWrapper label="Request">
-    <Handle class="!w-2 !h-2" type="target" position={Position.Left} {...data}/>
-
     <div class="flex-col space-y-2">
+        <div class="p-2 w-full">
+            <div class="relative">
+                <Handle id="input-flow" class="!w-4 !h-4" type="target" position={Position.Left}/>
+                <Handle id="output-flow" class="!w-4 !h-4" type="source" position={Position.Right}/>
+            </div>
+        </div>
+        
         <div class="flex gap-2">
             <p>Url:</p>
             <input bind:value={urlInputText} onchange={() => updateNodeData(id, { url: urlInputText })}
@@ -51,10 +57,12 @@
                         onchange={() => updateNodeData(id, { requestBody: requestBodyInputText })}></textarea>
             </div>
         {/if}
+        <hr class="text-gray-100">
+        <div class="relative flex justify-end">
+            <p class="mr-4">Result value</p>
+            <Handle id="result" class="!w-2 !h-2" type="source" position={Position.Right}/>
+        </div>
     </div>
-
-
-    <Handle class="!w-2 !h-2" type="source" position={Position.Right} {...data}/>
 </NodeWrapper>
 
 
