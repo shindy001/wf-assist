@@ -6,6 +6,7 @@
     import {useFlowDataStore} from "../stores/flowDataStore";
     import {useDragAndDrop} from "./DragAndDropProvider.svelte";
     import {useFlowDataProcessor} from "../processors/flowDataProcessor";
+    import ExtractPropertyNode from "./Nodes/ExtractPropertyNode.svelte";
 
     const {screenToFlowPosition} = $derived(useSvelteFlow());
     const dragAndDropContext = useDragAndDrop();
@@ -14,6 +15,7 @@
     const initialData = flowDataStore.getData();
     const additionalFlowNodes = {
         [FlowNodeType.Request]: RequestNode,
+        [FlowNodeType.ExtractProperty]: ExtractPropertyNode,
     };
 
     let nodes = $state.raw<Node[]>(initialData?.nodes ?? []);

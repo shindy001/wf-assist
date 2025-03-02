@@ -10,4 +10,5 @@
 
     // Custom node types
     Request = "request",
+    ExtractProperty = "extractProperty",
 }
