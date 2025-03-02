@@ -4,7 +4,7 @@
 
     export type ExtractPropertyNodeType = Node<{
         path: string,
-    }, FlowNodeType.Request>;
+    }, FlowNodeType.ExtractProperty>;
 </script>
 
 <script lang="ts">
@@ -19,7 +19,7 @@
 
 </script>
 
-<NodeWrapper label="Extract Property" minWidth={300} minHeight={150}>
+<NodeWrapper label="Extract Property" class="w-[280px]">
     <div class="flex-col space-y-2 w-full">
         <Handle id="input" type="target" position={Position.Left}
                 isConnectable={inputIsConnectable}/>

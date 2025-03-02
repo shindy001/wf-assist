@@ -40,8 +40,9 @@
 </script>
 
 <NodeWrapper label="Request"
-             minWidth={initialWidth}
-             minHeight={initialHeight}>
+             resizable
+             minResizableWidth={initialWidth}
+             minResizableHeight={initialHeight}>
     <div class="flex-col space-y-2 w-full">
         <div class="p-1">
             <div class="relative">
