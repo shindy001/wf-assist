@@ -54,13 +54,13 @@
 
         <fieldset class="daisyui-fieldset">
             <legend class="daisyui-fieldset-legend">Url</legend>
-            <input class="daisyui-input w-full" placeholder="Enter a url..." bind:value={urlInputText}
+            <input class="nodrag daisyui-input w-full" placeholder="Enter a url..." bind:value={urlInputText}
                    onchange={() => updateNodeData(id, { url: urlInputText })}/>
         </fieldset>
 
         <fieldset class="daisyui-fieldset">
             <legend class="daisyui-fieldset-legend">Type</legend>
-            <select class="daisyui-select w-full" bind:value={selectedRequestType}
+            <select class="nodrag daisyui-select w-full" bind:value={selectedRequestType}
                     onchange={() =>{
                         updateNodeData(id, { requestType: selectedRequestType });
                     } }>
@@ -74,7 +74,7 @@
             <fieldset class=" daisyui-fieldset">
                 <legend class="daisyui-fieldset-legend w-full flex justify-between">Body</legend>
                 <textarea
-                        class="daisyui-textarea min-w-72 w-full text-nowrap resize-none"
+                        class="nodrag daisyui-textarea min-w-72 w-full text-nowrap resize-none"
                         rows="5"
                         placeholder="Contents (JSON, XML, etc.)..."
                         bind:value={requestBodyInputText}
