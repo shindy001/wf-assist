@@ -14,9 +14,8 @@
     const {updateNodeData} = useSvelteFlow();
     const connections = useNodeConnections({handleType: 'target'});
     let {id, data}: NodeProps<ExtractPropertyNodeType> = $props();
-    let pathInput: string = $state("");
+    let pathInput: string = $state(data.path);
     let inputIsConnectable = $derived(connections.current.length === 0);
-
 </script>
 
 <NodeWrapper label="Extract Property" class="w-[280px]">
@@ -25,7 +24,7 @@
                 isConnectable={inputIsConnectable}/>
         <fieldset class="daisyui-fieldset">
             <legend class="daisyui-fieldset-legend">Path</legend>
-            <input class="daisyui-input w-full" placeholder="Enter a property path (e.g. user.id)..."
+            <input class="nodrag daisyui-input w-full" placeholder="Enter a property path (e.g. user.id)..."
                    bind:value={pathInput}
                    onchange={() => updateNodeData(id, { path: pathInput })}/>
         </fieldset>
