@@ -34,8 +34,6 @@ body {
 .node-pin {
     width: 10px;
     height: 10px;
-    background: #00a3e9;
-    border: 1px solid #00a3e9;
 }
 
 .node-pin.svelte-flow__handle-right {

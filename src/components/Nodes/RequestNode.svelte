@@ -86,7 +86,7 @@
         <div class="">
             <div class="relative flex justify-end">
                 <p class="mr-4">Result value</p>
-                <Handle id="result" class="node-pin" type="source" position={Position.Right}/>
+                <Handle id="result" class="node-pin !bg-blue-300" type="source" position={Position.Right}/>
             </div>
         </div>
     </div>
