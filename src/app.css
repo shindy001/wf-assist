@@ -35,11 +35,3 @@ body {
     width: 10px;
     height: 10px;
 }
-
-.node-pin.svelte-flow__handle-right {
-    transform: translate(0, -50%);
-}
-
-.node-pin.svelte-flow__handle-left {
-    transform: translate(0, -50%);
-}
