@@ -10,23 +10,26 @@
 </script>
 
 <script lang="ts">
-    import {Handle, type NodeProps, Position, useSvelteFlow} from "@xyflow/svelte";
+    import {Handle, type NodeProps, Position, useNodeConnections, useSvelteFlow} from "@xyflow/svelte";
     import NodeWrapper from "./NodeWrapper.svelte";
 
     const {updateNodeData} = useSvelteFlow();
+    const connections = useNodeConnections({handleType: 'target'});
     const requestTypes = ["GET", "POST", "PUT"];
 
     let {id, data}: NodeProps<UrlActionNodeType> = $props();
     let selectedRequestType = $state(data.requestType ?? "GET");
     let urlInputText = $state(data.url ?? "");
     let requestBodyInputText = $state(data.requestBody ?? "");
+    let inputIsConnectable = $derived(connections.current.length === 0);
 </script>
 
 <NodeWrapper label="Request">
     <div class="flex-col space-y-2">
         <div class="w-full p-1">
             <div class="relative">
-                <Handle id="input" class="input-flow-pin" type="target" position={Position.Left}/>
+                <Handle id="input" class="input-flow-pin" type="target" position={Position.Left}
+                        isConnectable={inputIsConnectable}/>
                 <Handle id="output" class="output-flow-pin" type="source" position={Position.Right}/>
             </div>
         </div>
