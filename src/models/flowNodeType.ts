@@ -11,4 +11,5 @@
     // Custom node types
     Request = "request",
     ExtractProperty = "extractProperty",
+    PrintString = "printString",
 }
