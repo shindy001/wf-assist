@@ -25,9 +25,8 @@
         {@render children?.()}
     </div>
     <NodeResizeControl
-            shouldResize={() => true}
-            minHeight={minHeight ?? 250}
-            minWidth={minWidth ?? 250}
+            minHeight={minHeight}
+            minWidth={minWidth}
             style="background: transparent; border: none;"
     >
         <svg
