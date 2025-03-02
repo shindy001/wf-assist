@@ -21,7 +21,7 @@
 
 <NodeWrapper label="Extract Property" class="w-[280px]">
     <div class="flex-col space-y-2 w-full">
-        <Handle id="input" type="target" position={Position.Left}
+        <Handle id="input" type="target" class="node-pin" position={Position.Left}
                 isConnectable={inputIsConnectable}/>
         <fieldset class="daisyui-fieldset">
             <legend class="daisyui-fieldset-legend">Path</legend>
@@ -29,7 +29,7 @@
                    bind:value={pathInput}
                    onchange={() => updateNodeData(id, { path: pathInput })}/>
         </fieldset>
-        <Handle id="input" type="source" position={Position.Right}/>
+        <Handle id="input" type="source" class="node-pin" position={Position.Right}/>
     </div>
 
 
