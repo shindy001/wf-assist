@@ -15,7 +15,12 @@
     const connections = useNodeConnections({handleType: 'target'});
     let {id, data}: NodeProps<ExtractPropertyNodeType> = $props();
     let pathInput: string = $state(data.path);
+    let currentConnectionId = $derived(connections.current[0]?.target);
     let inputIsConnectable = $derived(connections.current.length === 0);
+
+    $effect(() => {
+        updateNodeData(id, {path: pathInput, targetId: currentConnectionId});
+    });
 </script>
 
 <NodeWrapper label="Extract Property" class="w-[280px]">
@@ -25,8 +30,7 @@
         <fieldset class="daisyui-fieldset">
             <legend class="daisyui-fieldset-legend">Path</legend>
             <input class="nodrag daisyui-input w-full" placeholder="Enter a property path (e.g. user.id)..."
-                   bind:value={pathInput}
-                   onchange={() => updateNodeData(id, { path: pathInput })}/>
+                   bind:value={pathInput}/>
         </fieldset>
         <Handle id="input" type="source" class="node-pin" position={Position.Right}/>
     </div>
