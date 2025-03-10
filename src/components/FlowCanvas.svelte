@@ -1,7 +1,7 @@
 ﻿<script lang="ts">
     import {Background, Controls, type Edge, MiniMap, type Node, SvelteFlow, useSvelteFlow} from '@xyflow/svelte';
     import '@xyflow/svelte/dist/style.css';
-    import {FlowNodeType} from "../models/flowNodeType";
+    import {FlowNodeType} from "../models/FlowNodeType";
     import RequestNode from "./Nodes/RequestNode.svelte";
     import {useFlowDataStore} from "../stores/flowDataStore";
     import {useDragAndDrop} from "./DragAndDropProvider.svelte";
@@ -37,6 +37,7 @@
             flowDataStore.setData(data);
             const nodeExecutionOrder = flowDataProcessor.calculateNodeExecutionOrder(data);
             console.log(nodeExecutionOrder);
+            console.log(data);
 
             // Rate limit the saves
             setTimeout(() => {
