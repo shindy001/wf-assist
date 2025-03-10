@@ -1,4 +1,4 @@
-﻿import type {FlowData} from "../stores/flowDataStore";
+﻿import type {FlowData} from "../models/FlowData";
 
 export function useFlowDataProcessor() {
 
@@ -30,7 +30,7 @@ export function useFlowDataProcessor() {
 
     return {
         /**
-         * Uses Kahn’s Algorithm to topologically order the graph nodes - https://en.wikipedia.org/wiki/Topological_sorting
+         * Calculates dependency graph and then uses Kahn’s Algorithm to topologically order the graph nodes - https://en.wikipedia.org/wiki/Topological_sorting
          * @param {FlowData} data - collection of nodes and edges of flow diagram
          * @returns {string[]} - execution order of nodeIds
          */

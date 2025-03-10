@@ -1,10 +1,5 @@
-﻿import type {Edge, Node} from "@xyflow/svelte";
-import {get, writable} from "svelte/store";
-
-export interface FlowData {
-    nodes: Node[],
-    edges: Edge[],
-}
+﻿import {get, writable} from "svelte/store";
+import type {FlowData} from "../models/FlowData";
 
 const flowDataStore = writable<FlowData>();
 
