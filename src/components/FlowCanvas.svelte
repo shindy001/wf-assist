@@ -35,8 +35,8 @@
         if (canSaveFlow) {
             canSaveFlow = false;
             flowDataStore.setData(data);
-            const nodeExecutionOrder = flowDataProcessor.calculateNodeExecutionOrder(data);
-            console.log(nodeExecutionOrder);
+            const nodeExecutionList = flowDataProcessor.createExecutionList(data);
+            console.log(nodeExecutionList);
             console.log(data);
 
             // Rate limit the saves

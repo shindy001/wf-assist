@@ -28,37 +28,53 @@ export function useFlowDataProcessor() {
         return {graph, inDegree};
     }
 
-    return {
-        /**
-         * Calculates dependency graph and then uses Kahn’s Algorithm to topologically order the graph nodes - https://en.wikipedia.org/wiki/Topological_sorting
-         * @param {FlowData} data - collection of nodes and edges of flow diagram
-         * @returns {string[]} - execution order of nodeIds
-         */
-        calculateNodeExecutionOrder: (data: FlowData): string[] => {
-            const {graph, inDegree} = buildDependencyGraph(data);
+    /**
+     * Calculates dependency graph and then uses Kahn’s Algorithm to topologically order the graph nodes - https://en.wikipedia.org/wiki/Topological_sorting
+     * @param {FlowData} data - collection of nodes and edges of flow diagram
+     * @returns {string[]} - execution order of nodeIds
+     */
+    const calculateNodeExecutionOrder = (data: FlowData) => {
+        const {graph, inDegree} = buildDependencyGraph(data);
 
-            let queue: string[] = [];
-            let order: string[] = [];
+        let queue: string[] = [];
+        let order: string[] = [];
 
-            Object.keys(inDegree).forEach(nodeId => {
+        Object.keys(inDegree).forEach(nodeId => {
+            if (inDegree[nodeId] === 0) {
+                queue.push(nodeId);
+            }
+        });
+
+        while (queue.length > 0) {
+            let current = queue.shift()!;
+            order.push(current);
+
+            graph[current].forEach((nodeId: any) => {
+                inDegree[nodeId]--;
                 if (inDegree[nodeId] === 0) {
                     queue.push(nodeId);
                 }
             });
-
-            while (queue.length > 0) {
-                let current = queue.shift()!;
-                order.push(current);
-
-                graph[current].forEach((nodeId: any) => {
-                    inDegree[nodeId]--;
-                    if (inDegree[nodeId] === 0) {
-                        queue.push(nodeId);
-                    }
-                });
-            }
-
-            return order;
         }
+
+        return order;
+    }
+
+    const createExecutionList = (data: FlowData) => {
+        const nodeExecutionOrder = calculateNodeExecutionOrder(data);
+        
+        return nodeExecutionOrder.map(nodeId => {
+            const node = data.nodes.find(node => node.id === nodeId);
+            return {id: nodeId, type: node?.type, data: node?.data}
+        });
+    }
+
+    return {
+        /**
+         * Calculates dependency graph, topologically orders the nodes and returns nodes according to execution order
+         * @param {FlowData} data - collection of nodes and edges of flow diagram
+         * @returns {{id: string, type: any, data: any}[]} - execution order of nodeIds
+         */
+        createExecutionList: createExecutionList
     };
 }
