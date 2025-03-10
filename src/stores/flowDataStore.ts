@@ -6,8 +6,9 @@ export interface FlowData {
     edges: Edge[],
 }
 
+const flowDataStore = writable<FlowData>();
+
 export function useFlowDataStore() {
-    const store = writable<FlowData>();
     const isBrowser = typeof window !== "undefined";
     const flowDataKey = "flowData";
 
@@ -17,14 +18,14 @@ export function useFlowDataStore() {
                 throw new Error("FlowDataStore cannot be used outside of browser")
             }
             localStorage.setItem(flowDataKey, JSON.stringify(data));
-            store.set(data);
+            flowDataStore.set(data);
         },
         getData: () => {
             if (!isBrowser) {
                 throw new Error("FlowDataStore cannot be used outside of browser")
             }
 
-            let data = get(store);
+            let data = get(flowDataStore);
             if (data) {
                 return data;
             }
@@ -33,8 +34,8 @@ export function useFlowDataStore() {
             if (json) {
                 data = JSON.parse(json);
             }
-            store.set(data);
-            return get(store);
+            flowDataStore.set(data);
+            return get(flowDataStore);
         }
     }
 }
