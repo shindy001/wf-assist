@@ -1,22 +1,22 @@
 ﻿import {get, writable} from "svelte/store";
 import type {FlowData} from "../models/FlowData";
+import {isBrowser} from "../utils/platformUtils";
 
 const flowDataStore = writable<FlowData>();
 
 export function useFlowDataStore() {
-    const isBrowser = typeof window !== "undefined";
     const flowDataKey = "flowData";
 
     return {
         setData: (data: FlowData) => {
-            if (!isBrowser) {
+            if (!isBrowser()) {
                 throw new Error("FlowDataStore cannot be used outside of browser")
             }
             localStorage.setItem(flowDataKey, JSON.stringify(data));
             flowDataStore.set(data);
         },
         getData: () => {
-            if (!isBrowser) {
+            if (!isBrowser()) {
                 throw new Error("FlowDataStore cannot be used outside of browser")
             }
 
