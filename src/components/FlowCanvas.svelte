@@ -2,12 +2,12 @@
     import {Background, Controls, type Edge, MiniMap, type Node, SvelteFlow, useSvelteFlow} from '@xyflow/svelte';
     import '@xyflow/svelte/dist/style.css';
     import {FlowNodeType} from "../models/FlowNodeType";
-    import RequestNode from "./Nodes/RequestNode.svelte";
+    import RequestNode from "./nodes/RequestNode.svelte";
     import {useFlowDataStore} from "../stores/flowDataStore";
     import {useDragAndDrop} from "./DragAndDropProvider.svelte";
     import {useFlowDataProcessor} from "../processors/flowDataProcessor";
-    import ExtractPropertyNode from "./Nodes/ExtractPropertyNode.svelte";
-    import PrintStringNode from "./Nodes/PrintStringNode.svelte";
+    import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
+    import PrintStringNode from "./nodes/PrintStringNode.svelte";
 
     const {screenToFlowPosition} = $derived(useSvelteFlow());
     const dragAndDropContext = useDragAndDrop();
