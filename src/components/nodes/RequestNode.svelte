@@ -1,12 +1,9 @@
 ﻿<script lang="ts" module>
     import {FlowNodeType} from "../../models/nodes/FlowNodeType";
     import {type Node} from "@xyflow/svelte";
+    import type {RequestNode} from "../../models/nodes/RequestNode";
 
-    export type UrlActionNodeType = Node<{
-        url: string,
-        requestType: string,
-        requestBody: string,
-    }, FlowNodeType.Request>;
+    export type UrlActionNodeType = Node<RequestNode, FlowNodeType.Request>;
 </script>
 
 <script lang="ts">
