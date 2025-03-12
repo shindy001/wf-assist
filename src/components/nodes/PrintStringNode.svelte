@@ -4,6 +4,7 @@
 
     export type PrintStringNodeType = Node<{
         useLogger: boolean,
+        targetId: string,
     }, FlowNodeType.PrintString>;
 </script>
 <script lang="ts">
