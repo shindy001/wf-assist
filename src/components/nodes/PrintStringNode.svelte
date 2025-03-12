@@ -1,5 +1,5 @@
 ﻿<script lang="ts" module>
-    import {FlowNodeType} from "../../models/FlowNodeType";
+    import {FlowNodeType} from "../../models/nodes/FlowNodeType";
     import {type Node} from "@xyflow/svelte";
 
     export type PrintStringNodeType = Node<{

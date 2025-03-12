@@ -1,7 +1,7 @@
 ﻿import {ExecutionStatus, type WorkflowData} from "../models/WorkflowData";
-import {FlowNodeType} from "../models/FlowNodeType";
+import {FlowNodeType} from "../models/nodes/FlowNodeType";
 import {usePrintStringNodeProcessor} from "./nodes/printStringNodeProcessor";
-import type {NodeProcessor} from "../models/NodeProcessor";
+import type {NodeProcessor} from "../models/nodes/NodeProcessor";
 
 const processorMap: Record<string, NodeProcessor<any>> = {
     [FlowNodeType.PrintString]: usePrintStringNodeProcessor(),

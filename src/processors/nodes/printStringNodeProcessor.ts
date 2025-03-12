@@ -1,5 +1,5 @@
 ﻿import {useWorkflowDataStore} from "../../stores/workflowDataStore";
-import type {NodeProcessor} from "../../models/NodeProcessor";
+import type {NodeProcessor} from "../../models/nodes/NodeProcessor";
 
 export interface PrintStringNode {
     useLogger: boolean;
