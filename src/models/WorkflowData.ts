@@ -1,4 +1,6 @@
-﻿export enum ExecutionStatus {
+﻿import type {FlowData} from "./FlowData";
+
+export enum ExecutionStatus {
     Waiting,
     Started,
     Succeeded,
@@ -7,14 +9,11 @@
 
 export type ExecutionItem = {
     id: string;
-    type?: string;
+    type: string;
     data?: any;
-    status: ExecutionStatus;
 }
 
 export interface WorkflowData {
+    flowData: FlowData;
     executionList: Array<ExecutionItem>;
-    executingItem: string | undefined;
-    status: ExecutionStatus;
-    results: Record<string, {} | undefined>
 }

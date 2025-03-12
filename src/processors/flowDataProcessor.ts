@@ -66,7 +66,7 @@ export function useFlowDataProcessor() {
 
         return nodeExecutionOrder.map(nodeId => {
             const node = data.nodes.find(node => node.id === nodeId);
-            return {id: nodeId, type: node?.type, data: node?.data, status: ExecutionStatus.Waiting}
+            return {id: nodeId, type: node?.type ?? "", data: node?.data, status: ExecutionStatus.Waiting}
         });
     }
 
