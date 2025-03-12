@@ -1,4 +1,5 @@
 ﻿import type {FlowData} from "../models/FlowData";
+import {type ExecutionItem, ExecutionStatus} from "../models/WorkflowData";
 
 export function useFlowDataProcessor() {
 
@@ -60,12 +61,12 @@ export function useFlowDataProcessor() {
         return order;
     }
 
-    const createExecutionList = (data: FlowData) => {
+    const createExecutionList = (data: FlowData): Array<ExecutionItem> => {
         const nodeExecutionOrder = calculateNodeExecutionOrder(data);
-        
+
         return nodeExecutionOrder.map(nodeId => {
             const node = data.nodes.find(node => node.id === nodeId);
-            return {id: nodeId, type: node?.type, data: node?.data}
+            return {id: nodeId, type: node?.type, data: node?.data, status: ExecutionStatus.Waiting}
         });
     }
 
