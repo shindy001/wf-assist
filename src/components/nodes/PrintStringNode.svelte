@@ -1,12 +1,11 @@
 ﻿<script lang="ts" module>
     import {FlowNodeType} from "../../models/nodes/FlowNodeType";
     import {type Node} from "@xyflow/svelte";
+    import type {PrintStringNode} from "../../models/nodes/PrintStringNode";
 
-    export type PrintStringNodeType = Node<{
-        useLogger: boolean,
-        targetId: string,
-    }, FlowNodeType.PrintString>;
+    export type PrintStringNodeType = Node<PrintStringNode, FlowNodeType.PrintString>;
 </script>
+
 <script lang="ts">
     import NodeWrapper from "./NodeWrapper.svelte";
     import {Handle, type NodeProps, Position, useNodeConnections, useSvelteFlow} from "@xyflow/svelte";
