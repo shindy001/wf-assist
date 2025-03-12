@@ -1,10 +1,9 @@
 ﻿<script lang="ts" module>
     import {FlowNodeType} from "../../models/nodes/FlowNodeType";
     import {type Node} from "@xyflow/svelte";
+    import type {ExtractPropertyNode} from "../../models/nodes/ExtractPropertyNode";
 
-    export type ExtractPropertyNodeType = Node<{
-        path: string,
-    }, FlowNodeType.ExtractProperty>;
+    export type ExtractPropertyNodeType = Node<ExtractPropertyNode, FlowNodeType.ExtractProperty>;
 </script>
 
 <script lang="ts">
@@ -14,7 +13,7 @@
     const {updateNodeData} = useSvelteFlow();
     const connections = useNodeConnections({handleType: 'target'});
     let {id, data}: NodeProps<ExtractPropertyNodeType> = $props();
-    let pathInput: string = $state(data.path);
+    let pathInput = $state(data.path);
     let currentConnectionId = $derived(connections.current[0]?.target);
     let inputIsConnectable = $derived(connections.current.length === 0);
 
