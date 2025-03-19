@@ -8,6 +8,10 @@
     import {useFlowDataProcessor} from "../processors/flowDataProcessor";
     import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
     import PrintStringNode from "./nodes/PrintStringNode.svelte";
+    import {type WorkflowData} from "../models/WorkflowData";
+    import {useWorkflowDataStore} from "../stores/workflowDataStore";
+    import {useWorkflowProcessor} from "../processors/workflowProcessor";
+    import type {FlowData} from "../models/FlowData";
 
     const {screenToFlowPosition} = $derived(useSvelteFlow());
     const dragAndDropContext = useDragAndDrop();
@@ -46,6 +50,20 @@
         }
     });
 
+    function executeWorkflow() {
+        const flowData: FlowData = {nodes: nodes, edges: edges};
+        const nodeExecutionList = flowDataProcessor.createExecutionList(flowData);
+        const workflowData: WorkflowData = {
+            name: "workflow1",
+            flowData: flowData,
+            executionList: nodeExecutionList
+        }
+        const workflowDataStore = useWorkflowDataStore();
+        workflowDataStore.addOrUpdateWorkflow(workflowData);
+        const workflowProcessor = useWorkflowProcessor();
+        workflowProcessor.process(workflowData);
+    }
+
     const onDragOver = (event: DragEvent) => {
         event.preventDefault();
 
@@ -79,6 +97,9 @@
 </script>
 
 <div class="w-full h-full">
+    <button class="daisyui-btn absolute z-10" onclick={() => executeWorkflow()}>
+        Execute Flow
+    </button>
     <SvelteFlow
             bind:nodes
             bind:edges
