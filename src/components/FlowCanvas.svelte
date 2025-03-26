@@ -41,7 +41,6 @@
             flowDataStore.setData(data);
             const nodeExecutionList = flowDataProcessor.createExecutionList(data);
             console.log(nodeExecutionList);
-            console.log(data);
 
             // Rate limit the saves
             setTimeout(() => {
