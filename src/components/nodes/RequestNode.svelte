@@ -3,7 +3,7 @@
     import {type Node} from "@xyflow/svelte";
     import type {RequestNode} from "../../models/nodes/RequestNode";
 
-    export type UrlActionNodeType = Node<RequestNode, FlowNodeType.Request>;
+    export type RequestNodeType = Node<RequestNode, FlowNodeType.Request>;
 </script>
 
 <script lang="ts">
@@ -23,13 +23,21 @@
     const getNodeWidth = () => isGetRequestType() ? 200 : 320;
     const getNodeHeight = () => isGetRequestType() ? 300 : 450;
 
-    let {id, data}: NodeProps<UrlActionNodeType> = $props();
+    let {id, data}: NodeProps<RequestNodeType> = $props();
     let selectedRequestType = $state(data.requestType ?? "GET");
     let urlInputText = $state(data.url ?? "");
     let requestBodyInputText = $state(data.requestBody ?? "");
     let inputIsConnectable = $derived(connections.current.length === 0);
     let initialWidth = $derived(getNodeWidth());
     let initialHeight = $derived(getNodeHeight());
+
+    function isValidInputConnection(connection) {
+        return connection.source !== id;
+    }
+
+    function isValidOutputConnection(connection) {
+        return connection.targetHandle === "input-flow-pin";
+    }
 
     $effect(() => {
         updateNode(id, {width: getNodeWidth(), height: getNodeHeight()});
@@ -43,9 +51,11 @@
     <div class="flex-col space-y-2 w-full">
         <div class="p-1">
             <div class="relative">
-                <Handle id="input" class="input-flow-pin" type="target" position={Position.Left}
+                <Handle id="input-flow-pin" class="input-flow-pin" type="target" position={Position.Left}
+                        isValidConnection={isValidInputConnection}
                         isConnectable={inputIsConnectable}/>
-                <Handle id="output" class="output-flow-pin" type="source" position={Position.Right}/>
+                <Handle id="output-flow-pin" class="output-flow-pin" type="source" position={Position.Right}
+                        isValidConnection={isValidOutputConnection}/>
             </div>
         </div>
 
