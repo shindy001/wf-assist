@@ -12,6 +12,7 @@
     import {useWorkflowDataStore} from "../stores/workflowDataStore";
     import {useWorkflowProcessor} from "../processors/workflowProcessor";
     import type {FlowData} from "../models/FlowData";
+    import {throttle} from "lodash";
 
     const {screenToFlowPosition} = $derived(useSvelteFlow());
     const dragAndDropContext = useDragAndDrop();
@@ -26,27 +27,19 @@
 
     let nodes = $state.raw<Node[]>(initialData?.nodes ?? []);
     let edges = $state.raw<Edge[]>(initialData?.edges ?? []);
-    const saveRateLimitInMilliseconds = 1000;
-    let canSaveFlow = true;
+    const saveRateLimitInMilliseconds = 500;
+
+    const throttleSave = throttle((data: { nodes: Node[], edges: Edge[] }) => {
+        flowDataStore.setData(data);
+        const nodeExecutionList = flowDataProcessor.createExecutionList(data);
+        console.log(nodeExecutionList);
+    }, saveRateLimitInMilliseconds);
 
     $effect(() => {
-        // Leave data outside if statement to force svelte to evaluate effect on nodes/edges change
-        const data = {
+        throttleSave({
             nodes: nodes,
             edges: edges,
-        }
-
-        if (canSaveFlow) {
-            canSaveFlow = false;
-            flowDataStore.setData(data);
-            const nodeExecutionList = flowDataProcessor.createExecutionList(data);
-            console.log(nodeExecutionList);
-
-            // Rate limit the saves
-            setTimeout(() => {
-                canSaveFlow = true;
-            }, saveRateLimitInMilliseconds);
-        }
+        });
     });
 
     function executeWorkflow() {
@@ -96,7 +89,7 @@
 </script>
 
 <div class="w-full h-full">
-    <button class="daisyui-btn absolute z-10" onclick={() => executeWorkflow()}>
+    <button class="daisyui-btn absolute top-0 z-10 m-4" onclick={() => executeWorkflow()}>
         Execute Flow
     </button>
     <SvelteFlow
