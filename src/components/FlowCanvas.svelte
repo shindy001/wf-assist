@@ -3,34 +3,38 @@
     import '@xyflow/svelte/dist/style.css';
     import {FlowNodeType} from "../models/nodes/FlowNodeType";
     import RequestNode from "./nodes/RequestNode.svelte";
-    import {useFlowDataStore} from "../stores/flowDataStore";
     import {useDragAndDrop} from "./DragAndDropProvider.svelte";
     import {useFlowDataProcessor} from "../processors/flowDataProcessor";
     import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
     import PrintStringNode from "./nodes/PrintStringNode.svelte";
     import {type WorkflowData} from "../models/WorkflowData";
-    import {useWorkflowDataStore} from "../stores/workflowDataStore";
-    import {useWorkflowProcessor} from "../processors/workflowProcessor";
+    import {useWorkflowDataStore, type WorkflowDataError} from "../stores/workflowDataStore";
+    import {useWorkflowExecutor} from "../executors/workflowExecutor";
     import type {FlowData} from "../models/FlowData";
     import {throttle} from "lodash";
+    import {useLocalStore} from "../stores/localStore";
 
-    const {screenToFlowPosition} = $derived(useSvelteFlow());
-    const dragAndDropContext = useDragAndDrop();
-    const flowDataStore = useFlowDataStore();
+    const localStore = useLocalStore();
+    const workflowDataStore = useWorkflowDataStore();
     const flowDataProcessor = useFlowDataProcessor();
-    const initialData = flowDataStore.getData();
+    const workflowExecutor = useWorkflowExecutor();
+    const dragAndDropContext = useDragAndDrop();
     const additionalFlowNodes = {
         [FlowNodeType.Request]: RequestNode,
         [FlowNodeType.ExtractProperty]: ExtractPropertyNode,
         [FlowNodeType.PrintString]: PrintStringNode,
     };
 
-    let nodes = $state.raw<Node[]>(initialData?.nodes ?? []);
-    let edges = $state.raw<Edge[]>(initialData?.edges ?? []);
+    const {screenToFlowPosition} = $derived(useSvelteFlow());
+    const activeWorkflow: string | undefined = localStore.getItem("activeWorkflow");
+
+    let currentWorkflow: WorkflowData | undefined;
+    let nodes = $state.raw<Node[]>([]);
+    let edges = $state.raw<Edge[]>([]);
     const saveRateLimitInMilliseconds = 500;
 
     const throttleSave = throttle((data: { nodes: Node[], edges: Edge[] }) => {
-        flowDataStore.setData(data);
+        localStore.setItem("activeWorkflow", "workflow1");
         const nodeExecutionList = flowDataProcessor.createExecutionList(data);
         console.log(nodeExecutionList);
     }, saveRateLimitInMilliseconds);
@@ -42,6 +46,29 @@
         });
     });
 
+    const initializeWorkflow = async () => {
+        let result: WorkflowData | WorkflowDataError | undefined = undefined;
+        if (activeWorkflow) {
+            result = await workflowDataStore.getWorkflow(activeWorkflow);
+        }
+
+        if ((result as WorkflowDataError).error) {
+            console.error(result);
+            return undefined;
+        }
+
+        return result as WorkflowData;
+    };
+
+    initializeWorkflow()
+        .then((data) => {
+            currentWorkflow = data;
+            if (data) {
+                nodes = data.flowData.nodes;
+                edges = data.flowData.edges;
+            }
+        });
+
     function executeWorkflow() {
         const flowData: FlowData = {nodes: nodes, edges: edges};
         const nodeExecutionList = flowDataProcessor.createExecutionList(flowData);
@@ -50,10 +77,8 @@
             flowData: flowData,
             executionList: nodeExecutionList
         }
-        const workflowDataStore = useWorkflowDataStore();
         workflowDataStore.addOrUpdateWorkflow(workflowData);
-        const workflowProcessor = useWorkflowProcessor();
-        workflowProcessor.process(workflowData);
+        workflowExecutor.execute(workflowData);
     }
 
     const onDragOver = (event: DragEvent) => {
