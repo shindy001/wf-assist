@@ -5,9 +5,11 @@
     import FlowCanvas from "../components/FlowCanvas.svelte";
 </script>
 
-<SvelteFlowProvider>
-    <DragAndDropProvider>
-        <FlowSidebar class="absolute"></FlowSidebar>
-        <FlowCanvas/>
-    </DragAndDropProvider>
-</SvelteFlowProvider>
+<div class="flex w-full h-full">
+    <SvelteFlowProvider>
+        <DragAndDropProvider>
+            <FlowSidebar></FlowSidebar>
+            <FlowCanvas/>
+        </DragAndDropProvider>
+    </SvelteFlowProvider>
+</div>
