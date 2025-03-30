@@ -27,6 +27,14 @@ export function useWorkflowDataStore() {
         }
     }
 
+    const getWorkflow = async (name: string): Promise<WorkflowData | undefined | WorkflowDataError> => {
+        try {
+            return await executeDbOperation(db.workflows.get(name));
+        } catch (error) {
+            return handleError(error);
+        }
+    }
+
     const addWorkflow = async (data: WorkflowData): Promise<void | WorkflowDataError> => {
         try {
             if (await workflowExists(data.name)) {
@@ -82,6 +90,7 @@ export function useWorkflowDataStore() {
 
     return {
         workflowExists,
+        getWorkflow,
         addWorkflow,
         updateWorkflow,
         addOrUpdateWorkflow,
