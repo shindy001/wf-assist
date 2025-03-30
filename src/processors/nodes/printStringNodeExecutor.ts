@@ -1,10 +1,10 @@
-﻿import type {NodeProcessor} from "../../models/nodes/NodeProcessor";
+﻿import type {NodeExecutor} from "../../models/nodes/NodeExecutor";
 import type {PrintStringNode} from "../../models/nodes/PrintStringNode";
 
-export function usePrintStringNodeProcessor(): NodeProcessor<PrintStringNode> {
+export function usePrintStringNodeExecutor(): NodeExecutor<PrintStringNode> {
     return {
         // TODO - simplify and clean processing logic
-        process: (node: PrintStringNode) => {
+        execute: (node: PrintStringNode) => {
             if (node.targetId) {
                 // TODO
                 // 1. Get data from executionStore
