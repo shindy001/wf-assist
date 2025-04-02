@@ -1,91 +1,86 @@
 ﻿import {isBrowser} from "../utils/platformUtils";
 import type {WorkflowData} from "../models/WorkflowData";
 import {db, executeDbOperation} from "./db";
+import {failure, type Result, success} from "../models/Types/Result";
+import {ErrorDetail} from "../models/Types/ErrorDetail";
 
-export enum WorkflowDataStoreError {
-    AlreadyExists,
-    DoesNotExist,
-    Fatal
-}
-
-export type WorkflowDataError = {
-    error: WorkflowDataStoreError;
-    message: string;
-}
+const workflowDataError = (message: string) => new ErrorDetail("WorkflowDataError", message);
+const alreadyExistsError = (item: string) => workflowDataError(`${item} already exists.`);
+const notFoundError = (item: string) => workflowDataError(`${item} not found.`);
+const fatalError = (message: string) => workflowDataError(`Fatal: ${message}`);
 
 export function useWorkflowDataStore() {
     if (!isBrowser()) {
         throw new Error("WorkflowDataStore cannot be used outside of a browser");
     }
 
-    const workflowExists = async (name: string): Promise<boolean | WorkflowDataError> => {
+    const workflowExists = async (name: string): Promise<Result<boolean>> => {
         try {
             const existingItem = await executeDbOperation(db.workflows.get(name));
-            return existingItem !== undefined;
+            return success(existingItem !== undefined);
         } catch (error) {
-            return handleError(error);
+            return failure(errorDetail(error));
         }
     }
 
-    const getWorkflow = async (name: string): Promise<WorkflowData | undefined | WorkflowDataError> => {
+    const getWorkflow = async (name: string): Promise<Result<WorkflowData | undefined>> => {
         try {
-            return await executeDbOperation(db.workflows.get(name));
+            return success(await executeDbOperation(db.workflows.get(name)));
         } catch (error) {
-            return handleError(error);
+            return failure(errorDetail(error));
         }
     }
 
-    const addWorkflow = async (data: WorkflowData): Promise<void | WorkflowDataError> => {
+    const addWorkflow = async (data: WorkflowData): Promise<Result> => {
         try {
             if (await workflowExists(data.name)) {
-                return {
-                    error: WorkflowDataStoreError.AlreadyExists,
-                    message: `Workflow '${data.name}' already exists.`
-                };
+                return failure(alreadyExistsError(data.name));
             }
             await executeDbOperation(db.workflows.add(data));
+            return success(undefined);
         } catch (error) {
-            return handleError(error);
+            return failure(errorDetail(error));
         }
     }
 
-    const updateWorkflow = async (data: WorkflowData): Promise<void | WorkflowDataError> => {
+    const updateWorkflow = async (data: WorkflowData): Promise<Result> => {
         try {
             const itemExists = await workflowExists(data.name);
             if (!itemExists) {
-                return {
-                    error: WorkflowDataStoreError.DoesNotExist,
-                    message: `Workflow '${data.name}' does not exist.`
-                };
+                return failure(notFoundError(data.name));
             }
+
             await executeDbOperation(db.workflows.put(data));
+            return success(undefined);
         } catch (error) {
-            return handleError(error);
+            return failure(errorDetail(error));
         }
     }
 
-    const addOrUpdateWorkflow = async (data: WorkflowData): Promise<void | WorkflowDataError> => {
+    const addOrUpdateWorkflow = async (data: WorkflowData): Promise<Result> => {
         try {
             await executeDbOperation(db.workflows.put(data));
+            return success(undefined);
         } catch (error) {
-            return handleError(error);
+            return failure(errorDetail(error));
         }
     }
 
-    const deleteWorkflow = async (name: string): Promise<void | WorkflowDataError> => {
+    const deleteWorkflow = async (name: string): Promise<Result> => {
         try {
             const itemExists = await workflowExists(name);
             if (itemExists) {
                 await db.workflows.delete(name);
             }
+            return success(undefined);
         } catch (error) {
-            return handleError(error);
+            return failure(errorDetail(error));
         }
     }
 
-    const handleError = (error: unknown): WorkflowDataError => {
+    const errorDetail = (error: unknown) => {
         const message = error instanceof Error ? error.message : 'Unknown error';
-        return {error: WorkflowDataStoreError.Fatal, message: message};
+        return fatalError(message);
     };
 
     return {
