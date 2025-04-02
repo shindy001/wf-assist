@@ -8,7 +8,7 @@
     import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
     import PrintStringNode from "./nodes/PrintStringNode.svelte";
     import {type WorkflowData} from "../models/WorkflowData";
-    import {useWorkflowDataStore, type WorkflowDataError} from "../stores/workflowDataStore";
+    import {useWorkflowDataStore} from "../stores/workflowDataStore";
     import {useWorkflowExecutor} from "../executors/workflowExecutor";
     import type {FlowData} from "../models/FlowData";
     import {throttle} from "lodash";
@@ -47,17 +47,16 @@
     });
 
     const initializeWorkflow = async () => {
-        let result: WorkflowData | WorkflowDataError | undefined = undefined;
         if (activeWorkflow) {
-            result = await workflowDataStore.getWorkflow(activeWorkflow);
-        }
+            let result = await workflowDataStore.getWorkflow(activeWorkflow);
 
-        if ((result as WorkflowDataError).error) {
-            console.error(result);
-            return undefined;
-        }
+            if (!result.isSuccessful) {
+                console.error(result.error);
+                return undefined;
+            }
 
-        return result as WorkflowData;
+            return result.data;
+        }
     };
 
     initializeWorkflow()
