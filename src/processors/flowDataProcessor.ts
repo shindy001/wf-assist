@@ -1,12 +1,13 @@
 ﻿import type {FlowData} from "../models/FlowData";
-import {type ExecutionItem, ExecutionStatus} from "../models/WorkflowData";
+import {type ExecutionItem} from "../models/WorkflowData";
 
 export function useFlowDataProcessor() {
 
     /**
      * Converts FlowData to graph of node dependencies and inDegree (incoming edges)
      * @param {FlowData} data - collection of nodes and edges of flow diagram
-     * @returns { graph: { [key: string]: string[] }, inDegree: { [key: string]: number }} - execution order of nodeIds
+     * @returns { graph: { [key: string]: string[] }, inDegree: { [key: string]: number }} - graph of nodes with edges
+     * @remarks inDegree = the number of incoming edges to a node (vertex)
      */
     const buildDependencyGraph = (data: FlowData):
         {
@@ -32,11 +33,10 @@ export function useFlowDataProcessor() {
     /**
      * Calculates dependency graph and then uses Kahn’s Algorithm to topologically order the graph nodes - https://en.wikipedia.org/wiki/Topological_sorting
      * @param {FlowData} data - collection of nodes and edges of flow diagram
-     * @returns {string[]} - execution order of nodeIds
+     * @returns {string[]} - calculated execution order of nodes specified by node Ids
      */
-    const calculateNodeExecutionOrder = (data: FlowData) => {
+    const calculateNodeExecutionOrder = (data: FlowData): string[] => {
         const {graph, inDegree} = buildDependencyGraph(data);
-
         let queue: string[] = [];
         let order: string[] = [];
 
@@ -61,21 +61,25 @@ export function useFlowDataProcessor() {
         return order;
     }
 
+    /**
+     * Calculates dependency graph, topologically orders the nodes and returns nodes according to execution order
+     * @param {FlowData} data - collection of nodes and edges of flow diagram
+     * @returns Array<ExecutionItem> - execution order of nodeIds
+     */
     const createExecutionList = (data: FlowData): Array<ExecutionItem> => {
         const nodeExecutionOrder = calculateNodeExecutionOrder(data);
 
         return nodeExecutionOrder.map(nodeId => {
             const node = data.nodes.find(node => node.id === nodeId);
-            return {id: nodeId, type: node?.type ?? "", data: node?.data, status: ExecutionStatus.Waiting}
+            if (!node?.type) {
+                throw Error(`Node with id:'${nodeId}' has no type specified, cannot create execution list without node type.`)
+            }
+
+            return {id: nodeId, type: node.type, data: node?.data}
         });
     }
 
     return {
-        /**
-         * Calculates dependency graph, topologically orders the nodes and returns nodes according to execution order
-         * @param {FlowData} data - collection of nodes and edges of flow diagram
-         * @returns {{id: string, type: any, data: any}[]} - execution order of nodeIds
-         */
         createExecutionList: createExecutionList
     };
 }
