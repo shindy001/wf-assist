@@ -33,7 +33,7 @@ export function useWorkflowDataStore() {
 
     const addWorkflow = async (data: WorkflowData): Promise<Result> => {
         try {
-            if (await workflowExists(data.name)) {
+            if ((await workflowExists(data.name)).data === true) {
                 return failure(alreadyExistsError(data.name));
             }
             await executeDbOperation(db.workflows.add(data));
@@ -45,7 +45,7 @@ export function useWorkflowDataStore() {
 
     const updateWorkflow = async (data: WorkflowData): Promise<Result> => {
         try {
-            const itemExists = await workflowExists(data.name);
+            const itemExists = (await workflowExists(data.name)).data;
             if (!itemExists) {
                 return failure(notFoundError(data.name));
             }
@@ -68,10 +68,7 @@ export function useWorkflowDataStore() {
 
     const deleteWorkflow = async (name: string): Promise<Result> => {
         try {
-            const itemExists = await workflowExists(name);
-            if (itemExists) {
-                await db.workflows.delete(name);
-            }
+            await db.workflows.delete(name);
             return success(undefined);
         } catch (error) {
             return failure(errorDetail(error));
