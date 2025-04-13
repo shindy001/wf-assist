@@ -5,9 +5,11 @@
     import {Tween} from "svelte/motion";
     import {quintOut} from "svelte/easing";
     import {fade} from "svelte/transition";
+    import {useWorkflowDataStore} from "../stores/workflowDataStore";
 
     const props: { class?: ClassValue } = $props();
     const dragAndDropContext = useDragAndDrop();
+    const workflowDataStore = useWorkflowDataStore();
     const collapsedWidth = 60;
     const expandedWidth = 400;
     let isSidebarCollapsed = $state(false);
@@ -30,6 +32,20 @@
         dragAndDropContext.nodeType = nodeType;
         event.dataTransfer.effectAllowed = "move";
     };
+
+    const addWorkflow = async () => {
+        const workflowData = {
+            name: `Undefined${Date.now()}`, // Needs unique name
+            flowData: {nodes: [], edges: []},
+            executionList: []
+        };
+        const result = await workflowDataStore.addWorkflow(workflowData);
+        if (result.isSuccessful) {
+            workflows.unshift(workflowData.name);
+        } else {
+            console.error(result.error);
+        }
+    }
 
     const nodeTypes = [...Object.values(FlowNodeType)];
 </script>
@@ -68,7 +84,8 @@
             <div class="p-4">
                 <div class="flex justify-between items-center">
                     <p class="text-lg">Workflows</p>
-                    <button aria-label="add workflow" class="p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                    <button aria-label="add workflow" class="p-2 rounded-md cursor-pointer hover:bg-gray-100"
+                            onclick={addWorkflow}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                              stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
