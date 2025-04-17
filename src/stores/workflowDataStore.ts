@@ -3,6 +3,7 @@ import type {WorkflowData} from "../models/WorkflowData";
 import {db, executeDbOperation} from "./db";
 import {failure, type Result, success} from "../models/Types/Result";
 import {ErrorDetail} from "../models/Types/ErrorDetail";
+import {liveQuery} from "dexie";
 
 const workflowDataError = (message: string) => new ErrorDetail("WorkflowDataError", message);
 const alreadyExistsError = (item: string) => workflowDataError(`${item} already exists.`);
@@ -13,6 +14,14 @@ export function useWorkflowDataStore() {
     if (!isBrowser()) {
         throw new Error("WorkflowDataStore cannot be used outside of a browser");
     }
+
+    /**
+     * Collection with all workflow names
+     * Note: Returns observable => collection is updated on any addition/deletion.
+     */
+    let workflowNames = liveQuery(
+        async () => await executeDbOperation(db.workflows.toCollection().primaryKeys())
+    );
 
     const workflowExists = async (name: string): Promise<Result<boolean>> => {
         try {
@@ -81,6 +90,7 @@ export function useWorkflowDataStore() {
     };
 
     return {
+        workflowNames,
         workflowExists,
         getWorkflow,
         addWorkflow,
