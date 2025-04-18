@@ -1,14 +1,12 @@
 ﻿<script lang="ts">
-    import {useDragAndDrop} from "./DragAndDropProvider.svelte";
-    import {FlowNodeType} from "../models/nodes/FlowNodeType";
     import type {ClassValue} from "svelte/elements";
     import {Tween} from "svelte/motion";
     import {quintOut} from "svelte/easing";
     import {fade} from "svelte/transition";
     import WorkflowList from "./WorkflowList.svelte";
+    import DraggableNodeList from "./DraggableNodeList.svelte";
 
     const props: { class?: ClassValue } = $props();
-    const dragAndDropContext = useDragAndDrop();
     const collapsedWidth = 60;
     const expandedWidth = 400;
     let isSidebarCollapsed = $state(false);
@@ -22,16 +20,6 @@
         sidebarWidth.set(isSidebarCollapsed ? collapsedWidth : expandedWidth);
     };
 
-    const onDragStart = (event: DragEvent, nodeType: string) => {
-        if (!event.dataTransfer) {
-            return null;
-        }
-
-        dragAndDropContext.nodeType = nodeType;
-        event.dataTransfer.effectAllowed = "move";
-    };
-
-    const nodeTypes = [...Object.values(FlowNodeType)];
 </script>
 
 <div class={[props.class, "h-full bg-white z-1 border border-gray-200 relative"]}
@@ -71,19 +59,7 @@
 
             <hr class="h-[1px] w-full text-gray-200">
 
-            <div class="p-4">
-                <p class="text-lg">Nodes</p>
-                <div class="w-full flex flex-wrap gap-3 px-2 py-4 rounded-md ">
-                    {#each nodeTypes as nodeType}
-                        <div
-                                role="listitem"
-                                class="p-4 bg-gray-200 hover:bg-gray-300 rounded-md font-[#222428] cursor-grab translate-px"
-                                ondragstart={(event) => onDragStart(event, nodeType)}
-                                draggable={true}
-                        >{nodeType}</div>
-                    {/each}
-                </div>
-            </div>
+            <DraggableNodeList/>
 
             <hr class="h-[1px] w-full text-gray-200">
         </aside>
