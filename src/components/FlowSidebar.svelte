@@ -59,7 +59,7 @@
 
             <hr class="h-[1px] w-full text-gray-200">
 
-            <DraggableNodeList/>
+            <DraggableNodeList class="p-4"/>
 
             <hr class="h-[1px] w-full text-gray-200">
         </aside>
