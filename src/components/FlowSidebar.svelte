@@ -53,14 +53,9 @@
             <div class="p-2">WF Assist</div>
         </div>
         <aside class={["flex flex-col"]} in:fade>
-            <div class="p-4">
-                <WorkflowList/>
-            </div>
-
+            <WorkflowList class="p-4"/>
             <hr class="h-[1px] w-full text-gray-200">
-
             <DraggableNodeList class="p-4"/>
-
             <hr class="h-[1px] w-full text-gray-200">
         </aside>
         <div class="p-2 flex justify-end absolute bottom-0 right-0">
