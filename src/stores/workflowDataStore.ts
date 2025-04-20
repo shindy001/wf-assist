@@ -1,5 +1,4 @@
-﻿import {isBrowser} from "../utils/platformUtils";
-import type {WorkflowData} from "../models/WorkflowData";
+﻿import type {WorkflowData} from "../models/WorkflowData";
 import {db, executeDbOperation} from "./db";
 import {failure, type Result, success} from "../models/Types/Result";
 import {ErrorDetail} from "../models/Types/ErrorDetail";
@@ -11,10 +10,6 @@ const notFoundError = (item: string) => workflowDataError(`${item} not found.`);
 const fatalError = (message: string) => workflowDataError(`Fatal: ${message}`);
 
 export function useWorkflowDataStore() {
-    if (!isBrowser()) {
-        throw new Error("WorkflowDataStore cannot be used outside of a browser");
-    }
-
     /**
      * Collection with all workflow names
      * Note: Returns observable => collection is updated on any addition/deletion.

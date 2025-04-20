@@ -1,1 +1,4 @@
-﻿export const isBrowser = () => typeof window !== "undefined";
+﻿export const isCompatiblePlatform =
+    () => typeof window !== 'undefined' &&
+        typeof localStorage !== 'undefined' &&
+        typeof indexedDB !== 'undefined';

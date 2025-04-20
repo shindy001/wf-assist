@@ -1,10 +1,4 @@
-﻿import {isBrowser} from "../utils/platformUtils";
-
-export function useLocalStore() {
-    if (!isBrowser()) {
-        throw new Error("LocalStore cannot be used outside of browser")
-    }
-
+﻿export function useLocalStore() {
     return {
         setItem: (key: string, data: any) => {
             localStorage.setItem(key, JSON.stringify(data));
