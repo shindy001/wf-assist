@@ -12,9 +12,9 @@
     import {useWorkflowExecutor} from "../executors/workflowExecutor";
     import type {FlowData} from "../models/FlowData";
     import {throttle} from "lodash";
-    import {useLocalStore} from "../stores/localStore";
+    import {useAppDataStore} from "../stores/appDataStore";
 
-    const localStore = useLocalStore();
+    const appDataStore = useAppDataStore();
     const workflowDataStore = useWorkflowDataStore();
     const flowDataProcessor = useFlowDataProcessor();
     const workflowExecutor = useWorkflowExecutor();
@@ -26,7 +26,6 @@
     };
 
     const {screenToFlowPosition} = $derived(useSvelteFlow());
-    const activeWorkflow: string | undefined = localStore.getItem("activeWorkflow");
 
     let currentWorkflow: WorkflowData | undefined;
     let nodes = $state.raw<Node[]>([]);
@@ -34,7 +33,6 @@
     const saveRateLimitInMilliseconds = 500;
 
     const throttleSave = throttle((data: { nodes: Node[], edges: Edge[] }) => {
-        localStore.setItem("activeWorkflow", "workflow1");
         const nodeExecutionList = flowDataProcessor.createExecutionList(data);
         console.log(nodeExecutionList);
     }, saveRateLimitInMilliseconds);
@@ -47,8 +45,8 @@
     });
 
     const initializeWorkflow = async () => {
-        if (activeWorkflow) {
-            let result = await workflowDataStore.getWorkflow(activeWorkflow);
+        if ($appDataStore?.activeWorkflowId) {
+            let result = await workflowDataStore.getWorkflow($appDataStore.activeWorkflowId);
 
             if (!result.isSuccessful) {
                 console.error(result.error);
