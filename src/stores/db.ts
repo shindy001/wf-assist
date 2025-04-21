@@ -21,6 +21,7 @@ export const executeDbOperation = async <T>(fn: Promise<T>): Promise<T> => {
         return await fn;
     } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown error';
+        console.error(message);
         throw new DBError(`Error during method: '${fn.constructor.name}': ${message}`);
     }
 }
@@ -29,9 +30,9 @@ export const executeDbOperation = async <T>(fn: Promise<T>): Promise<T> => {
  * Database provider
  */
 export const db = new Dexie("wf-assist") as Dexie & {
-    workflows: EntityTable<WorkflowData, "name">;
+    workflows: EntityTable<WorkflowData, "id">;
 };
 
 db.version(1).stores({
-    workflows: "name"
+    workflows: "id++, name"
 });

@@ -1,4 +1,4 @@
-﻿import type {WorkflowData} from "../models/WorkflowData";
+﻿import type {WorkflowData, WorkflowDataInput} from "../models/WorkflowData";
 import {db, executeDbOperation} from "./db";
 import {failure, type Result, success} from "../models/Types/Result";
 import {ErrorDetail} from "../models/Types/ErrorDetail";
@@ -14,13 +14,16 @@ export function useWorkflowDataStore() {
      * Collection with all workflow names
      * Note: Returns observable => collection is updated on any addition/deletion.
      */
-    let workflowNames = liveQuery(
-        async () => await executeDbOperation(db.workflows.toCollection().primaryKeys())
+    let workflowIdentities = liveQuery(
+        async () => await executeDbOperation(db.workflows.toArray()
+            .then((result: WorkflowData[]) => result.map(x => {
+                return {id: x.id, name: x.name}
+            })))
     );
 
     const workflowExists = async (name: string): Promise<Result<boolean>> => {
         try {
-            const existingItem = await executeDbOperation(db.workflows.get(name));
+            const existingItem = await executeDbOperation(db.workflows.where('name').equalsIgnoreCase(name).first());
             return success(existingItem !== undefined);
         } catch (error) {
             return failure(errorDetail(error));
@@ -29,13 +32,13 @@ export function useWorkflowDataStore() {
 
     const getWorkflow = async (name: string): Promise<Result<WorkflowData | undefined>> => {
         try {
-            return success(await executeDbOperation(db.workflows.get(name)));
+            return success(await executeDbOperation(db.workflows.where("name").equalsIgnoreCase(name).first()));
         } catch (error) {
             return failure(errorDetail(error));
         }
     }
 
-    const addWorkflow = async (data: WorkflowData): Promise<Result> => {
+    const addWorkflow = async (data: WorkflowDataInput): Promise<Result> => {
         try {
             if ((await workflowExists(data.name)).data === true) {
                 return failure(alreadyExistsError(data.name));
@@ -61,18 +64,21 @@ export function useWorkflowDataStore() {
         }
     }
 
-    const addOrUpdateWorkflow = async (data: WorkflowData): Promise<Result> => {
+    const deleteWorkflow = async (name: string): Promise<Result> => {
         try {
-            await executeDbOperation(db.workflows.put(data));
+            await executeDbOperation(db.workflows.where("name").equals(name).delete());
             return success(undefined);
         } catch (error) {
             return failure(errorDetail(error));
         }
     }
 
-    const deleteWorkflow = async (name: string): Promise<Result> => {
+    const renameWorkflow = async (id: number, newName: string): Promise<Result> => {
         try {
-            await db.workflows.delete(name);
+            const result1 = await executeDbOperation(db.workflows.where("id").equals(id).modify(data => {
+                data.name = newName;
+            }));
+            console.log(result1);
             return success(undefined);
         } catch (error) {
             return failure(errorDetail(error));
@@ -85,12 +91,12 @@ export function useWorkflowDataStore() {
     };
 
     return {
-        workflowNames,
+        workflowIdentities,
         workflowExists,
         getWorkflow,
         addWorkflow,
         updateWorkflow,
-        addOrUpdateWorkflow,
         deleteWorkflow,
+        renameWorkflow,
     }
 }

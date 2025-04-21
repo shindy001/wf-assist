@@ -7,6 +7,13 @@ export type ExecutionItem = {
 }
 
 export interface WorkflowData {
+    id: number;
+    name: string;
+    flowData: FlowData;
+    executionList: Array<ExecutionItem>;
+}
+
+export interface WorkflowDataInput {
     name: string;
     flowData: FlowData;
     executionList: Array<ExecutionItem>;
