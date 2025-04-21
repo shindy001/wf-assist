@@ -45,15 +45,8 @@
     });
 
     const initializeWorkflow = async () => {
-        if ($appDataStore?.activeWorkflowId) {
-            let result = await workflowDataStore.getWorkflow($appDataStore.activeWorkflowId);
-
-            if (!result.isSuccessful) {
-                console.error(result.error);
-                return undefined;
-            }
-
-            return result.data;
+        if ($appDataStore?.activeWorkflowName) {
+            return (await workflowDataStore.getWorkflow($appDataStore.activeWorkflowName)).data;
         }
     };
 
@@ -70,11 +63,11 @@
         const flowData: FlowData = {nodes: nodes, edges: edges};
         const nodeExecutionList = flowDataProcessor.createExecutionList(flowData);
         const workflowData: WorkflowData = {
-            name: "workflow1",
+            id: 0,
+            name: "testWorkflow",
             flowData: flowData,
             executionList: nodeExecutionList
         }
-        workflowDataStore.addOrUpdateWorkflow(workflowData);
         workflowExecutor.execute(workflowData);
     }
 
