@@ -7,10 +7,13 @@
     const props: { class?: ClassValue } = $props();
     const appDataStore = useAppDataStore();
     const workflowDataStore = useWorkflowDataStore();
-    const workflowNames = workflowDataStore.workflowNames;
+    const workflowIdentities = workflowDataStore.workflowIdentities;
     let contextMenuIsOpen = $state(false);
     let contextMenuPosition = $state<{x: number, y: number}>({x: 0, y: 0});
-    let contextMenuWorkflowId: string | null;
+    let contextMenuWorkflowName = $state<string | null>();
+    let contextMenuWorkflowRenameValue = $state<string | null>();
+    let showRenameInput = $state(false);
+    let showRenameNameAlreadyExistError = $state(false);
 
     onMount(() => {
         initializeActiveWorkflowId();
@@ -18,26 +21,38 @@
 
     function showContextMenu(event: MouseEvent) {
         event.preventDefault();
-        contextMenuWorkflowId = (event.target as HTMLElement)?.textContent;
+        hideRenameAction();
+
+        const targetText = (event.target as HTMLElement)?.textContent;
+        contextMenuWorkflowName = targetText;
+        contextMenuWorkflowRenameValue = targetText;
         contextMenuPosition = { x: event.clientX, y: event.clientY };
         contextMenuIsOpen = true;
     }
 
     function hideContextMenu() {
         contextMenuIsOpen = false;
-        contextMenuWorkflowId = null;
+    }
+
+    function showRenameAction() {
+        showRenameInput = true;
+    }
+
+    function hideRenameAction() {
+        showRenameInput = false;
+        showRenameNameAlreadyExistError = false;
     }
 
     function initializeActiveWorkflowId() {
-        workflowNames.subscribe(value => {
-            if (value && !value.includes($appDataStore.activeWorkflowId)) {
-                appDataStore.set({activeWorkflowId: value[0]})
+        workflowIdentities.subscribe(value => {
+            if (value && !value.map(x => x.name).includes($appDataStore.activeWorkflowName)) {
+                appDataStore.set({activeWorkflowName: value[0].name})
             }
         }).unsubscribe();
     }
 
-    function setActiveWorkflow(id: string) {
-        appDataStore.set({activeWorkflowId: id})
+    function setActiveWorkflow(name: string) {
+        appDataStore.set({activeWorkflowName: name})
     }
 
     async function addWorkflow() {
@@ -47,34 +62,51 @@
             executionList: []
         };
         const result = await workflowDataStore.addWorkflow(workflowData);
-        if (!result.isSuccessful) {
-            console.error(result.error);
+    }
+
+    async function renameWorkflow() {
+        if(!contextMenuWorkflowName || !contextMenuWorkflowRenameValue) {
+            return;
+        }
+
+        const activeWorkflowIdentity = $workflowIdentities.find(x => x.name === contextMenuWorkflowName);
+        if (!activeWorkflowIdentity
+            || contextMenuWorkflowName === contextMenuWorkflowRenameValue) {
+            hideRenameAction();
+            return;
+        }
+
+        const result = await workflowDataStore.workflowExists(contextMenuWorkflowRenameValue);
+        if (result.isSuccessful) {
+            if (result.data === true) {
+                showRenameNameAlreadyExistError = true;
+            }
+            else {
+                await workflowDataStore.renameWorkflow(activeWorkflowIdentity.id, contextMenuWorkflowRenameValue);
+                hideRenameAction();
+            }
         }
     }
 
     async function removeWorkflow() {
-        if (!contextMenuWorkflowId || !confirm(`Delete workflow ${contextMenuWorkflowId}?`)) {
+        if (!contextMenuWorkflowName || !confirm(`Delete workflow ${contextMenuWorkflowName}?`)) {
             return;
         }
 
-        const removingActiveWorkflow = contextMenuWorkflowId === $appDataStore.activeWorkflowId;
-        const result = await workflowDataStore.deleteWorkflow(contextMenuWorkflowId);
-        if (!result.isSuccessful) {
-            console.error(result.error);
-            return;
-        }
+        const removingActiveWorkflow = contextMenuWorkflowName === $appDataStore.activeWorkflowName;
+        const result = await workflowDataStore.deleteWorkflow(contextMenuWorkflowName);
 
-        if (removingActiveWorkflow) {
-            appDataStore.set({activeWorkflowId: $workflowNames[0]})
+        if (result.isSuccessful && removingActiveWorkflow) {
+            appDataStore.set({activeWorkflowName: $workflowIdentities[0].name})
         }
     }
 </script>
 
 <svelte:window onclick={hideContextMenu} onblur={hideContextMenu}/>
 {#if contextMenuIsOpen}
-    <div class="p-2 z-10 daisyui-menu absolute flex flex-col gap-1 bg-white shadow-xl rounded-md"
+    <div class="p-2 z-50 daisyui-menu absolute flex flex-col gap-1 bg-white shadow-xl rounded-md"
          style="left: {contextMenuPosition.x}px; top: {contextMenuPosition.y}px">
-        <button class="p-2 flex gap-1 items-center hover:cursor-pointer hover:bg-gray-100 rounded-md">
+        <button class="p-2 flex gap-1 items-center hover:cursor-pointer hover:bg-gray-100 rounded-md" onclick={showRenameAction}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
             </svg>
@@ -101,13 +133,13 @@
         </button>
     </div>
     <div class="flex flex-col gap-1">
-        {#each $workflowNames as workflow}
+        {#each $workflowIdentities as workflow}
             <button
                     class={[
-                        "px-2 flex gap-2 items-center content-center rounded-md cursor-pointer hover:bg-gray-100",
-                        workflow === $appDataStore.activeWorkflowId ? 'bg-gray-100' : ''
+                        "w-full px-2 flex gap-2 items-center content-center rounded-md cursor-pointer hover:bg-gray-100",
+                        workflow.name === $appDataStore.activeWorkflowName ? 'bg-gray-100' : ''
                     ]}
-                    onclick={() => setActiveWorkflow(workflow)}
+                    onclick={() => setActiveWorkflow(workflow.name)}
                     oncontextmenu={showContextMenu}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -115,8 +147,23 @@
                     <path stroke-linecap="round" stroke-linejoin="round"
                           d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
                 </svg>
-                <p>{workflow}</p>
+                <span class="w-full text-left">{workflow.name}</span>
             </button>
+
+            {#if workflow.name === contextMenuWorkflowName && showRenameInput}
+                <div class="relative">
+                    <input class="w-full px-2 pr-8 border border-black rounded-md" type="text" bind:value={contextMenuWorkflowRenameValue} required minlength="1">
+                    <button aria-label="rename" class="absolute z-10 right-1 top-[2px] rounded-md cursor-pointer hover:bg-gray-100 content-center items-center" onclick={renameWorkflow}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                        </svg>
+                    </button>
+                </div>
+
+                {#if showRenameNameAlreadyExistError}
+                    <p class="text-red-600">Name already exist.</p>
+                {/if}
+            {/if}
         {:else}
             <div class="px-2 flex gap-2 items-center content-center rounded-md cursor-pointer hover:bg-gray-100">
                 <p>No workflows yet, try adding one.</p>
