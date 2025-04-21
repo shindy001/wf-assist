@@ -1,12 +1,12 @@
 ﻿import {type Writable, writable} from "svelte/store";
 
 export interface AppData {
-    activeWorkflowId: string;
+    activeWorkflowName: string;
 }
 
 const appDataKey = "wfAssistAppData";
 const storedValue = localStorage.getItem(appDataKey);
-const initialValue: AppData = storedValue ? JSON.parse(storedValue) : { activeWorkflowId: undefined };
+const initialValue: AppData = storedValue ? JSON.parse(storedValue) : {activeWorkflowName: undefined};
 const appDataStore = writable<AppData>(initialValue);
 
 appDataStore.subscribe((appData) => {
