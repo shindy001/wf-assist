@@ -8,21 +8,26 @@
     const appDataStore = useAppDataStore();
     const workflowDataStore = useWorkflowDataStore();
     const workflowNames = workflowDataStore.workflowNames;
+    const workflowContextMenuIsOpen = $state(false);
+    const workflowContextMenuPosition = $state([0, 0]);
 
     onMount(() => {
-        const subscription = workflowNames.subscribe(value => {
-            if (value && !value.includes($appDataStore.activeWorkflowId)) {
-                appDataStore.set({activeWorkflowId: value[0]})
-                subscription.unsubscribe();
-            }
-        });
+        initializeActiveWorkflowId();
     });
 
-    const setActiveWorkflow = (id: string) => {
+    function initializeActiveWorkflowId() {
+        workflowNames.subscribe(value => {
+            if (value && !value.includes($appDataStore.activeWorkflowId)) {
+                appDataStore.set({activeWorkflowId: value[0]})
+            }
+        }).unsubscribe();
+    }
+
+    function setActiveWorkflow(id: string) {
         appDataStore.set({activeWorkflowId: id})
     }
 
-    const addWorkflow = async () => {
+    async function addWorkflow() {
         const workflowData = {
             name: `Undefined${Date.now()}`, // Needs unique name
             flowData: {nodes: [], edges: []},
@@ -54,6 +59,7 @@
                         workflow === $appDataStore.activeWorkflowId ? 'bg-gray-100' : ''
                     ]}
                     onclick={() => setActiveWorkflow(workflow)}
+
             >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                      stroke="currentColor" class="size-4">
