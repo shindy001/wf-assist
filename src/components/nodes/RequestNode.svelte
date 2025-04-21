@@ -1,6 +1,7 @@
 ﻿<script lang="ts" module>
     import {FlowNodeType} from "../../models/nodes/FlowNodeType";
-    import {type Node} from "@xyflow/svelte";
+    import {type Connection, type Node} from "@xyflow/svelte";
+    import type {EdgeBase} from "@xyflow/system"
     import type {RequestNode} from "../../models/nodes/RequestNode";
 
     export type RequestNodeType = Node<RequestNode, FlowNodeType.Request>;
@@ -31,11 +32,11 @@
     let initialWidth = $derived(getNodeWidth());
     let initialHeight = $derived(getNodeHeight());
 
-    function isValidInputConnection(connection) {
+    function isValidInputConnection(connection: Connection | EdgeBase) {
         return connection.source !== id;
     }
 
-    function isValidOutputConnection(connection) {
+    function isValidOutputConnection(connection: Connection | EdgeBase) {
         return connection.targetHandle === "input-flow-pin";
     }
 
