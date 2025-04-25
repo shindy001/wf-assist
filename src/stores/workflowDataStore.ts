@@ -11,11 +11,11 @@ const fatalError = (message: string) => workflowDataError(`Fatal: ${message}`);
 
 export function useWorkflowDataStore() {
     /**
-     * Collection with all workflow names
+     * Collection with all workflow names in reverse order, last added => first in collection
      * Note: Returns observable => collection is updated on any addition/deletion.
      */
     let workflowIdentities = liveQuery(
-        async () => await executeDbOperation(db.workflows.toArray()
+        async () => await executeDbOperation(db.workflows.reverse().toArray()
             .then((result: WorkflowData[]) => result.map(x => {
                 return {id: x.id, name: x.name}
             })))
