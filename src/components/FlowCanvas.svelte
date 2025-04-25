@@ -64,10 +64,8 @@
 
     function setCurrentWorkflow(data: WorkflowData | undefined) {
         currentWorkflow = data;
-        if (data) {
-            nodes = data.flowData.nodes;
-            edges = data.flowData.edges;
-        }
+        nodes = data?.flowData.nodes ?? [];
+        edges = data?.flowData.edges ?? [];
     }
 
     function executeWorkflow() {
