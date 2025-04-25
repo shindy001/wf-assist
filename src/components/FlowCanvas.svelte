@@ -32,9 +32,14 @@
     let edges = $state.raw<Edge[]>([]);
     const saveRateLimitInMilliseconds = 500;
 
-    const throttleSave = throttle((data: { nodes: Node[], edges: Edge[] }) => {
+    const throttleSave = throttle(async (data: { nodes: Node[], edges: Edge[] }) => {
         const nodeExecutionList = flowDataProcessor.createExecutionList(data);
-        console.log(nodeExecutionList);
+        if (currentWorkflow) {
+            currentWorkflow.flowData.nodes = nodes;
+            currentWorkflow.flowData.edges = edges;
+            currentWorkflow.executionList = nodeExecutionList;
+            await workflowDataStore.updateWorkflow(currentWorkflow);
+        }
     }, saveRateLimitInMilliseconds);
 
     $effect(() => {
@@ -44,20 +49,26 @@
         });
     });
 
+    $effect(() => {
+        const activeWorkflowName = $appDataStore.activeWorkflowName;
+        if (currentWorkflow?.name !== activeWorkflowName) {
+            initializeWorkflow().then(setCurrentWorkflow);
+        }
+    })
+
     const initializeWorkflow = async () => {
         if ($appDataStore?.activeWorkflowName) {
             return (await workflowDataStore.getWorkflow($appDataStore.activeWorkflowName)).data;
         }
     };
 
-    initializeWorkflow()
-        .then((data) => {
-            currentWorkflow = data;
-            if (data) {
-                nodes = data.flowData.nodes;
-                edges = data.flowData.edges;
-            }
-        });
+    function setCurrentWorkflow(data: WorkflowData | undefined) {
+        currentWorkflow = data;
+        if (data) {
+            nodes = data.flowData.nodes;
+            edges = data.flowData.edges;
+        }
+    }
 
     function executeWorkflow() {
         const flowData: FlowData = {nodes: nodes, edges: edges};
