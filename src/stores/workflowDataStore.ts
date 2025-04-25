@@ -75,10 +75,9 @@ export function useWorkflowDataStore() {
 
     const renameWorkflow = async (id: number, newName: string): Promise<Result> => {
         try {
-            const result1 = await executeDbOperation(db.workflows.where("id").equals(id).modify(data => {
+            const result = await executeDbOperation(db.workflows.where("id").equals(id).modify(data => {
                 data.name = newName;
             }));
-            console.log(result1);
             return success(undefined);
         } catch (error) {
             return failure(errorDetail(error));
