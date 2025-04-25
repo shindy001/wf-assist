@@ -61,7 +61,8 @@
             flowData: {nodes: [], edges: []},
             executionList: []
         };
-        const result = await workflowDataStore.addWorkflow(workflowData);
+        await workflowDataStore.addWorkflow(workflowData);
+        setActiveWorkflow(workflowData.name);
     }
 
     async function renameWorkflow() {
@@ -94,10 +95,17 @@
         }
 
         const removingActiveWorkflow = contextMenuWorkflowName === $appDataStore.activeWorkflowName;
+        const nextWorkflow = $workflowIdentities.find(x => x.name !== contextMenuWorkflowName);
         const result = await workflowDataStore.deleteWorkflow(contextMenuWorkflowName);
 
-        if (result.isSuccessful && removingActiveWorkflow) {
-            appDataStore.set({activeWorkflowName: $workflowIdentities[0].name})
+        if (result.isSuccessful) {
+            if (removingActiveWorkflow && nextWorkflow) {
+                setActiveWorkflow(nextWorkflow.name);
+            }
+
+            if (!nextWorkflow) {
+                await addWorkflow();
+            }
         }
     }
 </script>
