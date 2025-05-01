@@ -1,5 +1,5 @@
 ﻿import type {WorkflowData, WorkflowDataInput} from "../models/WorkflowData";
-import {db, executeDbOperation} from "./db";
+import {db, executeDbOperation} from "../shared/db";
 import {failure, type Result, success} from "../models/Types/Result";
 import {ErrorDetail} from "../models/Types/ErrorDetail";
 import {liveQuery} from "dexie";

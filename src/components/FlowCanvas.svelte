@@ -12,7 +12,7 @@
     import {useWorkflowExecutor} from "../executors/workflowExecutor";
     import type {FlowData} from "../models/FlowData";
     import {throttle} from "lodash";
-    import {useAppDataStore} from "../stores/appDataStore";
+    import {useAppDataStore} from "../shared/appDataStore";
 
     const appDataStore = useAppDataStore();
     const workflowDataStore = useWorkflowDataStore();
