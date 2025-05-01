@@ -1,8 +1,8 @@
 <script>
-    import FlowSidebar from "./components/FlowSidebar.svelte";
-    import FlowCanvas from "./components/FlowCanvas.svelte";
+    import FlowSidebar from "./workflows/components/FlowSidebar.svelte";
+    import FlowCanvas from "./workflows/components/FlowCanvas.svelte";
     import {SvelteFlowProvider} from "@xyflow/svelte";
-    import DragAndDropProvider from "./components/DragAndDropProvider.svelte";
+    import DragAndDropProvider from "./workflows/components/DragAndDropProvider.svelte";
 </script>
 
 <div id="content__root" style:height="100vh" style:width="100vw" class="relative">

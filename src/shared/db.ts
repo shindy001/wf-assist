@@ -1,5 +1,5 @@
 ﻿import Dexie, {type EntityTable} from "dexie";
-import type {WorkflowData} from "../models/WorkflowData";
+import type {WorkflowData} from "../workflows/models/WorkflowData";
 
 /**
  * Represents error that happened during {@link db} call
