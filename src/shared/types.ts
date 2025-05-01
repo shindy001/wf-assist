@@ -1,4 +1,12 @@
-﻿import type {ErrorDetail} from "./ErrorDetail";
+﻿export class ErrorDetail {
+    name: string;
+    message: string;
+
+    constructor(name: string, message: string) {
+        this.name = name;
+        this.message = message;
+    }
+}
 
 export type Result<T = void> = {
     isSuccessful: true;
@@ -20,4 +28,4 @@ export const failure = (error: ErrorDetail): Result<never> => ({
     isSuccessful: false,
     data: undefined,
     error: error,
-})
+});
