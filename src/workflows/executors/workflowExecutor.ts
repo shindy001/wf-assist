@@ -1,7 +1,5 @@
-﻿import {type WorkflowData} from "../models/WorkflowData";
-import {FlowNodeType} from "../models/nodes/FlowNodeType";
+﻿import {FlowNodeType, type NodeExecutor, type WorkflowData} from "../types";
 import {usePrintStringNodeExecutor} from "./nodes/printStringNodeExecutor";
-import type {NodeExecutor} from "../models/nodes/NodeExecutor";
 
 const executorMap: Record<string, NodeExecutor<any>> = {
     [FlowNodeType.PrintString]: usePrintStringNodeExecutor(),

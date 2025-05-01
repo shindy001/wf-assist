@@ -1,5 +1,4 @@
-﻿import type {FlowData} from "../models/FlowData";
-import {type ExecutionItem} from "../models/WorkflowData";
+﻿import type {ExecutionItem, FlowData} from "../types";
 
 export function useFlowDataProcessor() {
 

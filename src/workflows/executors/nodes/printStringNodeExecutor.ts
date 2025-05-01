@@ -1,5 +1,4 @@
-﻿import type {NodeExecutor} from "../../models/nodes/NodeExecutor";
-import type {PrintStringNode} from "../../models/nodes/PrintStringNode";
+﻿import type {NodeExecutor, PrintStringNode} from "../../types";
 
 export function usePrintStringNodeExecutor(): NodeExecutor<PrintStringNode> {
     return {

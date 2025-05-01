@@ -1,16 +1,15 @@
 ﻿<script lang="ts">
     import {Background, Controls, type Edge, MiniMap, type Node, SvelteFlow, useSvelteFlow} from '@xyflow/svelte';
     import '@xyflow/svelte/dist/style.css';
-    import {FlowNodeType} from "../models/nodes/FlowNodeType";
+    import type {FlowData} from "../types";
+    import {FlowNodeType, type WorkflowData} from "../types";
     import RequestNode from "./nodes/RequestNode.svelte";
     import {useDragAndDrop} from "./DragAndDropProvider.svelte";
     import {useFlowDataProcessor} from "../processors/flowDataProcessor";
     import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
     import PrintStringNode from "./nodes/PrintStringNode.svelte";
-    import {type WorkflowData} from "../models/WorkflowData";
     import {useWorkflowDataStore} from "../stores/workflowDataStore";
     import {useWorkflowExecutor} from "../executors/workflowExecutor";
-    import type {FlowData} from "../models/FlowData";
     import {throttle} from "lodash";
     import {useAppDataStore} from "../../shared/appDataStore";
 

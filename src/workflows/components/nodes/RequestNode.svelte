@@ -1,8 +1,7 @@
 ﻿<script lang="ts" module>
-    import {FlowNodeType} from "../../models/nodes/FlowNodeType";
+    import {FlowNodeType, type RequestNode} from "../../types";
     import {type Connection, type Node} from "@xyflow/svelte";
     import type {EdgeBase} from "@xyflow/system"
-    import type {RequestNode} from "../../models/nodes/RequestNode";
 
     export type RequestNodeType = Node<RequestNode, FlowNodeType.Request>;
 </script>

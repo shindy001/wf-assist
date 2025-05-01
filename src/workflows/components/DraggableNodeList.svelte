@@ -1,5 +1,5 @@
 ﻿<script lang="ts">
-    import {FlowNodeType} from "../models/nodes/FlowNodeType";
+    import {FlowNodeType} from "../types";
     import {useDragAndDrop} from "./DragAndDropProvider.svelte";
     import type {ClassValue} from "svelte/elements";
 
