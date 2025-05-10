@@ -29,9 +29,26 @@ export function useWorkflowDataStore() {
         }
     }
 
+    const isEmpty = async (): Promise<Result<boolean>> => {
+        try {
+            const firstItem = await executeDbOperation(db.workflows.toCollection().first());
+            return success(firstItem === undefined);
+        } catch (error) {
+            return failure(errorDetail(error));
+        }
+    }
+
     const getWorkflow = async (name: string): Promise<Result<WorkflowData | undefined>> => {
         try {
             return success(await executeDbOperation(db.workflows.where("name").equalsIgnoreCase(name).first()));
+        } catch (error) {
+            return failure(errorDetail(error));
+        }
+    }
+
+    const getWorkflowById = async (id: number): Promise<Result<WorkflowData | undefined>> => {
+        try {
+            return success(await executeDbOperation(db.workflows.get(id)));
         } catch (error) {
             return failure(errorDetail(error));
         }
@@ -91,7 +108,9 @@ export function useWorkflowDataStore() {
     return {
         workflowIdentities,
         workflowExists,
+        isEmpty,
         getWorkflow,
+        getWorkflowById,
         addWorkflow,
         updateWorkflow,
         deleteWorkflow,

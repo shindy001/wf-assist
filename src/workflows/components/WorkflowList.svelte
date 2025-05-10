@@ -7,7 +7,7 @@
     const props: { class?: ClassValue } = $props();
     const appDataStore = useAppDataStore();
     const workflowDataStore = useWorkflowDataStore();
-    const workflowIdentities = workflowDataStore.workflowIdentities;
+    let workflowIdentitiesObservable = workflowDataStore.workflowIdentities;
     let contextMenuIsOpen = $state(false);
     let contextMenuPosition = $state<{x: number, y: number}>({x: 0, y: 0});
     let contextMenuWorkflowName = $state<string | null>();
@@ -15,8 +15,8 @@
     let showRenameInput = $state(false);
     let showRenameNameAlreadyExistError = $state(false);
 
-    onMount(() => {
-        initializeActiveWorkflowId();
+    onMount(async () => {
+        await initializeActiveWorkflow();
     });
 
     function showContextMenu(event: MouseEvent) {
@@ -30,25 +30,19 @@
         contextMenuIsOpen = true;
     }
 
-    function hideContextMenu() {
-        contextMenuIsOpen = false;
-    }
-
-    function showRenameAction() {
-        showRenameInput = true;
-    }
-
-    function hideRenameAction() {
-        showRenameInput = false;
-        showRenameNameAlreadyExistError = false;
-    }
-
-    function initializeActiveWorkflowId() {
-        workflowIdentities.subscribe(value => {
-            if (value && !value.map(x => x.name).includes($appDataStore.activeWorkflowName)) {
-                appDataStore.set({activeWorkflowName: value[0].name})
-            }
-        }).unsubscribe();
+    async function initializeActiveWorkflow() {
+        const activeWorkflowName = $appDataStore.activeWorkflowName;
+        if (activeWorkflowName && (await workflowDataStore.workflowExists(activeWorkflowName)).data === true) {
+            return;
+        }
+        else if ((await workflowDataStore.isEmpty()).data === true) {
+            await addWorkflow();
+            return;
+        }
+        else {
+            const workflow = (await workflowDataStore.getWorkflowById(1)).data;
+            setActiveWorkflow(workflow?.name ?? "");
+        }
     }
 
     function setActiveWorkflow(name: string) {
@@ -70,7 +64,7 @@
             return;
         }
 
-        const activeWorkflowIdentity = $workflowIdentities.find(x => x.name === contextMenuWorkflowName);
+        const activeWorkflowIdentity = $workflowIdentitiesObservable.find(x => x.name === contextMenuWorkflowName);
         if (!activeWorkflowIdentity
             || contextMenuWorkflowName === contextMenuWorkflowRenameValue) {
             hideRenameAction();
@@ -95,7 +89,7 @@
         }
 
         const removingActiveWorkflow = contextMenuWorkflowName === $appDataStore.activeWorkflowName;
-        const nextWorkflow = $workflowIdentities.find(x => x.name !== contextMenuWorkflowName);
+        const nextWorkflow = $workflowIdentitiesObservable.find(x => x.name !== contextMenuWorkflowName);
         const result = await workflowDataStore.deleteWorkflow(contextMenuWorkflowName);
 
         if (result.isSuccessful) {
@@ -107,6 +101,19 @@
                 await addWorkflow();
             }
         }
+    }
+
+    function hideContextMenu() {
+        contextMenuIsOpen = false;
+    }
+
+    function showRenameAction() {
+        showRenameInput = true;
+    }
+
+    function hideRenameAction() {
+        showRenameInput = false;
+        showRenameNameAlreadyExistError = false;
     }
 </script>
 
@@ -141,7 +148,7 @@
         </button>
     </div>
     <div class="flex flex-col gap-1">
-        {#each $workflowIdentities as workflow}
+        {#each $workflowIdentitiesObservable as workflow}
             <button
                     class={[
                         "w-full px-2 flex gap-2 items-center content-center rounded-md cursor-pointer hover:bg-gray-100",
