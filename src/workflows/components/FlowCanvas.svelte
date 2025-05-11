@@ -4,14 +4,14 @@
     import type {FlowData} from "../types";
     import {FlowNodeType, type WorkflowData} from "../types";
     import RequestNode from "./nodes/RequestNode.svelte";
-    import {useDragAndDrop} from "./DragAndDropProvider.svelte";
+    import {useDragAndDrop} from "../../lib/components/DragAndDropProvider.svelte";
     import {useFlowDataProcessor} from "../processors/flowDataProcessor";
     import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
     import PrintStringNode from "./nodes/PrintStringNode.svelte";
     import {useWorkflowDataStore} from "../stores/workflowDataStore";
     import {useWorkflowExecutor} from "../executors/workflowExecutor";
     import {throttle} from "lodash";
-    import {useAppDataStore} from "../../shared/appDataStore";
+    import {useAppDataStore} from "../../lib/stores/appDataStore";
 
     const appDataStore = useAppDataStore();
     const workflowDataStore = useWorkflowDataStore();

@@ -1,7 +1,7 @@
 ﻿<script lang="ts">
     import {useWorkflowDataStore} from "../stores/workflowDataStore";
     import type {ClassValue} from "svelte/elements";
-    import {useAppDataStore} from "../../shared/appDataStore";
+    import {useAppDataStore} from "../../lib/stores/appDataStore";
     import {onMount} from "svelte";
 
     const props: { class?: ClassValue } = $props();

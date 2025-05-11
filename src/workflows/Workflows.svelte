@@ -1,7 +1,7 @@
 ﻿<script>
     import {SvelteFlowProvider} from "@xyflow/svelte";
     import FlowSidebar from "./components/FlowSidebar.svelte";
-    import DragAndDropProvider from "./components/DragAndDropProvider.svelte";
+    import DragAndDropProvider from "../lib/components/DragAndDropProvider.svelte";
     import FlowCanvas from "./components/FlowCanvas.svelte";
 </script>
 

@@ -1,6 +1,6 @@
 ﻿<script lang="ts">
     import {FlowNodeType} from "../types";
-    import {useDragAndDrop} from "./DragAndDropProvider.svelte";
+    import {useDragAndDrop} from "../../lib/components/DragAndDropProvider.svelte";
     import type {ClassValue} from "svelte/elements";
 
     const props: { class?: ClassValue } = $props();

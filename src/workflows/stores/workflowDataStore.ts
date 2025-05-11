@@ -1,6 +1,6 @@
 ﻿import type {WorkflowData, WorkflowDataInput} from "../types";
-import {ErrorDetail, failure, type Result, success} from "../../shared/types";
-import {db, executeDbOperation} from "../../shared/db";
+import {ErrorDetail, failure, type Result, success} from "../../lib/types";
+import {db, executeDbOperation} from "../../lib/stores/db";
 import {liveQuery} from "dexie";
 
 const workflowDataError = (message: string) => new ErrorDetail("WorkflowDataError", message);
