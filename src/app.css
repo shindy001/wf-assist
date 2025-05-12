@@ -24,11 +24,11 @@ body {
 
 .input-flow-pin.svelte-flow__handle,
 .output-flow-pin.svelte-flow__handle {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     border-radius: 0;
     border: none;
-    background: white no-repeat center center fixed url('data:image/svg+xml,<svg class="text-gray-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 16 4-4-4-4m6 8 4-4-4-4"/></svg>')
+    background: white no-repeat center center fixed url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="gray" d="M9.575 12L5 7.4L6.4 6l6 6l-6 6L5 16.6zm6.6 0L11.6 7.4L13 6l6 6l-6 6l-1.4-1.4z" /></svg>');
 }
 
 .node-pin {
