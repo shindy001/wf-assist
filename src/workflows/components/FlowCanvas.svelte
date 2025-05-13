@@ -8,13 +8,13 @@
     import {useFlowDataProcessor} from "../processors/flowDataProcessor";
     import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
     import PrintStringNode from "./nodes/PrintStringNode.svelte";
-    import {useWorkflowDataStore} from "../stores/workflowDataStore";
+    import {useWorkflowDataService} from "../stores/workflowDataService";
     import {useWorkflowExecutor} from "../executors/workflowExecutor";
     import {throttle} from "lodash";
     import {useAppDataStore} from "../../lib/stores/appDataStore";
 
     const appDataStore = useAppDataStore();
-    const workflowDataStore = useWorkflowDataStore();
+    const workflowDataService = useWorkflowDataService();
     const flowDataProcessor = useFlowDataProcessor();
     const workflowExecutor = useWorkflowExecutor();
     const dragAndDropContext = useDragAndDrop();
@@ -37,7 +37,7 @@
             currentWorkflow.flowData.nodes = nodes;
             currentWorkflow.flowData.edges = edges;
             currentWorkflow.executionList = nodeExecutionList;
-            await workflowDataStore.updateWorkflow(currentWorkflow);
+            await workflowDataService.updateWorkflow(currentWorkflow);
         }
     }, saveRateLimitInMilliseconds);
 
@@ -57,7 +57,7 @@
 
     const initializeWorkflow = async () => {
         if ($appDataStore?.activeWorkflowName) {
-            return (await workflowDataStore.getWorkflow($appDataStore.activeWorkflowName)).data;
+            return (await workflowDataService.getWorkflow($appDataStore.activeWorkflowName)).data;
         }
     };
 
