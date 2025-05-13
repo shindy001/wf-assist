@@ -13,6 +13,10 @@ appDataStore.subscribe((appData) => {
     localStorage.setItem(appDataKey, JSON.stringify(appData));
 });
 
+export function setActiveWorkflow(name: string) {
+    appDataStore.set({activeWorkflowName: name});
+}
+
 export function useAppDataStore(): Writable<AppData> {
     return appDataStore;
 }
