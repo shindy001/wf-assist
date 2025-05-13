@@ -1,14 +1,16 @@
 ﻿<script lang="ts">
-    import {useWorkflowDataStore} from "../stores/workflowDataStore";
+    import {useWorkflowDataService} from "../stores/workflowDataService";
     import type {ClassValue} from "svelte/elements";
-    import {useAppDataStore} from "../../lib/stores/appDataStore";
+    import {useAppDataStore, setActiveWorkflow} from "../../lib/stores/appDataStore";
     import {onMount} from "svelte";
     import Icon from "../../lib/components/Icon.svelte";
+    import {createInitializeActiveWorkflowCommand} from "../commands/initializeActiveWorkflowCommand";
 
     const props: { class?: ClassValue } = $props();
     const appDataStore = useAppDataStore();
-    const workflowDataStore = useWorkflowDataStore();
-    let workflowIdentitiesObservable = workflowDataStore.workflowIdentities;
+    const workflowDataService = useWorkflowDataService();
+    const initializeActiveWorkflowCommand = createInitializeActiveWorkflowCommand(appDataStore, workflowDataService);
+    let workflowIdentitiesObservable = workflowDataService.workflowIdentities;
     let contextMenuIsOpen = $state(false);
     let contextMenuPosition = $state<{x: number, y: number}>({x: 0, y: 0});
     let contextMenuWorkflowName = $state<string | null>();
@@ -17,7 +19,7 @@
     let showRenameNameAlreadyExistError = $state(false);
 
     onMount(async () => {
-        await initializeActiveWorkflow();
+        await initializeActiveWorkflowCommand();
     });
 
     function showContextMenu(event: MouseEvent) {
@@ -31,33 +33,9 @@
         contextMenuIsOpen = true;
     }
 
-    async function initializeActiveWorkflow() {
-        const activeWorkflowName = $appDataStore.activeWorkflowName;
-        if (activeWorkflowName && (await workflowDataStore.workflowExists(activeWorkflowName)).data === true) {
-            return;
-        }
-        else if ((await workflowDataStore.isEmpty()).data === true) {
-            await addWorkflow();
-            return;
-        }
-        else {
-            const workflow = (await workflowDataStore.getWorkflowById(1)).data;
-            setActiveWorkflow(workflow?.name ?? "");
-        }
-    }
-
-    function setActiveWorkflow(name: string) {
-        appDataStore.set({activeWorkflowName: name})
-    }
-
     async function addWorkflow() {
-        const workflowData = {
-            name: `Undefined${Date.now()}`, // Needs unique name
-            flowData: {nodes: [], edges: []},
-            executionList: []
-        };
-        await workflowDataStore.addWorkflow(workflowData);
-        setActiveWorkflow(workflowData.name);
+        const newWorkflow = (await workflowDataService.addEmptyWorkflow()).data;
+        setActiveWorkflow(newWorkflow?.name ?? "");
     }
 
     async function renameWorkflow() {
@@ -72,13 +50,13 @@
             return;
         }
 
-        const result = await workflowDataStore.workflowExists(contextMenuWorkflowRenameValue);
+        const result = await workflowDataService.workflowExists(contextMenuWorkflowRenameValue);
         if (result.isSuccessful) {
             if (result.data === true) {
                 showRenameNameAlreadyExistError = true;
             }
             else {
-                await workflowDataStore.renameWorkflow(activeWorkflowIdentity.id, contextMenuWorkflowRenameValue);
+                await workflowDataService.renameWorkflow(activeWorkflowIdentity.id, contextMenuWorkflowRenameValue);
                 hideRenameAction();
             }
         }
@@ -91,7 +69,7 @@
 
         const removingActiveWorkflow = contextMenuWorkflowName === $appDataStore.activeWorkflowName;
         const nextWorkflow = $workflowIdentitiesObservable.find(x => x.name !== contextMenuWorkflowName);
-        const result = await workflowDataStore.deleteWorkflow(contextMenuWorkflowName);
+        const result = await workflowDataService.deleteWorkflow(contextMenuWorkflowName);
 
         if (result.isSuccessful) {
             if (removingActiveWorkflow && nextWorkflow) {
