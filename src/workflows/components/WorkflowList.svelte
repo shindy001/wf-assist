@@ -34,8 +34,8 @@
     }
 
     async function addWorkflow() {
-        const newWorkflow = (await workflowDataService.addEmptyWorkflow()).data;
-        setActiveWorkflow(newWorkflow?.name ?? "");
+        const newWorkflowName = await workflowDataService.addEmptyWorkflow();
+        setActiveWorkflow(newWorkflowName);
     }
 
     async function renameWorkflow() {
@@ -50,15 +50,11 @@
             return;
         }
 
-        const result = await workflowDataService.workflowExists(contextMenuWorkflowRenameValue);
-        if (result.isSuccessful) {
-            if (result.data === true) {
-                showRenameNameAlreadyExistError = true;
-            }
-            else {
-                await workflowDataService.renameWorkflow(activeWorkflowIdentity.id, contextMenuWorkflowRenameValue);
-                hideRenameAction();
-            }
+        if (await workflowDataService.workflowExists(contextMenuWorkflowRenameValue)) {
+            showRenameNameAlreadyExistError = true;
+        } else {
+            await workflowDataService.renameWorkflow(activeWorkflowIdentity.id, contextMenuWorkflowRenameValue);
+            hideRenameAction();
         }
     }
 
@@ -69,16 +65,14 @@
 
         const removingActiveWorkflow = contextMenuWorkflowName === $appDataStore.activeWorkflowName;
         const nextWorkflow = $workflowIdentitiesObservable.find(x => x.name !== contextMenuWorkflowName);
-        const result = await workflowDataService.deleteWorkflow(contextMenuWorkflowName);
 
-        if (result.isSuccessful) {
-            if (removingActiveWorkflow && nextWorkflow) {
-                setActiveWorkflow(nextWorkflow.name);
-            }
+        await workflowDataService.deleteWorkflow(contextMenuWorkflowName);
+        if (removingActiveWorkflow && nextWorkflow) {
+            setActiveWorkflow(nextWorkflow.name);
+        }
 
-            if (!nextWorkflow) {
-                await addWorkflow();
-            }
+        if (!nextWorkflow) {
+            await addWorkflow();
         }
     }
 

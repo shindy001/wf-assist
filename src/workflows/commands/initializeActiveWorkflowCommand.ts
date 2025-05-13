@@ -8,10 +8,9 @@ export function createInitializeActiveWorkflowCommand(
 ) {
     return async ()=> {
         const activeWorkflowName = get(appDataStore).activeWorkflowName;
-        if (activeWorkflowName && (await workflowDataStore.workflowExists(activeWorkflowName)).data === true) {
+        if (activeWorkflowName && (await workflowDataStore.workflowExists(activeWorkflowName))) {
             return;
-        }
-        else if ((await workflowDataStore.isEmpty()).data === true) {
+        } else if ((await workflowDataStore.isEmpty())) {
             await addEmptyWorkflow();
             return;
         }
@@ -21,12 +20,12 @@ export function createInitializeActiveWorkflowCommand(
     }
 
     async function setDefaultActiveWorkflow() {
-        const workflow = (await workflowDataStore.getWorkflowById(1)).data;
+        const workflow = await workflowDataStore.getWorkflowById(1);
         setActiveWorkflow(workflow?.name ?? "")
     }
 
     async function addEmptyWorkflow() {
-        const workflow = (await workflowDataStore.addEmptyWorkflow()).data;
-        setActiveWorkflow(workflow?.name ?? "");
+        const newEmptyWorkflowName = await workflowDataStore.addEmptyWorkflow();
+        setActiveWorkflow(newEmptyWorkflowName);
     }
 }

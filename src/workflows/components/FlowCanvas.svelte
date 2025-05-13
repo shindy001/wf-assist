@@ -57,7 +57,7 @@
 
     const initializeWorkflow = async () => {
         if ($appDataStore?.activeWorkflowName) {
-            return (await workflowDataService.getWorkflow($appDataStore.activeWorkflowName)).data;
+            return await workflowDataService.getWorkflow($appDataStore.activeWorkflowName);
         }
     };
 

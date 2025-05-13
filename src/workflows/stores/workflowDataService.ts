@@ -1,12 +1,7 @@
 ﻿import type {WorkflowData, WorkflowDataInput} from "../types";
-import {ErrorDetail, failure, type Result, success} from "../../lib/types";
+import {AlreadyExistsError, type Either, ErrorDetail, NotFoundError} from "../../lib/types";
 import {db, executeDbOperation} from "../../lib/stores/db";
 import {liveQuery} from "dexie";
-
-const workflowDataError = (message: string) => new ErrorDetail("WorkflowDataError", message);
-const alreadyExistsError = (item: string) => workflowDataError(`${item} already exists.`);
-const notFoundError = (item: string) => workflowDataError(`${item} not found.`);
-const fatalError = (message: string) => workflowDataError(`Fatal: ${message}`);
 
 export class WorkflowDataService {
     /**
@@ -20,102 +15,68 @@ export class WorkflowDataService {
             })))
     );
 
-    workflowExists = async (name: string): Promise<Result<boolean>> => {
-        try {
-            const existingItem = await executeDbOperation(db.workflows.where('name').equalsIgnoreCase(name).first());
-            return success(existingItem !== undefined);
-        } catch (error) {
-            return failure(this.getErrorDetail(error));
-        }
+    workflowExists = async (name: string): Promise<boolean> => {
+        const existingItem = await executeDbOperation(db.workflows.where('name').equalsIgnoreCase(name).first());
+        return existingItem !== undefined;
     }
 
-    isEmpty = async (): Promise<Result<boolean>> => {
-        try {
-            const firstItem = await executeDbOperation(db.workflows.toCollection().first());
-            return success(firstItem === undefined);
-        } catch (error) {
-            return failure(this.getErrorDetail(error));
-        }
+    isEmpty = async (): Promise<boolean> => {
+        const firstItem = await executeDbOperation(db.workflows.toCollection().first());
+        return firstItem === undefined;
     }
 
-    getWorkflow = async (name: string): Promise<Result<WorkflowData | undefined>> => {
-        try {
-            return success(await executeDbOperation(db.workflows.where("name").equalsIgnoreCase(name).first()));
-        } catch (error) {
-            return failure(this.getErrorDetail(error));
-        }
+    getWorkflow = async (name: string): Promise<WorkflowData | undefined> => {
+        return await executeDbOperation(db.workflows.where("name").equalsIgnoreCase(name).first());
     }
 
-    getWorkflowById = async (id: number): Promise<Result<WorkflowData | undefined>> => {
-        try {
-            return success(await executeDbOperation(db.workflows.get(id)));
-        } catch (error) {
-            return failure(this.getErrorDetail(error));
-        }
+    getWorkflowById = async (id: number): Promise<WorkflowData | undefined> => {
+        return await executeDbOperation(db.workflows.get(id));
     }
 
-    addWorkflow = async (data: WorkflowDataInput): Promise<Result> => {
-        try {
-            if ((await this.workflowExists(data.name)).data === true) {
-                return failure(alreadyExistsError(data.name));
-            }
-            await executeDbOperation(db.workflows.add(data));
-            return success(undefined);
-        } catch (error) {
-            return failure(this.getErrorDetail(error));
+    addWorkflow = async (data: WorkflowDataInput): Promise<Either<AlreadyExistsError, void>> => {
+        if (await this.workflowExists(data.name)) {
+            return new AlreadyExistsError();
         }
+
+        await executeDbOperation(db.workflows.add(data));
     }
 
-    addEmptyWorkflow = async () => {
+    addEmptyWorkflow = async (): Promise<string> => {
         const workflowData = {
             name: `Undefined${Date.now()}`, // Needs unique name
             flowData: {nodes: [], edges: []},
             executionList: []
         };
         const result = await this.addWorkflow(workflowData);
-        return result.isSuccessful
-            ? success(workflowData)
-            : failure(result.error);
-    }
-
-    updateWorkflow = async (data: WorkflowData): Promise<Result> => {
-        try {
-            const itemExists = (await this.workflowExists(data.name)).data;
-            if (!itemExists) {
-                return failure(notFoundError(data.name));
-            }
-
-            await executeDbOperation(db.workflows.put(data));
-            return success(undefined);
-        } catch (error) {
-            return failure(this.getErrorDetail(error));
+        if (result instanceof AlreadyExistsError) {
+            // This should not happen when adding empty workflow with unique name
+            throw new ErrorDetail("WorkflowDataError", `Error while adding Empty workflow: item already exists.`);
         }
+        return workflowData.name;
     }
 
-    deleteWorkflow = async (name: string): Promise<Result> => {
-        try {
-            await executeDbOperation(db.workflows.where("name").equals(name).delete());
-            return success(undefined);
-        } catch (error) {
-            return failure(this.getErrorDetail(error));
+    updateWorkflow = async (data: WorkflowData): Promise<Either<NotFoundError, void>> => {
+        if (!(await this.workflowExists(data.name))) {
+            return new NotFoundError();
         }
+
+        await executeDbOperation(db.workflows.put(data));
     }
 
-    renameWorkflow = async (id: number, newName: string): Promise<Result> => {
-        try {
-            await executeDbOperation(db.workflows.where("id").equals(id).modify(data => {
-                data.name = newName;
-            }));
-            return success(undefined);
-        } catch (error) {
-            return failure(this.getErrorDetail(error));
+    deleteWorkflow = async (name: string): Promise<void> => {
+        await executeDbOperation(db.workflows.where("name").equals(name).delete());
+    }
+
+    renameWorkflow = async (id: number, newName: string): Promise<Either<NotFoundError, void>> => {
+        const workflowData = (await this.getWorkflowById(id));
+        if (!workflowData) {
+            return new NotFoundError();
         }
-    }
 
-    private getErrorDetail(error: unknown) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return fatalError(message);
-    };
+        await executeDbOperation(db.workflows.where("id").equals(id).modify(data => {
+            data.name = newName;
+        }));
+    }
 }
 
 export function useWorkflowDataService() {
