@@ -4,13 +4,13 @@ import {WorkflowDataService} from "../stores/workflowDataService";
 
 export function createInitializeActiveWorkflowCommand(
     appDataStore: Writable<AppData>,
-    workflowDataStore: WorkflowDataService
+    workflowDataService: WorkflowDataService
 ) {
     return async ()=> {
         const activeWorkflowName = get(appDataStore).activeWorkflowName;
-        if (activeWorkflowName && (await workflowDataStore.workflowExists(activeWorkflowName))) {
+        if (activeWorkflowName && (await workflowDataService.workflowExists(activeWorkflowName))) {
             return;
-        } else if ((await workflowDataStore.isEmpty())) {
+        } else if ((await workflowDataService.isEmpty())) {
             await addEmptyWorkflow();
             return;
         }
@@ -20,12 +20,12 @@ export function createInitializeActiveWorkflowCommand(
     }
 
     async function setDefaultActiveWorkflow() {
-        const workflow = await workflowDataStore.getWorkflowById(1);
+        const workflow = await workflowDataService.getWorkflowById(1);
         setActiveWorkflow(workflow?.name ?? "")
     }
 
     async function addEmptyWorkflow() {
-        const newEmptyWorkflowName = await workflowDataStore.addEmptyWorkflow();
+        const newEmptyWorkflowName = await workflowDataService.addEmptyWorkflow();
         setActiveWorkflow(newEmptyWorkflowName);
     }
 }
