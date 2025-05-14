@@ -7,6 +7,8 @@
     import {createInitializeActiveWorkflowCommand} from "../commands/initializeActiveWorkflowCommand";
     import {createAddEmptyWorkflowCommand} from "../commands/addEmptyWorkflowCommand";
     import {createRemoveWorkflowCommand} from "../commands/removeWorkflowCommand";
+    import {createRenameWorkflowCommand} from "../commands/renameWorkflowCommand";
+    import {AlreadyExistsError, NotFoundError} from "../../lib/types";
 
     const props: { class?: ClassValue } = $props();
     const appDataStore = useAppDataStore();
@@ -14,6 +16,7 @@
     const initializeActiveWorkflowCommand = createInitializeActiveWorkflowCommand(appDataStore, workflowDataService);
     const addEmptyWorkflowCommand = createAddEmptyWorkflowCommand(workflowDataService);
     const removeActiveWorkflowCommand = createRemoveWorkflowCommand(appDataStore, workflowDataService);
+    const renameWorkflowCommand = createRenameWorkflowCommand(workflowDataService);
     let workflowIdentitiesObservable = workflowDataService.workflowIdentities;
     let contextMenuIsOpen = $state(false);
     let contextMenuPosition = $state<{x: number, y: number}>({x: 0, y: 0});
@@ -42,18 +45,19 @@
             return;
         }
 
-        const activeWorkflowIdentity = $workflowIdentitiesObservable.find(x => x.name === contextMenuWorkflowName);
-        if (!activeWorkflowIdentity
-            || contextMenuWorkflowName === contextMenuWorkflowRenameValue) {
-            hideRenameAction();
-            return;
-        }
-
-        if (await workflowDataService.workflowExists(contextMenuWorkflowRenameValue)) {
-            showRenameNameAlreadyExistError = true;
-        } else {
-            await workflowDataService.renameWorkflow(activeWorkflowIdentity.id, contextMenuWorkflowRenameValue);
-            hideRenameAction();
+        const result = await renameWorkflowCommand(contextMenuWorkflowName, contextMenuWorkflowRenameValue);
+        switch (result?.constructor) {
+            case AlreadyExistsError:
+                showRenameNameAlreadyExistError = true;
+                break;
+            case NotFoundError:
+                console.error(`Error while renaming workflow, workflow does not exist. currentWorkflow:
+                    '${contextMenuWorkflowName}', newName: '${contextMenuWorkflowRenameValue}'`);
+                hideRenameAction();
+                break;
+            default:
+                hideRenameAction();
+                return;
         }
     }
 
