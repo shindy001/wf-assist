@@ -6,12 +6,14 @@
     import Icon from "../../lib/components/Icon.svelte";
     import {createInitializeActiveWorkflowCommand} from "../commands/initializeActiveWorkflowCommand";
     import {createAddEmptyWorkflowCommand} from "../commands/addEmptyWorkflowCommand";
+    import {createRemoveWorkflowCommand} from "../commands/removeWorkflowCommand";
 
     const props: { class?: ClassValue } = $props();
     const appDataStore = useAppDataStore();
     const workflowDataService = useWorkflowDataService();
     const initializeActiveWorkflowCommand = createInitializeActiveWorkflowCommand(appDataStore, workflowDataService);
     const addEmptyWorkflowCommand = createAddEmptyWorkflowCommand(workflowDataService);
+    const removeActiveWorkflowCommand = createRemoveWorkflowCommand(appDataStore, workflowDataService);
     let workflowIdentitiesObservable = workflowDataService.workflowIdentities;
     let contextMenuIsOpen = $state(false);
     let contextMenuPosition = $state<{x: number, y: number}>({x: 0, y: 0});
@@ -60,17 +62,7 @@
             return;
         }
 
-        const removingActiveWorkflow = contextMenuWorkflowName === $appDataStore.activeWorkflowName;
-        const nextWorkflow = $workflowIdentitiesObservable.find(x => x.name !== contextMenuWorkflowName);
-
-        await workflowDataService.deleteWorkflow(contextMenuWorkflowName);
-        if (removingActiveWorkflow && nextWorkflow) {
-            setActiveWorkflow(nextWorkflow.name);
-        }
-
-        if (!nextWorkflow) {
-            await addEmptyWorkflowCommand();
-        }
+        await removeActiveWorkflowCommand(contextMenuWorkflowName);
     }
 
     function hideContextMenu() {
