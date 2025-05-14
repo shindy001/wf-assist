@@ -10,8 +10,8 @@
     import PrintStringNode from "./nodes/PrintStringNode.svelte";
     import {useWorkflowDataService} from "../stores/workflowDataService";
     import {useWorkflowExecutor} from "../executors/workflowExecutor";
-    import {throttle} from "lodash";
     import {useAppDataStore} from "../../lib/stores/appDataStore";
+    import {createSaveWorkflowCommand} from "../commands/saveWorkflowCommand";
 
     const appDataStore = useAppDataStore();
     const workflowDataService = useWorkflowDataService();
@@ -23,29 +23,20 @@
         [FlowNodeType.ExtractProperty]: ExtractPropertyNode,
         [FlowNodeType.PrintString]: PrintStringNode,
     };
-
     const {screenToFlowPosition} = $derived(useSvelteFlow());
-
-    let currentWorkflow: WorkflowData | undefined;
+    const saveRateLimitInMilliseconds = 500;
+    const saveWorkflowCommand = createSaveWorkflowCommand(workflowDataService, saveRateLimitInMilliseconds);
+    let currentWorkflow: WorkflowData = {id: 0, name: "", flowData: {nodes: [], edges: []}, executionList: []};
     let nodes = $state.raw<Node[]>([]);
     let edges = $state.raw<Edge[]>([]);
-    const saveRateLimitInMilliseconds = 500;
 
-    const throttleSave = throttle(async (data: { nodes: Node[], edges: Edge[] }) => {
-        const nodeExecutionList = flowDataProcessor.createExecutionList(data);
+    $effect(() => {
         if (currentWorkflow) {
             currentWorkflow.flowData.nodes = nodes;
             currentWorkflow.flowData.edges = edges;
-            currentWorkflow.executionList = nodeExecutionList;
-            await workflowDataService.updateWorkflow(currentWorkflow);
+            currentWorkflow.executionList = flowDataProcessor.createExecutionList(currentWorkflow.flowData);
+            saveWorkflowCommand(currentWorkflow);
         }
-    }, saveRateLimitInMilliseconds);
-
-    $effect(() => {
-        throttleSave({
-            nodes: nodes,
-            edges: edges,
-        });
     });
 
     $effect(() => {
@@ -62,7 +53,7 @@
     };
 
     function setCurrentWorkflow(data: WorkflowData | undefined) {
-        currentWorkflow = data;
+        currentWorkflow = data ?? {id: 0, name: "", flowData: {nodes: [], edges: []}, executionList: []};
         nodes = data?.flowData.nodes ?? [];
         edges = data?.flowData.edges ?? [];
     }
