@@ -5,11 +5,13 @@
     import {onMount} from "svelte";
     import Icon from "../../lib/components/Icon.svelte";
     import {createInitializeActiveWorkflowCommand} from "../commands/initializeActiveWorkflowCommand";
+    import {createAddEmptyWorkflowCommand} from "../commands/addEmptyWorkflowCommand";
 
     const props: { class?: ClassValue } = $props();
     const appDataStore = useAppDataStore();
     const workflowDataService = useWorkflowDataService();
     const initializeActiveWorkflowCommand = createInitializeActiveWorkflowCommand(appDataStore, workflowDataService);
+    const addEmptyWorkflowCommand = createAddEmptyWorkflowCommand(workflowDataService);
     let workflowIdentitiesObservable = workflowDataService.workflowIdentities;
     let contextMenuIsOpen = $state(false);
     let contextMenuPosition = $state<{x: number, y: number}>({x: 0, y: 0});
@@ -31,11 +33,6 @@
         contextMenuWorkflowRenameValue = targetText;
         contextMenuPosition = { x: event.clientX, y: event.clientY };
         contextMenuIsOpen = true;
-    }
-
-    async function addWorkflow() {
-        const newWorkflowName = await workflowDataService.addEmptyWorkflow();
-        setActiveWorkflow(newWorkflowName);
     }
 
     async function renameWorkflow() {
@@ -72,7 +69,7 @@
         }
 
         if (!nextWorkflow) {
-            await addWorkflow();
+            await addEmptyWorkflowCommand();
         }
     }
 
@@ -109,7 +106,7 @@
     <div class="flex justify-between items-center">
         <p class="text-lg">Workflows</p>
         <button aria-label="add workflow" class="p-2 rounded-md cursor-pointer hover:bg-gray-100"
-                onclick={addWorkflow}>
+                onclick={addEmptyWorkflowCommand}>
             <Icon name="material-symbols--add"/>
         </button>
     </div>
