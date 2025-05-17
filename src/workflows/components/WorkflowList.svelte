@@ -44,7 +44,8 @@
         contextMenuIsOpen = true;
     }
 
-    async function renameWorkflow() {
+    async function renameWorkflow(event: SubmitEvent) {
+        event.preventDefault();
         if(!contextMenuWorkflowName || !contextMenuWorkflowRenameValue) {
             return;
         }
@@ -127,10 +128,13 @@
 
             {#if workflow.name === contextMenuWorkflowName && showRenameInput}
                 <div class="relative">
-                    <input class="w-full px-2 pr-12 border border-black rounded-md" type="text" bind:value={contextMenuWorkflowRenameValue} minlength="1">
-                    <button aria-label="rename" class="absolute z-10 right-[1px] top-[1px] px-1 rounded-md cursor-pointer bg-gray-300 hover:bg-gray-100 content-center items-center" onclick={renameWorkflow}>
-                        Save
-                    </button>
+                    <form onsubmit={renameWorkflow}>
+                        <label for="rename">Name: (at least one a-Z or numeric char)</label>
+                        <input id="rename" class="w-full px-2 pr-12 border border-black rounded-md" bind:value={contextMenuWorkflowRenameValue} required pattern="\s*(\S\s*)&lbrace;1,&rbrace;">
+                        <button type="submit" class="absolute z-10 right-[1px] bottom-[1px] px-1 rounded-md cursor-pointer bg-gray-300 hover:bg-gray-100 content-center items-center">
+                            Save
+                        </button>
+                    </form>
                 </div>
 
                 {#if showRenameNameAlreadyExistError}
