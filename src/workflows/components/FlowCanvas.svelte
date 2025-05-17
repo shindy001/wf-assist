@@ -1,4 +1,10 @@
-﻿<script lang="ts">
+﻿<script module>
+    import {useAppState} from "../../lib/stores/appState.svelte.js";
+
+    const appState = await useAppState();
+</script>
+
+<script lang="ts">
     import {Background, Controls, type Edge, MiniMap, type Node, SvelteFlow, useSvelteFlow} from '@xyflow/svelte';
     import '@xyflow/svelte/dist/style.css';
     import type {FlowData} from "../types";
@@ -10,10 +16,8 @@
     import PrintStringNode from "./nodes/PrintStringNode.svelte";
     import {useWorkflowDataService} from "../stores/workflowDataService";
     import {useWorkflowExecutor} from "../executors/workflowExecutor";
-    import {useAppDataStore} from "../../lib/stores/appDataStore";
     import {createSaveWorkflowCommand} from "../commands/saveWorkflowCommand";
 
-    const appDataStore = useAppDataStore();
     const workflowDataService = useWorkflowDataService();
     const flowDataProcessor = useFlowDataProcessor();
     const workflowExecutor = useWorkflowExecutor();
@@ -23,12 +27,14 @@
         [FlowNodeType.ExtractProperty]: ExtractPropertyNode,
         [FlowNodeType.PrintString]: PrintStringNode,
     };
+
     const {screenToFlowPosition} = $derived(useSvelteFlow());
     const saveRateLimitInMilliseconds = 500;
     const saveWorkflowCommand = createSaveWorkflowCommand(workflowDataService, saveRateLimitInMilliseconds);
     let currentWorkflow: WorkflowData = {id: 0, name: "", flowData: {nodes: [], edges: []}, executionList: []};
     let nodes = $state.raw<Node[]>([]);
     let edges = $state.raw<Edge[]>([]);
+    let activeWorkflowName = $derived(appState.lastActiveWorkflowName);
 
     $effect(() => {
         if (currentWorkflow) {
@@ -40,15 +46,14 @@
     });
 
     $effect(() => {
-        const activeWorkflowName = $appDataStore.activeWorkflowName;
         if (currentWorkflow?.name !== activeWorkflowName) {
             initializeWorkflow().then(setCurrentWorkflow);
         }
     })
 
     const initializeWorkflow = async () => {
-        if ($appDataStore?.activeWorkflowName) {
-            return await workflowDataService.getWorkflow($appDataStore.activeWorkflowName);
+        if (activeWorkflowName) {
+            return await workflowDataService.getWorkflow(activeWorkflowName);
         }
     };
 

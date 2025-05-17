@@ -1,7 +1,12 @@
-﻿<script lang="ts">
+﻿<script lang="ts" module>
+    import {useAppState} from "../../lib/stores/appState.svelte";
+
+    const appState = await useAppState();
+</script>
+
+<script lang="ts">
     import {useWorkflowDataService} from "../stores/workflowDataService";
     import type {ClassValue} from "svelte/elements";
-    import {useAppDataStore, setActiveWorkflow} from "../../lib/stores/appDataStore";
     import {onMount} from "svelte";
     import Icon from "../../lib/components/Icon.svelte";
     import {createInitializeActiveWorkflowCommand} from "../commands/initializeActiveWorkflowCommand";
@@ -11,11 +16,10 @@
     import {AlreadyExistsError, NotFoundError} from "../../lib/types";
 
     const props: { class?: ClassValue } = $props();
-    const appDataStore = useAppDataStore();
     const workflowDataService = useWorkflowDataService();
-    const initializeActiveWorkflowCommand = createInitializeActiveWorkflowCommand(appDataStore, workflowDataService);
-    const addEmptyWorkflowCommand = createAddEmptyWorkflowCommand(workflowDataService);
-    const removeActiveWorkflowCommand = createRemoveWorkflowCommand(appDataStore, workflowDataService);
+    const initializeActiveWorkflowCommand = createInitializeActiveWorkflowCommand(appState, workflowDataService);
+    const addEmptyWorkflowCommand = createAddEmptyWorkflowCommand(appState, workflowDataService);
+    const removeActiveWorkflowCommand = createRemoveWorkflowCommand(appState, workflowDataService);
     const renameWorkflowCommand = createRenameWorkflowCommand(workflowDataService);
     let workflowIdentitiesObservable = workflowDataService.workflowIdentities;
     let contextMenuIsOpen = $state(false);
@@ -111,11 +115,10 @@
             <button
                     class={[
                         "w-full px-2 flex gap-2 items-center content-center rounded-md cursor-pointer hover:bg-gray-100",
-                        workflow.name === $appDataStore.activeWorkflowName ? 'bg-gray-100' : '',
+                        workflow.name === appState.lastActiveWorkflowName ? 'bg-gray-100' : '',
                         workflow.name === contextMenuWorkflowName && showRenameInput ? 'hidden' : ''
-
                     ]}
-                    onclick={() => setActiveWorkflow(workflow.name)}
+                    onclick={() => appState.setActiveWorkflowName(workflow.name)}
                     oncontextmenu={showContextMenu}
             >
                 <Icon name="material-symbols--folder-data-outline-sharp"/>
@@ -124,7 +127,7 @@
 
             {#if workflow.name === contextMenuWorkflowName && showRenameInput}
                 <div class="relative">
-                    <input class="w-full px-2 pr-12 border border-black rounded-md" type="text" bind:value={contextMenuWorkflowRenameValue} required minlength="1">
+                    <input class="w-full px-2 pr-12 border border-black rounded-md" type="text" bind:value={contextMenuWorkflowRenameValue} minlength="1">
                     <button aria-label="rename" class="absolute z-10 right-[1px] top-[1px] px-1 rounded-md cursor-pointer bg-gray-300 hover:bg-gray-100 content-center items-center" onclick={renameWorkflow}>
                         Save
                     </button>

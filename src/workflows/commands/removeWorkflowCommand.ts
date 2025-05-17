@@ -1,13 +1,12 @@
-﻿import {type AppData, setActiveWorkflow} from "../../lib/stores/appDataStore";
-import {WorkflowDataService} from "../stores/workflowDataService";
-import {get, type Writable} from "svelte/store";
+﻿import {WorkflowDataService} from "../stores/workflowDataService";
+import type {AppState} from "../../lib/stores/appState.svelte";
 
 export function createRemoveWorkflowCommand(
-    appDataStore: Writable<AppData>,
+    appState: AppState,
     workflowDataService: WorkflowDataService
 ) {
     return async (workflowName: string)=> {
-        const removingActiveWorkflow = workflowName === get(appDataStore).activeWorkflowName;
+        const removingActiveWorkflow = workflowName === appState.lastActiveWorkflowName;
         await workflowDataService.deleteWorkflow(workflowName);
 
         if (removingActiveWorkflow) {
@@ -16,10 +15,11 @@ export function createRemoveWorkflowCommand(
     }
 
     async function setNextActiveWorkflow() {
-        let nextWorkflow = (await workflowDataService.getWorkflowById(1))?.name;
-        if (!nextWorkflow) {
-            nextWorkflow = await workflowDataService.addEmptyWorkflow();
+        let nextWorkflowName = (await workflowDataService.getLastWorkflow())?.name;
+        if (!nextWorkflowName) {
+            const nextWorkflowName = await workflowDataService.addEmptyWorkflow();
         }
-        setActiveWorkflow(nextWorkflow);
+
+        appState.lastActiveWorkflowName = nextWorkflowName ?? "";
     }
 }

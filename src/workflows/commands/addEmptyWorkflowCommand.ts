@@ -1,11 +1,11 @@
-﻿import {setActiveWorkflow} from "../../lib/stores/appDataStore";
-import {WorkflowDataService} from "../stores/workflowDataService";
+﻿import {WorkflowDataService} from "../stores/workflowDataService";
+import type {AppState} from "../../lib/stores/appState.svelte";
 
 export function createAddEmptyWorkflowCommand(
+    appState: AppState,
     workflowDataService: WorkflowDataService
 ) {
     return async ()=> {
-        const newWorkflowName = await workflowDataService.addEmptyWorkflow();
-        setActiveWorkflow(newWorkflowName);
+        appState.lastActiveWorkflowName = await workflowDataService.addEmptyWorkflow();
     }
 }
