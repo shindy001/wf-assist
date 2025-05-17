@@ -33,6 +33,10 @@ export class WorkflowDataService {
         return await executeDbOperation(db.workflows.get(id));
     }
 
+    getLastWorkflow = async (): Promise<WorkflowData | undefined> => {
+        return await executeDbOperation(db.workflows.toCollection().last());
+    }
+
     addWorkflow = async (data: WorkflowDataInput): Promise<Either<AlreadyExistsError, void>> => {
         if (await this.workflowExists(data.name)) {
             return new AlreadyExistsError();
