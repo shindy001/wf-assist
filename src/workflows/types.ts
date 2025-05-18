@@ -28,7 +28,7 @@ export interface WorkflowResults {
 }
 
 export interface NodeExecutor<T> {
-    execute: (executionId: string, node: T) => void;
+    execute: (executionId: string, node: T) => Promise<void>;
 }
 
 /**

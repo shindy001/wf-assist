@@ -7,7 +7,7 @@ const executorMap: Record<string, NodeExecutor<any>> = {
 
 export function useWorkflowExecutor() {
     return {
-        execute: (workflowName: string, executionList: Array<ExecutionItem>) => {
+        execute: async (workflowName: string, executionList: Array<ExecutionItem>) => {
             const executionId = `${workflowName}_${new Date().toISOString()}`
             console.info(`Starting workflow '${executionId}'."`);
 
@@ -18,7 +18,7 @@ export function useWorkflowExecutor() {
                         console.error("Aborting workflow run, cannot find workflow executor for node type: " + executionItem.nodeType);
                         break;
                     }
-                    executor.execute(executionId, executionItem.nodeData);
+                    await executor.execute(executionId, executionItem.nodeData);
                 } else {
                     console.error("Aborting workflow run, empty node type: " + executionItem.nodeType);
                 }
