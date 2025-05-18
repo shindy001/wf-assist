@@ -10,9 +10,7 @@ export function useRequestNodeExecutor(resultDataService: ResultsDataService): N
 
             const response = await fetch(new URL(nodeData.url), {
                 method: nodeData.requestType,
-                body: nodeData.requestBody
-                    ? JSON.stringify(nodeData.requestBody)
-                    : null,
+                body: nodeData.requestBody ? nodeData.requestBody : null,
                 headers: {
                     "Access-Control-Allow-Origin": "*",
                     "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
