@@ -16,10 +16,12 @@
     import {useWorkflowDataService} from "../stores/workflowDataService";
     import {useWorkflowExecutor} from "../executors/workflowExecutor";
     import {createSaveWorkflowCommand} from "../commands/saveWorkflowCommand";
+    import {useResultsDataService} from "../stores/resultsDataService";
 
     const workflowDataService = useWorkflowDataService();
     const flowDataProcessor = useFlowDataProcessor();
-    const workflowExecutor = useWorkflowExecutor();
+    const resultsDataService = useResultsDataService();
+    const workflowExecutor = useWorkflowExecutor(resultsDataService);
     const dragAndDropContext = useDragAndDrop();
     const additionalFlowNodes = {
         [FlowNodeType.Request]: RequestNode,

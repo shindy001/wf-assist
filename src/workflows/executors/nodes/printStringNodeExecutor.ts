@@ -1,21 +1,19 @@
 ﻿import type {NodeExecutor, PrintStringNode} from "../../types";
+import type {ResultsDataService} from "../../stores/resultsDataService";
+import {isObject} from "lodash";
 
-export function usePrintStringNodeExecutor(): NodeExecutor<PrintStringNode> {
+export function usePrintStringNodeExecutor(resultDataService: ResultsDataService): NodeExecutor<PrintStringNode> {
     return {
-        // TODO - simplify and clean processing logic
         execute: async (executionId: string, node: PrintStringNode) => {
             if (node.targetId) {
-                // TODO
-                // 1. Get data from executionStore
-                // 2. Get result from executed node node.targetId
-                // 3. Print result if there is any
-                const targetResult = "Nothing to print.";
+                const resultData = await resultDataService.getResults(executionId);
+                const targetNodeResults = resultData?.data[node.targetId];
 
-                if (node.useLogger) {
-                    console.log(targetResult);
-                } else {
-                    // TODO - print somewhere else???
-                }
+                console.log(isObject(targetNodeResults)
+                    ? JSON.stringify(targetNodeResults)
+                    : targetNodeResults ?? "Nothing to print");
+            } else {
+                console.warn(`PrintStringNode ${node.id} does not have targetId set, try to set edge to some existing node.`);
             }
         }
     }
