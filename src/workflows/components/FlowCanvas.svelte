@@ -7,7 +7,6 @@
 <script lang="ts">
     import {Background, Controls, type Edge, MiniMap, type Node, SvelteFlow, useSvelteFlow} from '@xyflow/svelte';
     import '@xyflow/svelte/dist/style.css';
-    import type {FlowData} from "../types";
     import {FlowNodeType, type WorkflowData} from "../types";
     import RequestNode from "./nodes/RequestNode.svelte";
     import {useDragAndDrop} from "../../lib/components/DragAndDropProvider.svelte";

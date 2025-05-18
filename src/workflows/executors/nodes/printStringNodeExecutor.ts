@@ -3,7 +3,7 @@
 export function usePrintStringNodeExecutor(): NodeExecutor<PrintStringNode> {
     return {
         // TODO - simplify and clean processing logic
-        execute: (node: PrintStringNode) => {
+        execute: (executionId: string, node: PrintStringNode) => {
             if (node.targetId) {
                 // TODO
                 // 1. Get data from executionStore
