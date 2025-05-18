@@ -1,10 +1,12 @@
 ﻿import {type ExecutionItem, FlowNodeType, type NodeExecutor} from "../types";
 import {usePrintStringNodeExecutor} from "./nodes/printStringNodeExecutor";
 import type {ResultsDataService} from "../stores/resultsDataService";
+import {useRequestNodeExecutor} from "./nodes/requestNodeExecutor";
 
 export function useWorkflowExecutor(resultDataService: ResultsDataService) {
     const executorMap: Record<string, NodeExecutor<any>> = {
         [FlowNodeType.PrintString]: usePrintStringNodeExecutor(resultDataService),
+        [FlowNodeType.Request]: useRequestNodeExecutor(resultDataService),
     }
 
     return {

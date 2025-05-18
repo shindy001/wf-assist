@@ -6,8 +6,8 @@ export function usePrintStringNodeExecutor(resultDataService: ResultsDataService
     return {
         execute: async (executionId: string, node: PrintStringNode) => {
             if (node.targetId) {
-                const resultData = await resultDataService.getResults(executionId);
-                const targetNodeResults = resultData?.data[node.targetId];
+                const results = await resultDataService.getResults(executionId);
+                const targetNodeResults = results?.data[node.targetId];
 
                 console.log(isObject(targetNodeResults)
                     ? JSON.stringify(targetNodeResults)
