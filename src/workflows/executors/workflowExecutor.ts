@@ -1,4 +1,4 @@
-﻿import {FlowNodeType, type NodeExecutor, type WorkflowData} from "../types";
+﻿import {type ExecutionItem, FlowNodeType, type NodeExecutor} from "../types";
 import {usePrintStringNodeExecutor} from "./nodes/printStringNodeExecutor";
 
 const executorMap: Record<string, NodeExecutor<any>> = {
@@ -7,23 +7,23 @@ const executorMap: Record<string, NodeExecutor<any>> = {
 
 export function useWorkflowExecutor() {
     return {
-        execute: (data: WorkflowData) => {
-            console.info(`Starting workflow '${data.name}'."`);
+        execute: (workflowName: string, executionList: Array<ExecutionItem>) => {
+            console.info(`Starting workflow '${workflowName}'."`);
 
-            for (const executionItem of data.executionList) {
-                if (executionItem.type) {
-                    const executor: NodeExecutor<any> | undefined = executorMap[executionItem.type];
+            for (const executionItem of executionList) {
+                if (executionItem.nodeType) {
+                    const executor: NodeExecutor<any> | undefined = executorMap[executionItem.nodeType];
                     if (!executor) {
-                        console.error("Aborting workflow run, cannot find workflow executor for node type: " + executionItem.type);
+                        console.error("Aborting workflow run, cannot find workflow executor for node type: " + executionItem.nodeType);
                         break;
                     }
-                    executor.execute(executionItem.data);
+                    executor.execute(executionItem.nodeData);
                 } else {
-                    console.error("Aborting workflow run, empty node type: " + executionItem.type);
+                    console.error("Aborting workflow run, empty node type: " + executionItem.nodeType);
                 }
             }
 
-            console.info(`Workflow '${data.name}' ended."`);
+            console.info(`Workflow '${workflowName}' ended."`);
         }
     }
 }

@@ -49,7 +49,6 @@ export class WorkflowDataService {
         const workflowData = {
             name: `Undefined${Date.now()}`, // Needs unique name
             flowData: {nodes: [], edges: []},
-            executionList: []
         };
         const result = await this.addWorkflow(workflowData);
         if (result instanceof AlreadyExistsError) {

@@ -6,22 +6,20 @@ export interface FlowData {
 }
 
 export type ExecutionItem = {
-    id: string;
-    type: string;
-    data?: Record<string, unknown>;
+    nodeId: string;
+    nodeType: string;
+    nodeData?: Record<string, unknown>;
 }
 
 export interface WorkflowData {
     id: number;
     name: string;
     flowData: FlowData;
-    executionList: Array<ExecutionItem>;
 }
 
 export interface WorkflowDataInput {
     name: string;
     flowData: FlowData;
-    executionList: Array<ExecutionItem>;
 }
 
 export interface NodeExecutor<T> {

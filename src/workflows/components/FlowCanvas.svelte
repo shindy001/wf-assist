@@ -31,7 +31,7 @@
     const {screenToFlowPosition} = $derived(useSvelteFlow());
     const saveRateLimitInMilliseconds = 500;
     const saveWorkflowCommand = createSaveWorkflowCommand(workflowDataService, saveRateLimitInMilliseconds);
-    let currentWorkflow: WorkflowData = {id: 0, name: "", flowData: {nodes: [], edges: []}, executionList: []};
+    let currentWorkflow: WorkflowData = {id: 0, name: "", flowData: {nodes: [], edges: []}};
     let nodes = $state.raw<Node[]>([]);
     let edges = $state.raw<Edge[]>([]);
     let activeWorkflowName = $derived(appState.lastActiveWorkflowName);
@@ -40,7 +40,6 @@
         if (currentWorkflow) {
             currentWorkflow.flowData.nodes = nodes;
             currentWorkflow.flowData.edges = edges;
-            currentWorkflow.executionList = flowDataProcessor.createExecutionList(currentWorkflow.flowData);
             saveWorkflowCommand(currentWorkflow);
         }
     });
@@ -58,21 +57,14 @@
     };
 
     function setCurrentWorkflow(data: WorkflowData | undefined) {
-        currentWorkflow = data ?? {id: 0, name: "", flowData: {nodes: [], edges: []}, executionList: []};
+        currentWorkflow = data ?? {id: 0, name: "", flowData: {nodes: [], edges: []}};
         nodes = data?.flowData.nodes ?? [];
         edges = data?.flowData.edges ?? [];
     }
 
     function executeWorkflow() {
-        const flowData: FlowData = {nodes: nodes, edges: edges};
-        const nodeExecutionList = flowDataProcessor.createExecutionList(flowData);
-        const workflowData: WorkflowData = {
-            id: 0,
-            name: "testWorkflow",
-            flowData: flowData,
-            executionList: nodeExecutionList
-        }
-        workflowExecutor.execute(workflowData);
+        const executionList = flowDataProcessor.createExecutionList(currentWorkflow.flowData);
+        workflowExecutor.execute(currentWorkflow.name, executionList);
     }
 
     const onDragOver = (event: DragEvent) => {

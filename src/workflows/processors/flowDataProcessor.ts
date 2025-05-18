@@ -74,7 +74,7 @@ export function useFlowDataProcessor() {
                 throw Error(`Node with id:'${nodeId}' has no type specified, cannot create execution list without node type.`)
             }
 
-            return {id: nodeId, type: node.type, data: node?.data}
+            return {nodeId: nodeId, nodeType: node.type, nodeData: node?.data}
         });
     }
 
