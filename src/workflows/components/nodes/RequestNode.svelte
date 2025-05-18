@@ -40,9 +40,18 @@
     }
 
     $effect(() => {
-        const data: RequestNode = {id: id, width: getNodeWidth(), height: getNodeHeight()};
-        updateNode(id, data);
-    })
+        updateNode(id, {width: getNodeWidth(), height: getNodeHeight()});
+    });
+
+    $effect(() => {
+        const data: RequestNode = {
+            id: id,
+            url: urlInputText,
+            requestType: selectedRequestType,
+            requestBody: requestBodyInputText
+        };
+        updateNodeData(id, data);
+    });
 </script>
 
 <NodeWrapper label="Request"
