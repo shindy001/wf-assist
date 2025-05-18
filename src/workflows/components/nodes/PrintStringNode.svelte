@@ -12,8 +12,8 @@
     const {updateNodeData} = useSvelteFlow();
     let {id}: NodeProps<PrintStringNodeType> = $props();
 
-    const connections = useNodeConnections({handleType: 'target'});
-    let currentConnectionId = $derived(connections.current[0]?.target);
+    const connections = useNodeConnections({handleType: "target"});
+    let currentConnectionId = $derived(connections.current[0]?.source);
     let inputIsConnectable = $derived(connections.current.length === 0);
 
     $effect(() => {
