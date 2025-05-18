@@ -22,6 +22,11 @@ export interface WorkflowDataInput {
     flowData: FlowData;
 }
 
+export interface WorkflowResults {
+    id: string;
+    data: Record<string, unknown>;
+}
+
 export interface NodeExecutor<T> {
     execute: (node: T) => void;
 }

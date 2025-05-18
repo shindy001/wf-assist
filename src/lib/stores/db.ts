@@ -1,5 +1,5 @@
 ﻿import Dexie, {type EntityTable} from "dexie";
-import type {WorkflowData} from "../../workflows/types";
+import type {WorkflowData, WorkflowResults} from "../../workflows/types";
 
 /**
  * Represents error that happened during {@link db} call
@@ -31,8 +31,10 @@ export const executeDbOperation = async <T>(fn: Promise<T>): Promise<T> => {
  */
 export const db = new Dexie("wf-assist") as Dexie & {
     workflows: EntityTable<WorkflowData, "id">;
+    results: EntityTable<WorkflowResults, "id">;
 };
 
 db.version(1).stores({
-    workflows: "id++, name"
+    workflows: "id++, name",
+    results: "id",
 });
