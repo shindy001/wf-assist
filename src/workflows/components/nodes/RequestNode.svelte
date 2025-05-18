@@ -40,7 +40,8 @@
     }
 
     $effect(() => {
-        updateNode(id, {width: getNodeWidth(), height: getNodeHeight()});
+        const data: RequestNode = {id: id, width: getNodeWidth(), height: getNodeHeight()};
+        updateNode(id, data);
     })
 </script>
 

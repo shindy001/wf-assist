@@ -18,7 +18,8 @@
     let inputIsConnectable = $derived(connections.current.length === 0);
 
     $effect(() => {
-        updateNodeData(id, {path: pathInput, targetId: currentConnectionId});
+        const data: ExtractPropertyNode = {id: id, path: pathInput, targetId: currentConnectionId};
+        updateNodeData(id, data);
     });
 </script>
 

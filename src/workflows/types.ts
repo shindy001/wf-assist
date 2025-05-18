@@ -41,17 +41,20 @@ export enum FlowNodeType {
     PrintString = "Print String",
 }
 
-export interface ExtractPropertyNode extends Record<string, unknown> {
+export interface NodeBase extends Record<string, unknown> {
+    id: string;
+}
+
+export interface ExtractPropertyNode extends NodeBase {
     path?: string;
     targetId?: string;
 }
 
-export interface PrintStringNode extends Record<string, unknown> {
-    useLogger: boolean;
+export interface PrintStringNode extends NodeBase {
     targetId?: string;
 }
 
-export interface RequestNode extends Record<string, unknown> {
+export interface RequestNode extends NodeBase {
     url?: string,
     requestType?: string,
     requestBody?: string,

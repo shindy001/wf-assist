@@ -10,15 +10,15 @@
     import {Handle, type NodeProps, Position, useNodeConnections, useSvelteFlow} from "@xyflow/svelte";
 
     const {updateNodeData} = useSvelteFlow();
-    let {id, data}: NodeProps<PrintStringNodeType> = $props();
+    let {id}: NodeProps<PrintStringNodeType> = $props();
 
     const connections = useNodeConnections({handleType: 'target'});
     let currentConnectionId = $derived(connections.current[0]?.target);
     let inputIsConnectable = $derived(connections.current.length === 0);
-    let useLogger: boolean = $state(data.useLogger ?? false);
 
     $effect(() => {
-        updateNodeData(id, {useLogger: useLogger, targetId: currentConnectionId});
+        const data: PrintStringNode = {id: id, targetId: currentConnectionId};
+        updateNodeData(id, data);
     });
 </script>
 
@@ -26,9 +26,5 @@
     <div class="flex-col space-y-2 w-full">
         <Handle id="input" type="target" class="node-pin" position={Position.Left}
                 isConnectable={inputIsConnectable}/>
-        <div class="flex gap-2 items-center">
-            <p class="font-bold">Use logger</p>
-            <input type="checkbox" bind:checked={useLogger} class="nodrag daisyui-checkbox"/>
-        </div>
     </div>
 </NodeWrapper>
