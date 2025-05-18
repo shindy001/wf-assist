@@ -19,7 +19,13 @@ export function useWorkflowExecutor(resultDataService: ResultsDataService) {
                         console.error("Aborting workflow run, cannot find workflow executor for node type: " + executionItem.nodeType);
                         break;
                     }
-                    await executor.execute(executionId, executionItem.nodeData);
+                    try {
+                        await executor.execute(executionId, executionItem.nodeData);
+                    } catch (error) {
+                        console.error(`Error executing ${executionItem.nodeType} ${executionItem.nodeId}: ${error}`);
+                        // TODO set execution store => workflowExecutionState to error
+                        return;
+                    }
                 } else {
                     console.error("Aborting workflow run, empty node type: " + executionItem.nodeType);
                 }
