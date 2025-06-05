@@ -1,0 +1,11 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Target Name="CopyStaticAssetsFromPackage" AfterTargets="Build">
+        <ItemGroup>
+            <_StaticFiles Include="$(MSBuildThisFileDirectory)..\wwwroot\**\*.*" />
+        </ItemGroup>
+
+        <Copy SourceFiles="@(_StaticFiles)"
+              DestinationFiles="@(_StaticFiles->'$(OutDir)wwwroot\wfassist\%(RecursiveDir)%(Filename)%(Extension)')"
+              SkipUnchangedFiles="true" />
+    </Target>
+</Project>

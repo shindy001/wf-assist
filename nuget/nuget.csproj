@@ -6,10 +6,34 @@
         <Nullable>enable</Nullable>
         <Title>wf-assist</Title>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>WfAssist</PackageId>
+        <PackageVersion>0.0.6-dev</PackageVersion>
+        <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
     </PropertyGroup>
+    
+    <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+        <ItemGroup>
+            <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))"/>
+        </ItemGroup>
+    </Target>
+    
+    <Target Name="BuildAndIncludeClient" BeforeTargets="BeforeBuild">
+        <Exec Command="bun run build" WorkingDirectory="$(MSBuildProjectDirectory)/../client/" />
+        <ItemGroup>
+            <Content Include="$(MSBuildProjectDirectory)/../client/dist/**/*.*">
+                <Pack>true</Pack>
+                <PackagePath>wwwroot</PackagePath>
+                <PackageCopyToOutput>true</PackageCopyToOutput>
+            </Content>
+        </ItemGroup>
+    </Target>
 
     <ItemGroup>
-      <ProjectReference Include="..\server\server.lib\server.lib.csproj" />
+        <None Include="buildTransitive\WfAssist.targets" Pack="true" PackagePath="buildTransitive\WfAssist.targets" />
+        <ProjectReference Include="..\server\server.lib\server.lib.csproj">
+          <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+          <IncludeAssets>server.lib.dll</IncludeAssets>
+      </ProjectReference>
     </ItemGroup>
 
 </Project>
