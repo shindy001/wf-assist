@@ -6,6 +6,14 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <Target Name="BuildAndCopyClient" BeforeTargets="AfterBuild">
+        <Exec Command="bun run build" WorkingDirectory="$(MSBuildProjectDirectory)/../../client/" />
+        <ItemGroup>
+            <AssetsSourceFiles Include="$(MSBuildProjectDirectory)/../../client/dist/**/*.*"/>
+        </ItemGroup>
+        <Copy SourceFiles="@(AssetsSourceFiles)" DestinationFolder="$(OutDir)wwwroot\wfassist\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    </Target>
+    
     <ItemGroup>
       <ProjectReference Include="..\server.lib\server.lib.csproj" />
     </ItemGroup>
