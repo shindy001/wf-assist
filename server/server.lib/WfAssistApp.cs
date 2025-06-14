@@ -6,9 +6,11 @@ namespace server.lib;
 public static class WfAssistApp
 {
     /// <summary>
-    /// 1. Registers static file hosting for wwwroot folder
-    /// 2. Registers api endpoints used by WfAssist app
-    /// 3. WfAssist app is available at [yourAppUrl]/wfAssist
+    /// 1. Registers static file hosting for wwwroot folder<br/>
+    /// 2. Registers api endpoints used by WfAssist app<br/>
+    /// 3. WfAssist client app and this lib project is bundled to a nuget in nuget project (on project build) in solution.
+    /// Nuget package output dir is [solutionDir/nuget/packages]<br/>
+    /// 4. If you are not using the nuget, you need to copy dist binaries to [your server host outputDir]/wwwroot/wfAssist
     /// </summary>
     /// <param name="app"></param>
     public static void UseWfAssistApp(this WebApplication app)
@@ -20,7 +22,7 @@ public static class WfAssistApp
             FileProvider = new PhysicalFileProvider(staticFilesPath)
         });
 
-        // Redirect to index
+        // Redirect to client index - wfAssist files (from nuget or dist) must be in [server host outputDir]/wwwroot/wfAssist
         app.MapGet("/wfAssist", (context) =>
         {
             context.Response.Redirect("/wfAssist/index.html");
