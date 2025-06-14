@@ -10,7 +10,7 @@
         <option name="disableDebugging" value="true" />
         <option name="executable">
           <ExecutableSnapshot>
-            <option name="id" value="runConfig:.NET Launch Settings Profile.server.host(with api): https" />
+            <option name="id" value="runConfig:.NET Launch Settings Profile.server.host: https" />
           </ExecutableSnapshot>
         </option>
       </ExecutableRowSnapshot>
