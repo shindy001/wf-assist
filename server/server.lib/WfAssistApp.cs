@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 
 namespace server.lib;
@@ -13,6 +14,7 @@ public static class WfAssistApp
     /// 4. If you are not using the nuget, you need to copy dist binaries to [your server host outputDir]/wwwroot/wfAssist
     /// </summary>
     /// <param name="app"></param>
+    // TODO - replace WebApplication param with IEndpointConventionBuilder and serve html and js files via get endpoints so app.UseStaticFiles middleware is not imposed by this lib
     public static void UseWfAssistApp(this WebApplication app)
     {
         // Register wwwroot static file hosting

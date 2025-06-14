@@ -5,17 +5,14 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
-
-    <Target Name="BuildAndCopyClient" BeforeTargets="AfterBuild">
-        <Exec Command="bun run build" WorkingDirectory="$(MSBuildProjectDirectory)/../../client/" />
-        <ItemGroup>
-            <AssetsSourceFiles Include="$(MSBuildProjectDirectory)/../../client/dist/**/*.*"/>
-        </ItemGroup>
-        <Copy SourceFiles="@(AssetsSourceFiles)" DestinationFolder="$(OutDir)wwwroot\wfassist\%(RecursiveDir)" SkipUnchangedFiles="true" />
-    </Target>
     
     <ItemGroup>
       <ProjectReference Include="..\server.lib\server.lib.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
+      <PackageReference Include="Scalar.AspNetCore" Version="2.4.16" />
     </ItemGroup>
 
 </Project>
