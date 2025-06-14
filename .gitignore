@@ -12,8 +12,9 @@ dist
 dist-ssr
 *.local
 
-# Project nuget packages
+# Project files/folders
 nuget/packages/
+*.[Dd]ot[Ss]ettings.user
 
 # Editor directories and files
 .vscode/*
