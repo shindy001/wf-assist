@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Project nuget packages
+nuget/packages/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

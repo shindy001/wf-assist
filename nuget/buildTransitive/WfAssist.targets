@@ -1,4 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <!-- Copy packaged client app files to [project output]/wwwroot/wfassist on build -->
     <Target Name="CopyStaticAssetsFromPackage" AfterTargets="Build">
         <ItemGroup>
             <_StaticFiles Include="$(MSBuildThisFileDirectory)..\wwwroot\**\*.*" />
