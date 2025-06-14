@@ -3,6 +3,7 @@ using Scalar.AspNetCore;
 using server.lib;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddOpenApi(opt =>
 {
     opt.AddDocumentTransformer((document, _, _) =>
@@ -16,12 +17,16 @@ builder.Services.AddOpenApi(opt =>
     });
 });
 
-var app = builder.Build();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllCorsPolicy", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+});
 
-app.UseWfAssistApp();
+var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors("AllowAllCorsPolicy");
     app.MapOpenApi();
     app.MapScalarApiReference(opt =>
     {
@@ -29,5 +34,7 @@ if (app.Environment.IsDevelopment())
         opt.EnabledTargets = [ScalarTarget.Shell, ScalarTarget.JavaScript];
     });
 }
+
+app.UseWfAssistApp(excludeEndpointsFromOpenApi: false);
 
 app.Run();
