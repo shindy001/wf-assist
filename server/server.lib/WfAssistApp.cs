@@ -17,6 +17,7 @@ public static class WfAssistApp
     {
         // Register wwwroot static file hosting
         var staticFilesPath = Path.Combine(AppContext.BaseDirectory, "wwwroot");
+        Directory.CreateDirectory(staticFilesPath);
         app.UseStaticFiles(new StaticFileOptions
         {
             FileProvider = new PhysicalFileProvider(staticFilesPath)
@@ -30,7 +31,7 @@ public static class WfAssistApp
         });
 
         // TODO - api endpoints
-        app.MapGet("/api", () => "Hello World!");
+        app.MapGet("/api", () => "Hello from WfAssist endpoint!");
 
     }
 }
