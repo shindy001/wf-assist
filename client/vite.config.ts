@@ -7,6 +7,12 @@ export default defineConfig({
     base: './',
     build: {
         target: 'esnext',
+        rollupOptions: {
+            output: {
+                entryFileNames: "[name].js",
+                assetFileNames: "[name][extname]",
+            }
+        }
     },
     plugins: [
         svelte(),
