@@ -1,6 +1,6 @@
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
-using server.lib;
+using WfAssist.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +35,6 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseWfAssistApp(excludeEndpointsFromOpenApi: false);
+app.UseWfAssistApp(excludeFromOpenApi: false);
 
 app.Run();
