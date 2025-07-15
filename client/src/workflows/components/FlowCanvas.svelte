@@ -17,6 +17,7 @@
     import {useWorkflowExecutor} from "../executors/workflowExecutor";
     import {createSaveWorkflowCommand} from "../commands/saveWorkflowCommand";
     import {useResultsDataService} from "../stores/resultsDataService";
+    import { Button } from "$lib/components/ui/button/index.js";
 
     const workflowDataService = useWorkflowDataService();
     const flowDataProcessor = useFlowDataProcessor();
@@ -101,9 +102,9 @@
 </script>
 
 <div class="w-full h-full">
-    <button class="absolute top-0 z-10 m-4" onclick={() => executeWorkflow()}>
+    <Button class="absolute top-0 z-10 m-4" onclick={() => executeWorkflow()}>
         Execute Flow
-    </button>
+    </Button>
     <SvelteFlow
             colorMode="system"
             bind:nodes
