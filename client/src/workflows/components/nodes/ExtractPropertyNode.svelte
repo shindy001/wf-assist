@@ -27,9 +27,9 @@
     <div class="flex-col space-y-2 w-full">
         <Handle id="input" type="target" class="node-pin" position={Position.Left}
                 isConnectable={inputIsConnectable}/>
-        <fieldset class="daisyui-fieldset">
-            <legend class="daisyui-fieldset-legend">Path</legend>
-            <input class="nodrag daisyui-input w-full" placeholder="Enter a property path (e.g. user.id)..."
+        <fieldset class="">
+            <legend class="">Path</legend>
+            <input class="nodrag w-full" placeholder="Enter a property path (e.g. user.id)..."
                    bind:value={pathInput}/>
         </fieldset>
         <Handle id="input" type="source" class="node-pin" position={Position.Right}/>

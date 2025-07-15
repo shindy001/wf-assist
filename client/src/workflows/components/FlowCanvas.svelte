@@ -101,10 +101,11 @@
 </script>
 
 <div class="w-full h-full">
-    <button class="daisyui-btn absolute top-0 z-10 m-4" onclick={() => executeWorkflow()}>
+    <button class="absolute top-0 z-10 m-4" onclick={() => executeWorkflow()}>
         Execute Flow
     </button>
     <SvelteFlow
+            colorMode="system"
             bind:nodes
             bind:edges
             nodeTypes={additionalFlowNodes}

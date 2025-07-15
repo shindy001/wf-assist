@@ -1,37 +1,11 @@
 @import "tailwindcss";
 
-@plugin "daisyui" {
-    themes: light --default;
-    prefix: "daisyui-";
-    root: "#app";
-}
-
 * {
     scrollbar-width: thin;
     scroll-behavior: smooth;
 }
 
-html,
-body {
-    margin: 0;
-    font-family: sans-serif;
-}
-
 #app {
     width: 100vw;
     height: 100vh;
-}
-
-.input-flow-pin.svelte-flow__handle,
-.output-flow-pin.svelte-flow__handle {
-    width: 20px;
-    height: 20px;
-    border-radius: 0;
-    border: none;
-    background: white no-repeat center center fixed url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="gray" d="M9.575 12L5 7.4L6.4 6l6 6l-6 6L5 16.6zm6.6 0L11.6 7.4L13 6l6 6l-6 6l-1.4-1.4z" /></svg>');
-}
-
-.node-pin {
-    width: 10px;
-    height: 10px;
 }

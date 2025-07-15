@@ -69,15 +69,15 @@
             </div>
         </div>
 
-        <fieldset class="daisyui-fieldset">
-            <legend class="daisyui-fieldset-legend">Url</legend>
-            <input class="nodrag daisyui-input w-full" placeholder="Enter a url..." bind:value={urlInputText}
+        <fieldset class="">
+            <legend class="">Url</legend>
+            <input class="nodrag w-full" placeholder="Enter a url..." bind:value={urlInputText}
                    onchange={() => updateNodeData(id, { url: urlInputText })}/>
         </fieldset>
 
-        <fieldset class="daisyui-fieldset">
-            <legend class="daisyui-fieldset-legend">Type</legend>
-            <select class="nodrag daisyui-select w-full" bind:value={selectedRequestType}
+        <fieldset class="">
+            <legend class="">Type</legend>
+            <select class="nodrag w-full" bind:value={selectedRequestType}
                     onchange={() =>{
                         updateNodeData(id, { requestType: selectedRequestType });
                     } }>
@@ -88,10 +88,10 @@
         </fieldset>
 
         {#if !isGetRequestType() }
-            <fieldset class=" daisyui-fieldset">
-                <legend class="daisyui-fieldset-legend w-full flex justify-between">Body</legend>
+            <fieldset class="">
+                <legend class="w-full flex justify-between">Body</legend>
                 <textarea
-                        class="nodrag daisyui-textarea min-w-72 w-full text-nowrap resize-none"
+                        class="nodrag min-w-72 w-full text-nowrap resize-none"
                         rows="5"
                         placeholder="Contents (JSON, XML, etc.)..."
                         bind:value={requestBodyInputText}

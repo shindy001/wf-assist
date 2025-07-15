@@ -90,7 +90,7 @@
 
 <svelte:window onclick={hideContextMenu} onblur={hideContextMenu}/>
 {#if contextMenuIsOpen}
-    <div class="p-2 z-50 daisyui-menu absolute flex flex-col gap-1 bg-white shadow-xl rounded-md"
+    <div class="p-2 z-50 absolute flex flex-col gap-1 bg-white shadow-xl rounded-md"
          style="left: {contextMenuPosition.x}px; top: {contextMenuPosition.y}px">
         <button class="p-2 flex gap-1 items-center hover:cursor-pointer hover:bg-gray-100 rounded-md" onclick={showRenameAction}>
             <Icon name="material-symbols--edit-square-outline"/>
