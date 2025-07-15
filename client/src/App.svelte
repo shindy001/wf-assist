@@ -1,4 +1,5 @@
 <script>
+    import "./app.css";
     import Workflows from "./workflows/Workflows.svelte";
     import Icons from "./lib/components/Icons.svelte";
 </script>
