@@ -5,33 +5,17 @@
 </script>
 
 <script lang="ts">
-    import {useWorkflowDataService} from "../stores/workflowDataService";
     import type {ClassValue} from "svelte/elements";
-    import {onMount} from "svelte";
     import Icon from "../../lib/components/Icon.svelte";
-    import {createInitializeActiveWorkflowCommand} from "../commands/initializeActiveWorkflowCommand";
-    import {createAddEmptyWorkflowCommand} from "../commands/addEmptyWorkflowCommand";
-    import {createRemoveWorkflowCommand} from "../commands/removeWorkflowCommand";
-    import {createRenameWorkflowCommand} from "../commands/renameWorkflowCommand";
-    import {AlreadyExistsError, NotFoundError} from "../../lib/types";
 
     const props: { class?: ClassValue } = $props();
-    const workflowDataService = useWorkflowDataService();
-    const initializeActiveWorkflowCommand = createInitializeActiveWorkflowCommand(appState, workflowDataService);
-    const addEmptyWorkflowCommand = createAddEmptyWorkflowCommand(appState, workflowDataService);
-    const removeActiveWorkflowCommand = createRemoveWorkflowCommand(appState, workflowDataService);
-    const renameWorkflowCommand = createRenameWorkflowCommand(workflowDataService);
-    let workflowIdentitiesObservable = workflowDataService.workflowIdentities;
+
     let contextMenuIsOpen = $state(false);
     let contextMenuPosition = $state<{x: number, y: number}>({x: 0, y: 0});
     let contextMenuWorkflowName = $state<string | null>();
     let contextMenuWorkflowRenameValue = $state<string | null>();
     let showRenameInput = $state(false);
     let showRenameNameAlreadyExistError = $state(false);
-
-    onMount(async () => {
-        await initializeActiveWorkflowCommand();
-    });
 
     function showContextMenu(event: MouseEvent) {
         event.preventDefault();
@@ -42,36 +26,6 @@
         contextMenuWorkflowRenameValue = targetText;
         contextMenuPosition = { x: event.clientX, y: event.clientY };
         contextMenuIsOpen = true;
-    }
-
-    async function renameWorkflow(event: SubmitEvent) {
-        event.preventDefault();
-        if(!contextMenuWorkflowName || !contextMenuWorkflowRenameValue) {
-            return;
-        }
-
-        const result = await renameWorkflowCommand(contextMenuWorkflowName, contextMenuWorkflowRenameValue);
-        switch (result?.constructor) {
-            case AlreadyExistsError:
-                showRenameNameAlreadyExistError = true;
-                break;
-            case NotFoundError:
-                console.error(`Error while renaming workflow, workflow does not exist. currentWorkflow:
-                    '${contextMenuWorkflowName}', newName: '${contextMenuWorkflowRenameValue}'`);
-                hideRenameAction();
-                break;
-            default:
-                hideRenameAction();
-                return;
-        }
-    }
-
-    async function removeWorkflow() {
-        if (!contextMenuWorkflowName || !confirm(`Delete workflow ${contextMenuWorkflowName}?`)) {
-            return;
-        }
-
-        await removeActiveWorkflowCommand(contextMenuWorkflowName);
     }
 
     function hideContextMenu() {
@@ -96,7 +50,7 @@
             <Icon name="material-symbols--edit-square-outline"/>
             <span>Rename</span>
         </button>
-        <button class="p-2 flex gap-1 items-center hover:cursor-pointer hover:bg-gray-100 rounded-md" onclick={removeWorkflow}>
+        <button class="p-2 flex gap-1 items-center hover:cursor-pointer hover:bg-gray-100 rounded-md">
             <Icon name="material-symbols--delete-outline"/>
             <span>Remove</span>
         </button>
@@ -106,29 +60,28 @@
 <div class={props.class}>
     <div class="flex justify-between items-center">
         <p class="text-lg">Workflows</p>
-        <button aria-label="add workflow" class="p-2 rounded-md cursor-pointer hover:bg-gray-100"
-                onclick={addEmptyWorkflowCommand}>
+        <button aria-label="add workflow" class="p-2 rounded-md cursor-pointer hover:bg-gray-100">
             <Icon name="material-symbols--add"/>
         </button>
     </div>
     <div class="flex flex-col gap-1">
-        {#each $workflowIdentitiesObservable as workflow}
+        {#each ["workflow1", "workflow2"] as workflow}
             <button
                     class={[
                         "w-full px-2 flex gap-2 items-center content-center rounded-md cursor-pointer hover:bg-gray-100",
-                        workflow.name === appState.lastActiveWorkflowName ? 'bg-gray-100' : '',
-                        workflow.name === contextMenuWorkflowName && showRenameInput ? 'hidden' : ''
+                        workflow === appState.lastActiveWorkflowName ? 'bg-gray-100' : '',
+                        workflow === contextMenuWorkflowName && showRenameInput ? 'hidden' : ''
                     ]}
-                    onclick={() => appState.setActiveWorkflowName(workflow.name)}
+                    onclick={() => appState.setActiveWorkflowName(workflow)}
                     oncontextmenu={showContextMenu}
             >
                 <Icon name="material-symbols--folder-data-outline-sharp"/>
-                <span class="w-full text-left">{workflow.name}</span>
+                <span class="w-full text-left">{workflow}</span>
             </button>
 
-            {#if workflow.name === contextMenuWorkflowName && showRenameInput}
+            {#if workflow === contextMenuWorkflowName && showRenameInput}
                 <div class="relative">
-                    <form onsubmit={renameWorkflow}>
+                    <form onsubmit={null}>
                         <label for="rename">Name: (at least one a-Z or numeric char)</label>
                         <input id="rename" class="w-full px-2 pr-12 border border-black rounded-md" bind:value={contextMenuWorkflowRenameValue} required pattern="\s*(\S\s*)&lbrace;1,&rbrace;">
                         <button type="submit" class="absolute z-10 right-[1px] bottom-[1px] px-1 rounded-md cursor-pointer bg-gray-300 hover:bg-gray-100 content-center items-center">
