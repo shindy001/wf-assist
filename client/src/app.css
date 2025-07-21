@@ -119,3 +119,72 @@
     @apply bg-background text-foreground;
   }
 }
+
+.svelte-flow__handle-left.node-pin {
+  left: -10px; /* Move standard left pin outside the node box */
+  background: transparent;
+  border: 2px solid #c24298;
+  min-width: 10px;
+  min-height: 10px;
+}
+
+.svelte-flow__handle-right.node-pin {
+  right: -10px; /* Move standard right pin outside the node box */
+  background: transparent;
+  border: 2px solid #3b82ea;
+  min-width: 10px;
+  min-height: 10px;
+}
+
+/* Turbo style - inspired by https://turborepo.com/ */
+.turbo-node {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding: 2px;
+  border-radius: calc(var(--radius));
+  box-shadow: 10px 0 15px rgba(42, 138, 246, 0.3),
+  -10px 0 15px rgba(233, 42, 103, 0.3);
+}
+
+.turbo-node_gradient {
+  background: conic-gradient(
+          from -160deg at 50% 50%,
+          #e92a67 0deg,
+          #a853ba 120deg,
+          #2a8af6 240deg,
+          #e92a67 360deg
+  );
+}
+
+.turbo-node_gradient-animation {
+  position: relative;
+  overflow: hidden;
+}
+
+.turbo-node_gradient-animation:before {
+  content: "";
+  position: absolute;
+  width: calc(100% * 1.41421356237);
+  padding-bottom: calc(100% * 1.41421356237);
+  left: 50%;
+  top: 50%;
+  background: none;
+  background: conic-gradient(
+          from -160deg at 50% 50%,
+          #e92a67 0deg,
+          #a853ba 120deg,
+          #2a8af6 240deg,
+          rgba(42, 138, 246, 0) 360deg
+  );
+  animation: spinner 4s linear infinite;
+  transform: translate(-50%, -50%) rotate(0deg);
+  border-radius: 100%;
+  z-index: -1;
+}
+
+@keyframes spinner {
+  100% {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}

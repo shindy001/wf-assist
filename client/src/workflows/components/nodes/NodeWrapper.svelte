@@ -7,6 +7,7 @@
     const props: {
         label: string,
         resizable?: boolean,
+        isActive?: boolean,
         minResizableHeight?: number,
         minResizableWidth?: number,
         children?: Snippet,
@@ -15,19 +16,17 @@
 
 </script>
 
-<div
-        class={[props.class, "flex flex-col border border-solid h-full rounded-2xl"]}
->
-    <div
-            class="text-xs px-3 py-2 border-b border-solid font-mono font-semibold rounded-t-2xl family-mono"
-    >
+<div class={[
+    props.class,
+    "turbo-node",
+    props.isActive ? "turbo-node_gradient-animation" : "turbo-node_gradient"
+    ]}>
+    <div class="relative bg-white dark:bg-black size-full text-xs p-2 border-b border-solid font-mono font-semibold rounded-md family-mono">
         {props.label}
-    </div>
-    <div
-            class="relative h-full p-3 flex rounded-b-2xl family-sans font-light text-xs"
-    >
+        <hr class="my-2">
         {@render props.children?.()}
     </div>
+
     {#if props.resizable}
         <NodeResizeControl
                 minHeight={props.minResizableHeight}

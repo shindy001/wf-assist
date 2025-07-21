@@ -58,13 +58,13 @@
              resizable
              minResizableWidth={initialWidth}
              minResizableHeight={initialHeight}>
-    <div class="flex-col space-y-2 w-full">
+    <div class="space-y-2 w-full">
         <div class="p-1">
             <div class="relative">
-                <Handle id="input-flow-pin" class="input-flow-pin" type="target" position={Position.Left}
+                <Handle id="input-flow-pin" type="target" position={Position.Left}
                         isValidConnection={isValidInputConnection}
                         isConnectable={inputIsConnectable}/>
-                <Handle id="output-flow-pin" class="output-flow-pin" type="source" position={Position.Right}
+                <Handle id="output-flow-pin" type="source" position={Position.Right}
                         isValidConnection={isValidOutputConnection}/>
             </div>
         </div>
@@ -88,7 +88,7 @@
         </fieldset>
 
         {#if !isGetRequestType() }
-            <fieldset class="">
+            <fieldset>
                 <legend class="w-full flex justify-between">Body</legend>
                 <textarea
                         class="nodrag min-w-72 w-full text-nowrap resize-none"
@@ -100,10 +100,10 @@
             </fieldset>
         {/if}
         <hr class="text-gray-100">
-        <div class="">
-            <div class="relative flex justify-end">
-                <p class="mr-4">Result value</p>
-                <Handle id="result" class="node-pin !bg-blue-300 -translate-x-1/2" type="source"
+        <div class="p-1">
+            <div class="relative">
+                <p class="">Result value</p>
+                <Handle id="result" class="!bg-blue-300" type="source"
                         position={Position.Right}/>
             </div>
         </div>
