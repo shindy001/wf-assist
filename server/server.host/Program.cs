@@ -28,10 +28,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseCors("AllowAllCorsPolicy");
     app.MapOpenApi();
-    app.MapScalarApiReference(opt =>
+    app.MapScalarApiReference(options =>
     {
-        opt.EnabledClients = [ScalarClient.Curl, ScalarClient.Axios, ScalarClient.Fetch];
-        opt.EnabledTargets = [ScalarTarget.Shell, ScalarTarget.JavaScript];
+        options.WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Axios);
+        options.EnabledClients = [ScalarClient.Curl, ScalarClient.Axios];
+        options.EnabledTargets = [ScalarTarget.Shell, ScalarTarget.JavaScript];
+
     });
 }
 
