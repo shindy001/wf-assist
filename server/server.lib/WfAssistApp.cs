@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 
 namespace WfAssist.AspNetCore;
@@ -26,6 +28,8 @@ public static class WfAssistApp
     /// <param name="excludeFromOpenApi">Default is true, excludes WfAssist endpoints from OpenApi definitions</param>
     public static void UseWfAssistApp(this IEndpointRouteBuilder endpoints, bool excludeFromOpenApi = true)
     {
+        var loggerFactory = endpoints.ServiceProvider.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger($"{nameof(UseWfAssistApp)}-API_and_UI_registration");
         var clientUiEndpointsGroup = endpoints.MapGroup(AppRoute);
         var clientApiGroup = endpoints.MapGroup(ApiRoute).WithTags(AppRoute);
         if (excludeFromOpenApi)
@@ -34,7 +38,7 @@ public static class WfAssistApp
             clientApiGroup.ExcludeFromDescription();
         }
 
-        clientUiEndpointsGroup.MapWfAssistClient();
+        clientUiEndpointsGroup.MapWfAssistClient(logger);
 
         // Redirect to client index - wfAssist files (from nuget or dist) must be in [server host outputDir]/wwwroot/wfAssist
         endpoints.MapGet($"/{AppRoute}", context =>
@@ -53,15 +57,25 @@ public static class WfAssistApp
     /// Nuget project bundles this server.lib and client binaries and copy them to output directory when the project using the nuget is build.
     /// </summary>
     /// <param name="endpoints"></param>
+    /// <param name="logger"></param>
     /// <returns></returns>
-    private static IEndpointRouteBuilder MapWfAssistClient(this IEndpointRouteBuilder endpoints)
+    private static IEndpointRouteBuilder MapWfAssistClient(this IEndpointRouteBuilder endpoints, ILogger logger)
     {
         var rootDirectoryPath = Path.Combine(AppContext.BaseDirectory, WwwRootDirectory, AppRoute);
         var rootDirectoryInfo = new DirectoryInfo(rootDirectoryPath);
         if (!rootDirectoryInfo.Exists)
         {
-            Console.Error.WriteLine($"Missing WfAssist root directory, UI will not be registered:{Environment.NewLine}" +
-                                        $"RootDirectory: {rootDirectoryPath}{Environment.NewLine}");
+            var errorMessage =
+                $"""
+                  *****
+                  Failed to register WFAssist UI, web application binaries not found in directory: '{rootDirectoryPath}'.
+                  If your are developing or debugging WFAssist server and need the client UI, copy built client UI binaries to the specified directory.
+                  Otherwise only server API will be available.
+                  (You can ignore this message if you are only using the API or running WFAssist UI as separate process.)
+                  *****
+                  """;
+
+            logger.LogError("{errorMessage}", errorMessage);
 
             return endpoints;
         }
@@ -73,12 +87,18 @@ public static class WfAssistApp
 
         if (indexHtmlFileInfo is null || indexCssFileInfo is null || indexJsFileInfo is null || faviconFileInfo is null)
         {
-            Console.Error.WriteLine($"Missing WfAssist files, UI will not be registered, file report:{Environment.NewLine}" +
-                                        $"RootDirectory: {rootDirectoryPath}{Environment.NewLine}" +
-                                        $"{IndexHtmlFile}: {(indexHtmlFileInfo is null ? "missing": "found")}{Environment.NewLine}" +
-                                        $"{IndexCssFile}: {(indexCssFileInfo is null ? "missing": "found")}{Environment.NewLine}" +
-                                        $"{IndexJsFile}: {(indexJsFileInfo is null ? "missing": "found")}{Environment.NewLine}" +
-                                        $"{FaviconFile}: {(faviconFileInfo is null ? "missing": "found")}{Environment.NewLine}");
+            var errorMessage =
+                $"""
+                  *****
+                  Failed to register WFAssist UI, some files are missing in app root directory '{rootDirectoryPath}':
+                  {IndexHtmlFile}: {(indexHtmlFileInfo is null ? "missing": "found")}
+                  {IndexCssFile}: {(indexCssFileInfo is null ? "missing": "found")}
+                  {IndexJsFile}: {(indexJsFileInfo is null ? "missing": "found")}
+                  {FaviconFile}: {(faviconFileInfo is null ? "missing": "found")}
+                  *****
+                  """;
+
+            logger.LogError("{errorMessage}", errorMessage);
 
             return endpoints;
         }
