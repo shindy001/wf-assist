@@ -1,17 +1,18 @@
 ﻿<script lang="ts">
     import {Background, Controls, type Edge, MiniMap, type Node, SvelteFlow, useSvelteFlow} from '@xyflow/svelte';
     import '@xyflow/svelte/dist/style.css';
-    import {FlowNodeType} from "../types";
     import {useDragAndDrop} from "../../lib/components/DragAndDropProvider.svelte";
     import RequestNode from "./nodes/RequestNode.svelte";
     import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
     import PrintStringNode from "./nodes/PrintStringNode.svelte";
+    import {Button} from "$lib/components/ui/button/index.js";
+    import {NodeType} from "../types";
 
     const dragAndDropContext = useDragAndDrop();
     const additionalFlowNodes = {
-        [FlowNodeType.Request]: RequestNode,
-        [FlowNodeType.ExtractProperty]: ExtractPropertyNode,
-        [FlowNodeType.PrintString]: PrintStringNode,
+        [NodeType.ExtractProperty]: ExtractPropertyNode,
+        [NodeType.PrintString]: PrintStringNode,
+        [NodeType.Request]: RequestNode,
     };
 
     const {screenToFlowPosition} = $derived(useSvelteFlow());
@@ -51,6 +52,7 @@
 </script>
 
 <div class="w-full h-full">
+    <Button onclick={() => console.log(nodes)}>Print</Button>
     <SvelteFlow
             colorMode="system"
             bind:nodes

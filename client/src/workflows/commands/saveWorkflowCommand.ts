@@ -1,10 +1,9 @@
 ﻿import {throttle} from "lodash";
-import type {WorkflowData} from "../types";
 
 export function createSaveWorkflowCommand(
     saveRateLimitInMilliseconds: number
 ) {
-    return throttle(async (workflowData: WorkflowData) => {
+    return throttle(async (workflowData: unknown) => {
                 // TODO - send save request to server
         }, saveRateLimitInMilliseconds);
 }

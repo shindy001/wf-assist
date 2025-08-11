@@ -1,4 +1,15 @@
-﻿import type {ExecutionItem, FlowData} from "../types";
+﻿import type { Node, Edge } from "@xyflow/svelte";
+
+interface FlowData {
+    nodes: Node[],
+    edges: Edge[],
+}
+
+type ExecutionItem = {
+    nodeId: string;
+    nodeType: string;
+    nodeData?: Record<string, unknown>;
+}
 
 export function useFlowDataProcessor() {
 

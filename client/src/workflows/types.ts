@@ -1,34 +1,40 @@
-﻿import type {Edge, Node} from "@xyflow/svelte";
-
-export interface FlowData {
-    nodes: Node[],
-    edges: Edge[],
+﻿export interface Position {
+    x: number;
+    y: number;
 }
 
-export type ExecutionItem = {
-    nodeId: string;
-    nodeType: string;
-    nodeData?: Record<string, unknown>;
+export interface PrintTextNodeData {
+    text: string;
+}
+
+export interface ExtractPropertyNodeData {
+    propertyPath: string;
+}
+
+export type NodeData = undefined | PrintTextNodeData | ExtractPropertyNodeData;
+
+export interface WorkflowNode {
+    id: string;
+    type: string;
+    position: Position;
+    data: NodeData;
+}
+
+export interface WorkflowEdge {
+    id: string;
+    type: string;
+    position: Position;
 }
 
 export interface WorkflowData {
-    id: number;
-    name: string;
-    flowData: FlowData;
+    nodes: Array<WorkflowNode>;
+    edges: Array<WorkflowEdge>;
 }
 
-export interface WorkflowDataInput {
-    name: string;
-    flowData: FlowData;
-}
-
-export interface WorkflowResults {
+export interface Workflow {
     id: string;
-    data: Record<string, unknown>;
-}
-
-export interface NodeExecutor<T> {
-    execute: (executionId: string, node: T) => Promise<void>;
+    name: string;
+    data: WorkflowData;
 }
 
 /**
@@ -36,9 +42,9 @@ export interface NodeExecutor<T> {
  * @link {https://reactflow.dev/api-reference/types/node#default-node-types}
  */
 export enum FlowNodeType {
-    Request = "Request",
-    ExtractProperty = "Extract Property",
-    PrintString = "Print String",
+    Request = "request",
+    ExtractProperty = "extractProperty",
+    PrintString = "printString",
 }
 
 export interface NodeBase extends Record<string, unknown> {
@@ -54,8 +60,15 @@ export interface PrintStringNode extends NodeBase {
     targetId?: string;
 }
 
+
 export interface RequestNode extends NodeBase {
     url?: string,
     requestType?: string,
     requestBody?: string,
+}
+
+export enum NodeType {
+    Request = "request",
+    ExtractProperty = "extractProperty",
+    PrintString = "printString",
 }
