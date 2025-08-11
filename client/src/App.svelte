@@ -5,7 +5,7 @@
     import { ModeWatcher } from "mode-watcher";
 </script>
 
-<div id="content__root" style:height="100vh" style:width="100vw" class="relative">
+<div style:height="100vh" style:width="100vw" class="relative">
     <ModeWatcher />
     <Icons/>
     <Workflows/>
