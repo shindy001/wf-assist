@@ -39,7 +39,7 @@
         });
 
         const newNode = {
-            id: `${Math.random()}`,
+            id: `${Date.now()}`,
             type: dragAndDropContext.nodeType,
             position,
             data: {label: `${dragAndDropContext.nodeType} node`},
