@@ -3,19 +3,26 @@
     y: number;
 }
 
-export interface WorkflowNodeDataBase extends Record<string, unknown> {}
+export enum WorkflowNodeType {
+    PrintText = "printText",
+    ExtractProperty = "extractProperty",
+    Request = "request",
+}
 
-export interface PrintTextNodeData extends WorkflowNodeDataBase {
+export interface PrintTextNodeData {
+    type: WorkflowNodeType.PrintText;
     targetId?: string;
     text?: string;
 }
 
-export interface ExtractPropertyNodeData extends WorkflowNodeDataBase {
+export interface ExtractPropertyNodeData {
+    type: WorkflowNodeType.ExtractProperty;
     path?: string;
     targetId?: string;
 }
 
-export interface RequestNodeData extends WorkflowNodeDataBase {
+export interface RequestNodeData {
+    type: WorkflowNodeType.Request;
     url?: string,
     requestType?: string,
     requestBody?: string,
@@ -23,22 +30,14 @@ export interface RequestNodeData extends WorkflowNodeDataBase {
 
 export type WorkflowNodeData = PrintTextNodeData | ExtractPropertyNodeData | RequestNodeData;
 
-export enum WorkflowNodeType {
-    Request = "request",
-    ExtractProperty = "extractProperty",
-    PrintText = "printText",
-}
-
 export interface WorkflowNode {
     id: string;
-    type: string;
     position: Position;
     data: WorkflowNodeData;
 }
 
 export interface WorkflowEdge {
     id: string;
-    type: string;
     position: Position;
     source: string;
     target: string;

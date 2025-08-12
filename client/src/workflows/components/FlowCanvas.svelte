@@ -1,12 +1,11 @@
 ﻿<script lang="ts">
-    import {Background, Controls, type Edge, MiniMap, type Node, SvelteFlow, useSvelteFlow} from '@xyflow/svelte';
+    import {Background, Controls, MiniMap, SvelteFlow, useSvelteFlow, type Node, type Edge} from '@xyflow/svelte';
     import '@xyflow/svelte/dist/style.css';
     import {useDragAndDrop} from "../../lib/components/DragAndDropProvider.svelte";
     import RequestNode from "./nodes/RequestNode.svelte";
     import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
     import PrintTextNode from "./nodes/PrintTextNode.svelte";
-    import {Button} from "$lib/components/ui/button/index.js";
-    import {WorkflowNodeType, type WorkflowNode, type WorkflowEdge} from "../types";
+    import {type WorkflowNode, WorkflowNodeType} from "../types";
 
     const dragAndDropContext = useDragAndDrop();
     const additionalNodeTypes = {
@@ -16,8 +15,8 @@
     };
 
     const {screenToFlowPosition} = $derived(useSvelteFlow());
-    let nodes = $state.raw<WorkflowNode[]>([]);
-    let edges = $state.raw<WorkflowEdge[]>([]);
+    let nodes = $state.raw<Node[]>([]);
+    let edges = $state.raw<Edge[]>([]);
 
     const onDragOver = (event: DragEvent) => {
         event.preventDefault();
@@ -39,20 +38,18 @@
             y: event.clientY,
         });
 
-        const newNode = {
+        const newNode: WorkflowNode = {
             id: `${Date.now()}`,
             type: dragAndDropContext.nodeType,
             position,
-            data: {label: `${dragAndDropContext.nodeType} node`},
-            origin: [0.5, 0.5],
-        } satisfies Node;
+            data: { type: WorkflowNodeType.Request },
+        };
 
-        nodes = [...nodes, newNode];
+        nodes = [...nodes, { ...newNode, data: {...newNode.data} } ];
     };
 </script>
 
 <div class="size-full">
-    <Button onclick={() => console.log(nodes)}>Print</Button>
     <SvelteFlow
             colorMode="system"
             nodes={nodes}
