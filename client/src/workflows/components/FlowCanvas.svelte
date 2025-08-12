@@ -4,14 +4,14 @@
     import {useDragAndDrop} from "../../lib/components/DragAndDropProvider.svelte";
     import RequestNode from "./nodes/RequestNode.svelte";
     import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
-    import PrintStringNode from "./nodes/PrintStringNode.svelte";
+    import PrintTextNode from "./nodes/PrintTextNode.svelte";
     import {Button} from "$lib/components/ui/button/index.js";
     import {NodeType} from "../types";
 
     const dragAndDropContext = useDragAndDrop();
     const additionalFlowNodes = {
         [NodeType.ExtractProperty]: ExtractPropertyNode,
-        [NodeType.PrintString]: PrintStringNode,
+        [NodeType.PrintText]: PrintTextNode,
         [NodeType.Request]: RequestNode,
     };
 

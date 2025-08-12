@@ -1,9 +1,9 @@
 ﻿<script lang="ts" module>
     import type {ExtractPropertyNode} from "../../types";
-    import {FlowNodeType} from "../../types";
+    import {NodeType} from "../../types";
     import {type Node} from "@xyflow/svelte";
 
-    export type ExtractPropertyNodeType = Node<ExtractPropertyNode, FlowNodeType.ExtractProperty>;
+    export type ExtractPropertyNodeType = Node<ExtractPropertyNode, NodeType.ExtractProperty>;
 </script>
 
 <script lang="ts">

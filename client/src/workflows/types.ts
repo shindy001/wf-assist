@@ -41,11 +41,6 @@ export interface Workflow {
  * Custom node types
  * @link {https://reactflow.dev/api-reference/types/node#default-node-types}
  */
-export enum FlowNodeType {
-    Request = "request",
-    ExtractProperty = "extractProperty",
-    PrintString = "printString",
-}
 
 export interface NodeBase extends Record<string, unknown> {
     id: string;
@@ -70,5 +65,5 @@ export interface RequestNode extends NodeBase {
 export enum NodeType {
     Request = "request",
     ExtractProperty = "extractProperty",
-    PrintString = "printString",
+    PrintText = "printText",
 }

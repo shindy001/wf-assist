@@ -1,5 +1,5 @@
 ﻿<script lang="ts">
-    import {FlowNodeType} from "../types";
+    import {NodeType} from "../types";
     import {useDragAndDrop} from "../../lib/components/DragAndDropProvider.svelte";
     import type {ClassValue} from "svelte/elements";
     import {Button} from "$lib/components/ui/button";
@@ -16,7 +16,7 @@
         event.dataTransfer.effectAllowed = "move";
     };
 
-    const nodeTypes = [...Object.values(FlowNodeType)];
+    const nodeTypes = [...Object.values(NodeType)];
 </script>
 
 <div class={props.class}>
