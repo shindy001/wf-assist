@@ -3,27 +3,45 @@
     y: number;
 }
 
-export interface PrintTextNodeData {
-    text: string;
+export interface WorkflowNodeDataBase extends Record<string, unknown> {}
+
+export interface PrintTextNodeData extends WorkflowNodeDataBase {
+    targetId?: string;
+    text?: string;
 }
 
-export interface ExtractPropertyNodeData {
-    propertyPath: string;
+export interface ExtractPropertyNodeData extends WorkflowNodeDataBase {
+    path?: string;
+    targetId?: string;
 }
 
-export type NodeData = undefined | PrintTextNodeData | ExtractPropertyNodeData;
+export interface RequestNodeData extends WorkflowNodeDataBase {
+    url?: string,
+    requestType?: string,
+    requestBody?: string,
+}
+
+export type WorkflowNodeData = PrintTextNodeData | ExtractPropertyNodeData | RequestNodeData;
+
+export enum WorkflowNodeType {
+    Request = "request",
+    ExtractProperty = "extractProperty",
+    PrintText = "printText",
+}
 
 export interface WorkflowNode {
     id: string;
     type: string;
     position: Position;
-    data: NodeData;
+    data: WorkflowNodeData;
 }
 
 export interface WorkflowEdge {
     id: string;
     type: string;
     position: Position;
+    source: string;
+    target: string;
 }
 
 export interface WorkflowData {
@@ -35,35 +53,4 @@ export interface Workflow {
     id: string;
     name: string;
     data: WorkflowData;
-}
-
-/**
- * Custom node types
- * @link {https://reactflow.dev/api-reference/types/node#default-node-types}
- */
-
-export interface NodeBase extends Record<string, unknown> {
-    id: string;
-}
-
-export interface ExtractPropertyNode extends NodeBase {
-    path?: string;
-    targetId?: string;
-}
-
-export interface PrintStringNode extends NodeBase {
-    targetId?: string;
-}
-
-
-export interface RequestNode extends NodeBase {
-    url?: string,
-    requestType?: string,
-    requestBody?: string,
-}
-
-export enum NodeType {
-    Request = "request",
-    ExtractProperty = "extractProperty",
-    PrintText = "printText",
 }

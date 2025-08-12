@@ -1,9 +1,9 @@
 ﻿<script lang="ts" module>
-    import type {ExtractPropertyNode} from "../../types";
-    import {NodeType} from "../../types";
+    import type {ExtractPropertyNodeData} from "../../types";
+    import {WorkflowNodeType} from "../../types";
     import {type Node} from "@xyflow/svelte";
 
-    export type ExtractPropertyNodeType = Node<ExtractPropertyNode, NodeType.ExtractProperty>;
+    export type ExtractPropertyNodeType = Node<ExtractPropertyNodeData, WorkflowNodeType.ExtractProperty>;
 </script>
 
 <script lang="ts">
@@ -18,7 +18,7 @@
     let inputIsConnectable = $derived(connections.current.length === 0);
 
     $effect(() => {
-        const data: ExtractPropertyNode = {id: id, path: pathInput, targetId: currentConnectionId};
+        const data: ExtractPropertyNodeData = {id: id, path: pathInput, targetId: currentConnectionId};
         updateNodeData(id, data);
     });
 </script>

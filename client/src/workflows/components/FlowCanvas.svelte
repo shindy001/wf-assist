@@ -6,18 +6,18 @@
     import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
     import PrintTextNode from "./nodes/PrintTextNode.svelte";
     import {Button} from "$lib/components/ui/button/index.js";
-    import {NodeType} from "../types";
+    import {WorkflowNodeType, type WorkflowNode, type WorkflowEdge} from "../types";
 
     const dragAndDropContext = useDragAndDrop();
-    const additionalFlowNodes = {
-        [NodeType.ExtractProperty]: ExtractPropertyNode,
-        [NodeType.PrintText]: PrintTextNode,
-        [NodeType.Request]: RequestNode,
+    const additionalNodeTypes = {
+        [WorkflowNodeType.ExtractProperty]: ExtractPropertyNode,
+        [WorkflowNodeType.PrintText]: PrintTextNode,
+        [WorkflowNodeType.Request]: RequestNode,
     };
 
     const {screenToFlowPosition} = $derived(useSvelteFlow());
-    let nodes = $state.raw<Node[]>([]);
-    let edges = $state.raw<Edge[]>([]);
+    let nodes = $state.raw<WorkflowNode[]>([]);
+    let edges = $state.raw<WorkflowEdge[]>([]);
 
     const onDragOver = (event: DragEvent) => {
         event.preventDefault();
@@ -51,13 +51,13 @@
     };
 </script>
 
-<div class="w-full h-full">
+<div class="size-full">
     <Button onclick={() => console.log(nodes)}>Print</Button>
     <SvelteFlow
             colorMode="system"
-            bind:nodes
-            bind:edges
-            nodeTypes={additionalFlowNodes}
+            nodes={nodes}
+            edges={edges}
+            nodeTypes={additionalNodeTypes}
             fitView
             ondragover={onDragOver}
             ondrop={onDrop}
