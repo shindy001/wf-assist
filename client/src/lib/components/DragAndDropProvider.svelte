@@ -1,16 +1,18 @@
 ﻿<script module lang="ts">
     import {getContext} from "svelte";
+    import {WorkflowNodeType} from "../../workflows/types";
 
     export const useDragAndDrop = () => {
-        return getContext('DragAndDrop') as { nodeType: string | null };
+        return getContext('DragAndDrop') as { nodeType: WorkflowNodeType };
     }
 </script>
 
 <script lang="ts">
-    import {onDestroy, setContext, type Snippet} from "svelte";
+    import {setContext, type Snippet} from "svelte";
 
-    let {children}: { children: Snippet } = $props();
-    let dragAndDropType = $state(null);
+    // https://svelte.dev/docs/svelte/snippet#Passing-snippets-to-components-Optional-snippet-props
+    let { children } = $props();
+    let dragAndDropType: WorkflowNodeType = $state(WorkflowNodeType.Default);
 
     setContext('DragAndDrop', {
         set nodeType(value) {
@@ -20,12 +22,6 @@
             return dragAndDropType;
         }
     });
-
-    onDestroy(() => {
-        if (dragAndDropType) {
-            dragAndDropType = null;
-        }
-    })
 </script>
 
-{@render children()}
+{@render children?.()}

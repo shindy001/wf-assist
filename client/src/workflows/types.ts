@@ -4,34 +4,39 @@
 }
 
 export enum WorkflowNodeType {
+    Default = "default",
     PrintText = "printText",
     ExtractProperty = "extractProperty",
     Request = "request",
 }
 
-export interface PrintTextNodeData {
-    type: WorkflowNodeType.PrintText;
-    targetId?: string;
-    text?: string;
+interface WorkflowNodeDataBase {
+    type: WorkflowNodeType;
 }
 
-export interface ExtractPropertyNodeData {
-    type: WorkflowNodeType.ExtractProperty;
-    path?: string;
-    targetId?: string;
+export class PrintTextNodeData implements WorkflowNodeDataBase {
+    readonly type: WorkflowNodeType = WorkflowNodeType.PrintText;
+
+    constructor(public targetId?: string, public text?: string) {}
 }
 
-export interface RequestNodeData {
-    type: WorkflowNodeType.Request;
-    url?: string,
-    requestType?: string,
-    requestBody?: string,
+export class ExtractPropertyNodeData implements WorkflowNodeDataBase {
+    readonly type: WorkflowNodeType = WorkflowNodeType.ExtractProperty;
+
+    constructor(public path?: string, public targetId?: string) {}
+}
+
+export class RequestNodeData implements WorkflowNodeDataBase {
+    readonly type: WorkflowNodeType = WorkflowNodeType.Request;
+
+    constructor(public url?: string, public requestType?: string, public requestBody?: string) {}
 }
 
 export type WorkflowNodeData = PrintTextNodeData | ExtractPropertyNodeData | RequestNodeData;
 
 export interface WorkflowNode {
     id: string;
+    type: WorkflowNodeType;
     position: Position;
     data: WorkflowNodeData;
 }

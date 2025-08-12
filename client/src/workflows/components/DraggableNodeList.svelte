@@ -7,7 +7,7 @@
     const props: { class?: ClassValue } = $props();
     const dragAndDropContext = useDragAndDrop();
 
-    const onDragStart = (event: DragEvent, nodeType: string) => {
+    const onDragStart = (event: DragEvent, nodeType: WorkflowNodeType) => {
         if (!event.dataTransfer) {
             return null;
         }
