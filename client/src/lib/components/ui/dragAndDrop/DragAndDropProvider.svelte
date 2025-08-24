@@ -1,6 +1,6 @@
 ﻿<script module lang="ts">
     import {getContext} from "svelte";
-    import {WorkflowNodeType} from "../../workflows/types";
+    import {WorkflowNodeType} from "$lib/components/types";
 
     export const useDragAndDrop = () => {
         return getContext('DragAndDrop') as { nodeType: WorkflowNodeType };
@@ -8,7 +8,7 @@
 </script>
 
 <script lang="ts">
-    import {setContext, type Snippet} from "svelte";
+    import {setContext} from "svelte";
 
     // https://svelte.dev/docs/svelte/snippet#Passing-snippets-to-components-Optional-snippet-props
     let { children } = $props();
