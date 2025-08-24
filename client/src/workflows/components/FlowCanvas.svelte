@@ -72,8 +72,8 @@
 <div class="size-full">
     <SvelteFlow
             colorMode="system"
-            nodes={nodes}
-            edges={edges}
+            bind:nodes={nodes}
+            bind:edges={edges}
             nodeTypes={additionalNodeTypes}
             fitView
             ondragover={onDragOver}
