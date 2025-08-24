@@ -8,6 +8,7 @@
 <script lang="ts">
     import NodeWrapper from "./NodeWrapper.svelte";
     import {Handle, type NodeProps, Position, useNodeConnections, useSvelteFlow} from "@xyflow/svelte";
+    import {createSvelteFlowPrintTextNodeData} from "$lib/components/types";
 
     const {updateNodeData} = useSvelteFlow();
     let {id}: NodeProps<PrintStringNodeType> = $props();
@@ -17,7 +18,7 @@
     let inputIsConnectable = $derived(connections.current.length === 0);
 
     $effect(() => {
-        const data: SvelteFlowPrintTextNodeData = {type: WorkflowNodeType.PrintText, targetId: currentConnectionId};
+        const data: SvelteFlowPrintTextNodeData = createSvelteFlowPrintTextNodeData({ targetId: currentConnectionId });
         updateNodeData(id, data);
     });
 </script>

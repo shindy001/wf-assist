@@ -15,6 +15,7 @@
         useSvelteFlow
     } from "@xyflow/svelte";
     import NodeWrapper from "./NodeWrapper.svelte";
+    import {createSvelteFlowRequestNodeData} from "$lib/components/types";
 
     const {updateNodeData, updateNode} = useSvelteFlow();
     const connections = useNodeConnections({handleType: 'target'});
@@ -44,12 +45,11 @@
     });
 
     $effect(() => {
-        const data: SvelteFlowRequestNodeData = {
-            type: WorkflowNodeType.Request,
+        const data: SvelteFlowRequestNodeData = createSvelteFlowRequestNodeData({
             url: urlInputText,
             requestType: selectedRequestType,
             requestBody: requestBodyInputText
-        };
+        });
         updateNodeData(id, data);
     });
 </script>

@@ -8,6 +8,7 @@
 <script lang="ts">
     import NodeWrapper from "./NodeWrapper.svelte";
     import {Handle, type NodeProps, Position, useNodeConnections, useSvelteFlow} from "@xyflow/svelte";
+    import {createSvelteFlowExtractPropertyNodeData} from "$lib/components/types";
 
     const {updateNodeData} = useSvelteFlow();
     const connections = useNodeConnections({handleType: 'target'});
@@ -17,7 +18,7 @@
     let inputIsConnectable = $derived(connections.current.length === 0);
 
     $effect(() => {
-        const data: SvelteFlowExtractPropertyNodeData = {type: WorkflowNodeType.ExtractProperty, path: pathInput, targetId: currentConnectionId};;
+        const data: SvelteFlowExtractPropertyNodeData = createSvelteFlowExtractPropertyNodeData({ path: pathInput, targetId: currentConnectionId});
         updateNodeData(id, data);
     });
 </script>

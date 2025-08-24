@@ -6,6 +6,8 @@
     import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
     import PrintTextNode from "./nodes/PrintTextNode.svelte";
     import {
+        createSvelteFlowExtractPropertyNodeData,
+        createSvelteFlowPrintTextNodeData, createSvelteFlowRequestNodeData,
         type WorkflowNode,
         type WorkflowNodeData,
         WorkflowNodeType
@@ -56,11 +58,11 @@
     function CreateWorkflowNodeData(nodeType: WorkflowNodeType): WorkflowNodeData {
         switch (nodeType) {
             case WorkflowNodeType.PrintText:
-                return { type: WorkflowNodeType.PrintText };
+                return createSvelteFlowPrintTextNodeData();
             case WorkflowNodeType.ExtractProperty:
-                return { type: WorkflowNodeType.ExtractProperty };
+                return createSvelteFlowExtractPropertyNodeData();
             case WorkflowNodeType.Request:
-                return { type: WorkflowNodeType.Request };
+                return createSvelteFlowRequestNodeData();
             default:
                 throw new Error(`Unsupported WorkflowNode type '${nodeType}'`);
         }
