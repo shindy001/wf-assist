@@ -10,13 +10,14 @@ export enum WorkflowNodeType {
     Request = "request",
 }
 
-interface WorkflowNodeDataBase {
+export interface WorkflowNodeDataBase {
     type: WorkflowNodeType;
 }
 
 export interface PrintTextNodeData extends WorkflowNodeDataBase {
     targetId?: string;
-    text?: string;
+    text: string;
+    useConsole: boolean;
 }
 
 export interface ExtractPropertyNodeData extends WorkflowNodeDataBase {
@@ -26,7 +27,7 @@ export interface ExtractPropertyNodeData extends WorkflowNodeDataBase {
 
 export interface RequestNodeData extends WorkflowNodeDataBase {
     url?: string;
-    requestType?: string;
+    requestType: string;
     requestBody?: string
 }
 
@@ -56,8 +57,3 @@ export interface Workflow {
     name: string;
     data: WorkflowData;
 }
-
-/* SvelteFlow Node Data types */
-export type SvelteFlowPrintTextNodeData = PrintTextNodeData & Record<string, unknown>;
-export type SvelteFlowExtractPropertyNodeData = ExtractPropertyNodeData & Record<string, unknown>;
-export type SvelteFlowRequestNodeData = RequestNodeData & Record<string, unknown>;
