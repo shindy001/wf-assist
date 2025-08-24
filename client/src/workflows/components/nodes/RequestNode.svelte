@@ -1,9 +1,9 @@
 ﻿<script lang="ts" module>
-    import {WorkflowNodeType, type RequestNodeData} from "../../types";
+    import {WorkflowNodeType, type SvelteFlowRequestNodeData} from "$lib/components/types";
     import {type Connection, type Node} from "@xyflow/svelte";
     import type {EdgeBase} from "@xyflow/system"
 
-    export type RequestNodeType = Node<RequestNodeData, WorkflowNodeType.Request>;
+    export type RequestNodeType = Node<SvelteFlowRequestNodeData, WorkflowNodeType.Request>;
 </script>
 
 <script lang="ts">
@@ -44,8 +44,8 @@
     });
 
     $effect(() => {
-        const data: RequestNodeData = {
-            id: id,
+        const data: SvelteFlowRequestNodeData = {
+            type: WorkflowNodeType.Request,
             url: urlInputText,
             requestType: selectedRequestType,
             requestBody: requestBodyInputText

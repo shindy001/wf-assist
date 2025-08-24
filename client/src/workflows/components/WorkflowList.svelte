@@ -1,13 +1,13 @@
 ﻿<script lang="ts" module>
     import {useAppState} from "../../lib/stores/appState.svelte";
-    import {Button} from "$lib/components/ui/button";
 
     const appState = await useAppState();
 </script>
 
 <script lang="ts">
     import type {ClassValue} from "svelte/elements";
-    import Icon from "../../lib/components/Icon.svelte";
+    import {Button} from "$lib/components/ui/button";
+    import {Icon} from "$lib/components/ui/icons";
 
     const props: { class?: ClassValue } = $props();
 

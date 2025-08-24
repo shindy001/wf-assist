@@ -2,7 +2,7 @@
     import {NodeResizeControl} from "@xyflow/svelte";
     import type {Snippet} from "svelte";
     import type {ClassValue} from "svelte/elements";
-    import Icon from "../../../lib/components/Icon.svelte";
+    import {Icon} from "$lib/components/ui/icons";
 
     const props: {
         label: string,

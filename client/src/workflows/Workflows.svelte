@@ -1,8 +1,8 @@
 ﻿<script>
     import {SvelteFlowProvider} from "@xyflow/svelte";
     import FlowSidebar from "./components/FlowSidebar.svelte";
-    import DragAndDropProvider from "../lib/components/DragAndDropProvider.svelte";
     import FlowCanvas from "./components/FlowCanvas.svelte";
+    import {DragAndDropProvider} from "$lib/components/ui/dragAndDrop";
 </script>
 
 <div class="flex w-full h-full">

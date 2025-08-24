@@ -5,8 +5,8 @@
     import {fade} from "svelte/transition";
     import WorkflowList from "./WorkflowList.svelte";
     import DraggableNodeList from "./DraggableNodeList.svelte";
-    import Icon from "../../lib/components/Icon.svelte";
     import {Button} from "$lib/components/ui/button";
+    import {Icon} from "$lib/components/ui/icons";
 
     const props: { class?: ClassValue } = $props();
     const collapsedWidth = 60;

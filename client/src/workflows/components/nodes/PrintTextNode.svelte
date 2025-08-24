@@ -1,8 +1,8 @@
 ﻿<script lang="ts" module>
-    import type {WorkflowNodeType, PrintTextNodeData} from "../../types";
+    import {WorkflowNodeType, type SvelteFlowPrintTextNodeData} from "$lib/components/types";
     import {type Node} from "@xyflow/svelte";
 
-    export type PrintStringNodeType = Node<PrintTextNodeData, WorkflowNodeType.PrintText>;
+    export type PrintStringNodeType = Node<SvelteFlowPrintTextNodeData, WorkflowNodeType.PrintText>;
 </script>
 
 <script lang="ts">
@@ -17,7 +17,7 @@
     let inputIsConnectable = $derived(connections.current.length === 0);
 
     $effect(() => {
-        const data: PrintTextNodeData = {id: id, targetId: currentConnectionId};
+        const data: SvelteFlowPrintTextNodeData = {type: WorkflowNodeType.PrintText, targetId: currentConnectionId};
         updateNodeData(id, data);
     });
 </script>

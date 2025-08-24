@@ -1,17 +1,15 @@
 ﻿<script lang="ts">
     import {Background, Controls, type Edge, MiniMap, type Node, SvelteFlow, useSvelteFlow} from '@xyflow/svelte';
     import '@xyflow/svelte/dist/style.css';
-    import {useDragAndDrop} from "../../lib/components/DragAndDropProvider.svelte";
+    import { useDragAndDrop } from '$lib/components/ui/dragAndDrop';
     import RequestNode from "./nodes/RequestNode.svelte";
     import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
     import PrintTextNode from "./nodes/PrintTextNode.svelte";
     import {
-        PrintTextNodeData,
-        ExtractPropertyNodeData,
-        RequestNodeData,
-        type WorkflowNode, type WorkflowNodeData,
+        type WorkflowNode,
+        type WorkflowNodeData,
         WorkflowNodeType
-    } from "../types";
+    } from "$lib/components/types";
 
     const dragAndDropContext = useDragAndDrop();
     const additionalNodeTypes = {
@@ -58,11 +56,11 @@
     function CreateWorkflowNodeData(nodeType: WorkflowNodeType): WorkflowNodeData {
         switch (nodeType) {
             case WorkflowNodeType.PrintText:
-                return new PrintTextNodeData();
+                return { type: WorkflowNodeType.PrintText };
             case WorkflowNodeType.ExtractProperty:
-                return new ExtractPropertyNodeData();
+                return { type: WorkflowNodeType.ExtractProperty };
             case WorkflowNodeType.Request:
-                return new RequestNodeData();
+                return { type: WorkflowNodeType.Request };
             default:
                 throw new Error(`Unsupported WorkflowNode type '${nodeType}'`);
         }

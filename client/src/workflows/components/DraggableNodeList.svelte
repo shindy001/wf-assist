@@ -1,7 +1,7 @@
 ﻿<script lang="ts">
-    import {WorkflowNodeType} from "../types";
-    import {useDragAndDrop} from "../../lib/components/DragAndDropProvider.svelte";
+    import {WorkflowNodeType} from "$lib/components/types";
     import type {ClassValue} from "svelte/elements";
+    import { useDragAndDrop } from "$lib/components/ui/dragAndDrop";
     import {Button} from "$lib/components/ui/button";
 
     const props: { class?: ClassValue } = $props();
