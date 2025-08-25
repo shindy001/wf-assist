@@ -16,7 +16,7 @@
         event.dataTransfer.effectAllowed = "move";
     };
 
-    const nodeTypes = [...Object.values(WorkflowNodeType)];
+    const nodeTypes = [...Object.values(WorkflowNodeType).filter(x => x !== WorkflowNodeType.Default)];
 </script>
 
 <div class={props.class}>
