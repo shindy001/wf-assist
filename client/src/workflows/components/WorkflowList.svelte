@@ -1,5 +1,5 @@
 ﻿<script lang="ts" module>
-    import {useAppState} from "../../lib/stores/appState.svelte";
+    import {useAppState} from "$lib/stores/appState";
 
     const appState = await useAppState();
 </script>
