@@ -4,6 +4,8 @@ using WfAssist.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddWfAssistServices();
+
 builder.Services.AddOpenApi(opt =>
 {
     opt.AddDocumentTransformer((document, _, _) =>

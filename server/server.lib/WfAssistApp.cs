@@ -1,11 +1,30 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using FluentMigrator.Runner;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using WfAssist.AspNetCore.Infrastructure;
 
 namespace WfAssist.AspNetCore;
 
 public static class WfAssistApp
 {
+    /// <summary>
+    /// Adds services required by WfAssist app.
+    /// </summary>
+    /// <param name="services"></param>
+    public static void AddWfAssistServices(this IServiceCollection services)
+    {
+        services.AddSingleton<IDbConnectionFactory, SqliteDbConnectionFactory>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddFluentMigratorCore()
+            .ConfigureRunner(rb => rb
+                .AddSQLite()
+                .WithGlobalConnectionString(Constants.SqliteDbConnectionString)
+                .ScanIn(typeof(WfAssistApp).Assembly).For.Migrations())
+            .AddLogging(lb => lb.AddFluentMigratorConsole());
+    }
+
     /// <summary>
     /// Sets up WfAssist resources and api.<br/><br/>
     /// <b>Client endpoints:</b><br/>
@@ -22,5 +41,14 @@ public static class WfAssistApp
 
         app.RegisterWfAssistClientEndpoints(logger, excludeFromOpenApi);
         app.RegisterWfAssistApiEndpoints(logger, excludeFromOpenApi);
+
+        UpdateDatabase(app);
+    }
+
+    private static void UpdateDatabase(IApplicationBuilder app)
+    {
+        using var scope = app.ApplicationServices.CreateScope();
+        var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
+        runner.MigrateUp();
     }
 }
