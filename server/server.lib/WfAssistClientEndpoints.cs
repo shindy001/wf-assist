@@ -43,7 +43,7 @@ internal static class WfAssistClientEndpoints
     /// <param name="routeGroup"></param>
     /// <param name="logger"></param>
     /// <returns></returns>
-    public static IEndpointRouteBuilder MapWfAssistClientResources(this RouteGroupBuilder routeGroup, ILogger logger)
+    private static IEndpointRouteBuilder MapWfAssistClientResources(this RouteGroupBuilder routeGroup, ILogger logger)
     {
         var rootDirectoryPath = Path.Combine(AppContext.BaseDirectory, Constants.WwwRootDirectory, Constants.AppRoute);
         var rootDirectoryInfo = new DirectoryInfo(rootDirectoryPath);

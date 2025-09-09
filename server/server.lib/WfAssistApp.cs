@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -13,14 +13,14 @@ public static class WfAssistApp
     /// <b>Api endpoints:</b><br/>
     /// <inheritdoc cref="WfAssistApiEndpoints.RegisterWfAssistApiEndpoints"/><br/>
     /// </summary>
-    /// <param name="endpoints">Endpoints of the application that want to use WfAssist.</param>
+    /// <param name="app">Web application that want to use WfAssist.</param>
     /// <param name="excludeFromOpenApi">Default is true, excludes WfAssist endpoints from OpenApi definitions</param>
-    public static void UseWfAssistApp(this IEndpointRouteBuilder endpoints, bool excludeFromOpenApi = true)
+    public static void UseWfAssistApp(this WebApplication app, bool excludeFromOpenApi = true)
     {
-        var loggerFactory = endpoints.ServiceProvider.GetRequiredService<ILoggerFactory>();
+        var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger($"{nameof(UseWfAssistApp)}-API_and_UI_registration");
 
-        endpoints.RegisterWfAssistClientEndpoints(logger, excludeFromOpenApi);
-        endpoints.RegisterWfAssistApiEndpoints(logger, excludeFromOpenApi);
+        app.RegisterWfAssistClientEndpoints(logger, excludeFromOpenApi);
+        app.RegisterWfAssistApiEndpoints(logger, excludeFromOpenApi);
     }
 }
