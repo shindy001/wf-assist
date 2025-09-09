@@ -1,0 +1,132 @@
+﻿using System.Net.Mime;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
+
+namespace WfAssist.AspNetCore;
+
+internal static class WfAssistClientEndpoints
+{
+    /// <summary>
+    /// 1. Registers WfAssist Client app resources via endpoints<br/>
+    /// 2. WfAssist client app and this lib project is bundled to a nuget in nuget project (on project build) in solution.
+    /// Nuget package output dir is [solutionDir/nuget/packages]<br/>
+    /// 3. If you are not using the nuget, you need to copy dist binaries to [your server host outputDir]/wwwroot/wfAssist
+    /// </summary>
+    /// <param name="endpoints"></param>
+    /// <param name="logger"></param>
+    /// <param name="excludeFromOpenApi">Default is true, excludes WfAssist endpoints from OpenApi definitions</param>
+    public static void RegisterWfAssistClientEndpoints(this IEndpointRouteBuilder endpoints, ILogger logger, bool excludeFromOpenApi = true)
+    {
+        var clientUiEndpointsGroup = endpoints.MapGroup(Constants.AppRoute);
+        if (excludeFromOpenApi)
+        {
+            clientUiEndpointsGroup.ExcludeFromDescription();
+        }
+
+        // Redirect to client index - wfAssist files (from nuget or dist) must be in [server host outputDir]/wwwroot/wfAssist
+        clientUiEndpointsGroup.MapGet($"/{Constants.AppRoute}", context =>
+        {
+            context.Response.Redirect($"/{Constants.AppRoute}/{Constants.IndexHtmlFile}");
+            return Task.CompletedTask;
+        });
+
+        clientUiEndpointsGroup.MapWfAssistClientResources(logger);
+    }
+
+    /// <summary>
+    /// Maps WfAssist client resources and provides them via endpoints, client resources are copies to output only when used via nuget.
+    /// Nuget project bundles this server.lib and client binaries and copy them to output directory when the project using the nuget is build.
+    /// </summary>
+    /// <param name="routeGroup"></param>
+    /// <param name="logger"></param>
+    /// <returns></returns>
+    public static IEndpointRouteBuilder MapWfAssistClientResources(this RouteGroupBuilder routeGroup, ILogger logger)
+    {
+        var rootDirectoryPath = Path.Combine(AppContext.BaseDirectory, Constants.WwwRootDirectory, Constants.AppRoute);
+        var rootDirectoryInfo = new DirectoryInfo(rootDirectoryPath);
+        if (!rootDirectoryInfo.Exists)
+        {
+            var errorMessage =
+                $"""
+                  *****
+                  Failed to register WFAssist UI, web application binaries not found in directory: '{rootDirectoryPath}'.
+                  If your are developing or debugging WFAssist server and need the client UI, copy built client UI binaries to the specified directory.
+                  Otherwise only server API will be available.
+                  (You can ignore this message if you are only using the API or running WFAssist UI as separate process.)
+                  *****
+                  """;
+
+            logger.LogError("{errorMessage}", errorMessage);
+
+            return routeGroup;
+        }
+
+        var indexHtmlFileInfo = rootDirectoryInfo.GetFiles(Constants.IndexHtmlFile).SingleOrDefault();
+        var indexCssFileInfo = rootDirectoryInfo.GetFiles(Constants.IndexCssFile).SingleOrDefault();
+        var indexJsFileInfo = rootDirectoryInfo.GetFiles(Constants.IndexJsFile).SingleOrDefault();
+        var faviconFileInfo = rootDirectoryInfo.GetFiles(Constants.FaviconFile).SingleOrDefault();
+
+        if (indexHtmlFileInfo is null || indexCssFileInfo is null || indexJsFileInfo is null || faviconFileInfo is null)
+        {
+            var errorMessage =
+                $"""
+                  *****
+                  Failed to register WFAssist UI, some files are missing in app root directory '{rootDirectoryPath}':
+                  {Constants.IndexHtmlFile}: {(indexHtmlFileInfo is null ? "missing": "found")}
+                  {Constants.IndexCssFile}: {(indexCssFileInfo is null ? "missing": "found")}
+                  {Constants.IndexJsFile}: {(indexJsFileInfo is null ? "missing": "found")}
+                  {Constants.FaviconFile}: {(faviconFileInfo is null ? "missing": "found")}
+                  *****
+                  """;
+
+            logger.LogError("{errorMessage}", errorMessage);
+
+            return routeGroup;
+        }
+
+        routeGroup.MapDocumentEndpoint(indexHtmlFileInfo);
+        routeGroup.MapStaticAsset(indexCssFileInfo, MediaTypeNames.Text.Css);
+        routeGroup.MapStaticAsset(indexJsFileInfo, MediaTypeNames.Text.JavaScript);
+        routeGroup.MapStaticAsset(faviconFileInfo, MediaTypeNames.Image.Icon);
+
+        return routeGroup;
+    }
+
+    private static void MapDocumentEndpoint(this IEndpointRouteBuilder endpoints, FileInfo documentFileInfo)
+    {
+        if (!documentFileInfo.Exists) return;
+
+        var fileContent = File.ReadAllText(documentFileInfo.FullName);
+        endpoints.MapGet($"{documentFileInfo.Name}", () => Results.Content(fileContent, "text/html"));
+    }
+
+    private static void MapStaticAsset(this IEndpointRouteBuilder endpoints, FileInfo asset, string contentType)
+    {
+        endpoints.MapGet($"{asset.Name}", (HttpContext httpContext) => HandleStaticAsset(asset, contentType, httpContext))
+            .AllowAnonymous();
+    }
+
+    private static IResult HandleStaticAsset(FileInfo fileInfo, string contentType, HttpContext httpContext)
+    {
+        httpContext.Response.Headers.CacheControl = "no-cache";
+
+        if (!fileInfo.Exists)
+        {
+            return Results.NotFound();
+        }
+
+        var etag = $"\"{fileInfo.LastWriteTime.Ticks}\"";
+        var ifNoneMatch = httpContext.Request.Headers.IfNoneMatch.ToString();
+        if (ifNoneMatch == etag)
+        {
+            return Results.StatusCode(StatusCodes.Status304NotModified);
+        }
+
+        var stream = fileInfo.OpenRead();
+
+        return Results.Stream(stream, contentType, entityTag: new EntityTagHeaderValue(etag));
+    }
+}
