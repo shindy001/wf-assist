@@ -1,4 +1,4 @@
-﻿namespace WfAssist.AspNetCore.Features.Workflows.Models;
+﻿namespace WfAssist.AspNetCore.Domain.Workflows.Models;
 
 /// <summary>
 /// Marker interface of node data.

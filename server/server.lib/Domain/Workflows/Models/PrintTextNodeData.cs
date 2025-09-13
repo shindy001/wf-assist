@@ -1,4 +1,4 @@
-﻿namespace WfAssist.AspNetCore.Features.Workflows.Models;
+﻿namespace WfAssist.AspNetCore.Domain.Workflows.Models;
 
 public sealed record PrintTextNodeData() : WorkflowNodeDataBase(WorkflowNodeType.PrintText)
 {

@@ -1,4 +1,4 @@
-﻿namespace WfAssist.AspNetCore.Features.Workflows.Models;
+﻿namespace WfAssist.AspNetCore.Domain.Workflows.Models;
 
 public sealed record RequestNodeData() : WorkflowNodeDataBase(WorkflowNodeType.Request)
 {
