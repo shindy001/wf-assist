@@ -3,7 +3,6 @@
 internal static class Constants
 {
     public const string AppRoute = "wfAssist";
-    public const string ApiRoute = $"{AppRoute}/api";
 
     public const string WwwRootDirectory = "wwwroot";
     public const string IndexHtmlFile = "index.html";

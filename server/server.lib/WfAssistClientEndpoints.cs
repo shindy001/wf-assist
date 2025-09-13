@@ -13,27 +13,21 @@ internal static class WfAssistClientEndpoints
     /// 1. Registers WfAssist Client app resources via endpoints<br/>
     /// 2. WfAssist client app and this lib project is bundled to a nuget in nuget project (on project build) in solution.
     /// Nuget package output dir is [solutionDir/nuget/packages]<br/>
-    /// 3. If you are not using the nuget, you need to copy dist binaries to [your server host outputDir]/wwwroot/wfAssist
+    /// 3. If you are not using the nuget, you need to copy dist binaries to [your server host outputDir]/wwwroot/wfAssist<br/>
+    /// Example path - "myServerDirectory/bin/debug/net9.0/wwwroot/wfAssist"
     /// </summary>
     /// <param name="endpoints"></param>
     /// <param name="logger"></param>
-    /// <param name="excludeFromOpenApi">Default is true, excludes WfAssist endpoints from OpenApi definitions</param>
-    public static void RegisterWfAssistClientEndpoints(this IEndpointRouteBuilder endpoints, ILogger logger, bool excludeFromOpenApi = true)
+    public static void RegisterWfAssistClientEndpoints(IEndpointRouteBuilder endpoints, ILogger logger)
     {
-        var clientUiEndpointsGroup = endpoints.MapGroup(Constants.AppRoute);
-        if (excludeFromOpenApi)
-        {
-            clientUiEndpointsGroup.ExcludeFromDescription();
-        }
-
         // Redirect to client index - wfAssist files (from nuget or dist) must be in [server host outputDir]/wwwroot/wfAssist
-        clientUiEndpointsGroup.MapGet($"/{Constants.AppRoute}", context =>
+        endpoints.MapGet($"/", context =>
         {
             context.Response.Redirect($"/{Constants.AppRoute}/{Constants.IndexHtmlFile}");
             return Task.CompletedTask;
         });
 
-        clientUiEndpointsGroup.MapWfAssistClientResources(logger);
+        MapWfAssistClientResources(endpoints, logger);
     }
 
     /// <summary>
@@ -43,7 +37,7 @@ internal static class WfAssistClientEndpoints
     /// <param name="routeGroup"></param>
     /// <param name="logger"></param>
     /// <returns></returns>
-    private static IEndpointRouteBuilder MapWfAssistClientResources(this RouteGroupBuilder routeGroup, ILogger logger)
+    private static void MapWfAssistClientResources(IEndpointRouteBuilder routeGroup, ILogger logger)
     {
         var rootDirectoryPath = Path.Combine(AppContext.BaseDirectory, Constants.WwwRootDirectory, Constants.AppRoute);
         var rootDirectoryInfo = new DirectoryInfo(rootDirectoryPath);
@@ -61,7 +55,7 @@ internal static class WfAssistClientEndpoints
 
             logger.LogError("{errorMessage}", errorMessage);
 
-            return routeGroup;
+            return;
         }
 
         var indexHtmlFileInfo = rootDirectoryInfo.GetFiles(Constants.IndexHtmlFile).SingleOrDefault();
@@ -84,15 +78,13 @@ internal static class WfAssistClientEndpoints
 
             logger.LogError("{errorMessage}", errorMessage);
 
-            return routeGroup;
+            return;
         }
 
         routeGroup.MapDocumentEndpoint(indexHtmlFileInfo);
         routeGroup.MapStaticAsset(indexCssFileInfo, MediaTypeNames.Text.Css);
         routeGroup.MapStaticAsset(indexJsFileInfo, MediaTypeNames.Text.JavaScript);
         routeGroup.MapStaticAsset(faviconFileInfo, MediaTypeNames.Image.Icon);
-
-        return routeGroup;
     }
 
     private static void MapDocumentEndpoint(this IEndpointRouteBuilder endpoints, FileInfo documentFileInfo)

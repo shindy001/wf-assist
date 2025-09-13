@@ -39,6 +39,6 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseWfAssistApp(excludeFromOpenApi: false);
+await app.UseWfAssistApp(excludeFromOpenApi: false);
 
 app.Run();

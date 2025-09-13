@@ -1,19 +1,23 @@
 ﻿using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WfAssist.AspNetCore.Infrastructure;
+using WfAssist.AspNetCore.Shared;
 
 namespace WfAssist.AspNetCore;
 
 public static class WfAssistApp
 {
+    private static readonly FeatureModuleManager FeatureModuleManager = new();
+
     /// <summary>
     /// Adds services required by WfAssist app.
     /// </summary>
-    /// <param name="services"></param>
     public static void AddWfAssistServices(this IServiceCollection services)
     {
+        var wfAssistAssembly = typeof(WfAssistApp).Assembly;
         services.AddSingleton<IReadOnlyDbConnectionFactory, SqliteReadOnlyDbConnectionFactory>();
         services.AddSingleton<IDbConnectionFactory, SqliteDbConnectionFactory>();
 
@@ -24,28 +28,39 @@ public static class WfAssistApp
             .ConfigureRunner(rb => rb
                 .AddSQLite()
                 .WithGlobalConnectionString(Constants.SqliteDbConnectionString)
-                .ScanIn(typeof(WfAssistApp).Assembly).For.Migrations())
+                .ScanIn(wfAssistAssembly).For.Migrations())
             .AddLogging(lb => lb.AddFluentMigratorConsole());
+
+        FeatureModuleManager.RegisterModules(services, wfAssistAssembly);
     }
 
     /// <summary>
     /// Sets up WfAssist resources and api.<br/><br/>
     /// <b>Client endpoints:</b><br/>
     /// <inheritdoc cref="WfAssistClientEndpoints.RegisterWfAssistClientEndpoints"/><br/><br/>
-    /// <b>Api endpoints:</b><br/>
-    /// <inheritdoc cref="WfAssistApiEndpoints.RegisterWfAssistApiEndpoints"/><br/>
+    /// <b>Feature modules (api):</b><br/>
+    /// 1. <inheritdoc cref="FeatureModuleManager.InitializeModules"/><br/>
+    /// 2. <inheritdoc cref="FeatureModuleManager.MapFeatureModulesEndpoints"/><br/>
     /// </summary>
     /// <param name="app">Web application that want to use WfAssist.</param>
     /// <param name="excludeFromOpenApi">Default is true, excludes WfAssist endpoints from OpenApi definitions</param>
-    public static void UseWfAssistApp(this WebApplication app, bool excludeFromOpenApi = true)
+    public static async Task UseWfAssistApp(this WebApplication app, bool excludeFromOpenApi = true)
     {
+        UpdateDatabase(app);
+
         var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger($"{nameof(UseWfAssistApp)}-API_and_UI_registration");
 
-        app.RegisterWfAssistClientEndpoints(logger, excludeFromOpenApi);
-        app.RegisterWfAssistApiEndpoints(logger, excludeFromOpenApi);
+        var wfAssistDefaultRouteGroup = app.MapGroup(Constants.AppRoute);
+        if (excludeFromOpenApi)
+        {
+            wfAssistDefaultRouteGroup.ExcludeFromDescription();
+        }
 
-        UpdateDatabase(app);
+        await FeatureModuleManager.InitializeModules(app);
+        FeatureModuleManager.MapFeatureModulesEndpoints(wfAssistDefaultRouteGroup);
+
+        WfAssistClientEndpoints.RegisterWfAssistClientEndpoints(wfAssistDefaultRouteGroup, logger);
     }
 
     private static void UpdateDatabase(IApplicationBuilder app)
