@@ -6,13 +6,18 @@ namespace WfAssist.AspNetCore.Infrastructure;
 public interface IDbConnectionFactory
 {
     public IDbConnection CreateConnection();
-    public IDbConnection CreateReadonlyConnection();
 }
+
+public interface IReadOnlyDbConnectionFactory : IDbConnectionFactory;
 
 internal sealed class SqliteDbConnectionFactory : IDbConnectionFactory
 {
     public IDbConnection CreateConnection() => new SqliteConnection(Constants.SqliteDbConnectionString);
-    public IDbConnection CreateReadonlyConnection()
+}
+
+internal sealed class SqliteReadOnlyDbConnectionFactory : IReadOnlyDbConnectionFactory
+{
+    public IDbConnection CreateConnection()
     {
         var builder = new SqliteConnectionStringBuilder(Constants.SqliteDbConnectionString)
         {

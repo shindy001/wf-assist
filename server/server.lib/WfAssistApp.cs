@@ -14,7 +14,10 @@ public static class WfAssistApp
     /// <param name="services"></param>
     public static void AddWfAssistServices(this IServiceCollection services)
     {
+        services.AddSingleton<IReadOnlyDbConnectionFactory, SqliteReadOnlyDbConnectionFactory>();
         services.AddSingleton<IDbConnectionFactory, SqliteDbConnectionFactory>();
+
+        services.AddScoped<IReadOnlyUnitOfWork, ReadOnlyUnitOfWork>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddFluentMigratorCore()

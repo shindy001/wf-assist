@@ -3,78 +3,59 @@ using Microsoft.Extensions.Logging;
 
 namespace WfAssist.AspNetCore.Infrastructure;
 
-public interface IUnitOfWork
+public interface IReadOnlyUnitOfWork
 {
     // TODO define repositories
-
-    public Task CommitAsync();
 }
 
-internal sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
+internal sealed class ReadOnlyUnitOfWork : IReadOnlyUnitOfWork, IDisposable
 {
     private readonly ILogger<UnitOfWork> _logger;
     private readonly IDbConnection _dbConnection;
-    private readonly IDbTransaction _dbTransaction;
-    private bool _commited;
+
+    public ReadOnlyUnitOfWork(IReadOnlyDbConnectionFactory dbConnectionFactory, ILogger<UnitOfWork> logger)
+    {
+        _logger = logger;
+        _dbConnection = dbConnectionFactory.CreateConnection();
+        _dbConnection.Open();
+
+        // TODO create repositories with _dbConnection as param
+    }
+
+    public void Dispose()
+    {
+        _dbConnection.Dispose();
+    }
+}
+
+public interface IUnitOfWork
+{
+    IDbTransaction BeginTransactionAsync();
+
+    // TODO define repositories
+}
+
+internal sealed class UnitOfWork : IUnitOfWork, IDisposable
+{
+    private readonly ILogger<UnitOfWork> _logger;
+    private readonly IDbConnection _dbConnection;
 
     public UnitOfWork(IDbConnectionFactory dbConnectionFactory, ILogger<UnitOfWork> logger)
     {
         _logger = logger;
         _dbConnection = dbConnectionFactory.CreateConnection();
         _dbConnection.Open();
-        _dbTransaction = _dbConnection.BeginTransaction();
 
         // TODO create repositories with _dbConnection as param
     }
 
-    public Task CommitAsync()
+    public IDbTransaction BeginTransactionAsync()
     {
-        if (_dbTransaction is null)
-        {
-            throw new InvalidOperationException("No active transaction to commit.");
-        }
-
-        try
-        {
-            _dbTransaction.Commit();
-            _commited = true;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Transaction commit failed, will try rollback before rethrow.");
-            TryRollback();
-            throw;
-        }
-
-        return Task.CompletedTask;
+        return _dbConnection.BeginTransaction();
     }
 
-    private void TryRollback()
+    public void Dispose()
     {
-        try
-        {
-            _dbTransaction.Rollback();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Transaction rollback failed.");
-        }
-        finally
-        {
-            _dbTransaction.Dispose();
-        }
-    }
-
-    public ValueTask DisposeAsync()
-    {
-        if (!_commited)
-        {
-            TryRollback();
-        }
-
-        _dbTransaction.Dispose();
         _dbConnection.Dispose();
-
-        return ValueTask.CompletedTask;
     }
 }
