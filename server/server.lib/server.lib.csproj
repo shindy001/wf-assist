@@ -16,6 +16,7 @@
       <PackageReference Include="FluentMigrator" Version="7.1.0" />
       <PackageReference Include="FluentMigrator.Runner" Version="7.1.0" />
       <PackageReference Include="FluentMigrator.Runner.SQLite" Version="7.1.0" />
+      <PackageReference Include="JetBrains.Annotations" Version="2025.2.2" />
       <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.9" />
     </ItemGroup>
 
