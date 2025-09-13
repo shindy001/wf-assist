@@ -8,7 +8,7 @@ public interface IFeatureModule
     /// <summary>
     /// Registers service dependencies required by the module.
     /// </summary>
-    IServiceCollection RegisterServices(IServiceCollection services);
+    void RegisterServices(IServiceCollection services);
 
     /// <summary>
     /// Initializes feature. E.g. Seeding of default data.
@@ -18,5 +18,5 @@ public interface IFeatureModule
     /// <summary>
     /// Maps endpoints required by the module.
     /// </summary>
-    IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpointBuilder);
+    void MapEndpoints(IEndpointRouteBuilder endpointBuilder);
 }
