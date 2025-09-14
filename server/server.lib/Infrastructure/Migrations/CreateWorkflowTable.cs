@@ -1,8 +1,10 @@
 ﻿using FluentMigrator;
+using JetBrains.Annotations;
 
 namespace WfAssist.AspNetCore.Infrastructure.Migrations;
 
 [Migration(2025100901)]
+[UsedImplicitly]
 public class CreateWorkflowTable : Migration
 {
     public override void Up()
