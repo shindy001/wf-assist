@@ -8,7 +8,9 @@ public class CreateWorkflowTable : Migration
     public override void Up()
     {
         Create.Table("Workflows")
-            .WithColumn("Id").AsInt32().PrimaryKey().Identity();
+            .WithColumn("Id").AsFixedLengthString(36).PrimaryKey() // uuid
+            .WithColumn("Name").AsFixedLengthString(100)
+            .WithColumn("Data").AsString();
     }
 
     public override void Down()
