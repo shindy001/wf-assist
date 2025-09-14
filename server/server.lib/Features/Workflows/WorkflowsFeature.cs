@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using WfAssist.AspNetCore.Features.Workflows.GetIdentities;
 using WfAssist.AspNetCore.Shared;
 
 namespace WfAssist.AspNetCore.Features.Workflows;
@@ -20,6 +21,8 @@ internal sealed class WorkflowsFeature : IFeatureModule
 
     public void MapEndpoints(IEndpointRouteBuilder endpointBuilder)
     {
-        endpointBuilder.MapGet("/workflows", () => "Hello from workflows feature!");
+        var workflowsGroup = endpointBuilder.MapGroup("/workflows");
+
+        workflowsGroup.MapGetIdentitiesEndpoint();
     }
 }
