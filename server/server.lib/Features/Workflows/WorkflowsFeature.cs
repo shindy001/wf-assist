@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using WfAssist.AspNetCore.Features.Workflows.GetIdentities;
 using WfAssist.AspNetCore.Shared;
 
 namespace WfAssist.AspNetCore.Features.Workflows;
