@@ -1,9 +1,12 @@
-﻿using FluentMigrator.Runner;
+﻿using Dapper;
+using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using WfAssist.AspNetCore.Domain.Workflows.Contracts;
 using WfAssist.AspNetCore.Infrastructure;
+using WfAssist.AspNetCore.Infrastructure.Serialization;
 using WfAssist.AspNetCore.Shared;
 
 namespace WfAssist.AspNetCore;
@@ -18,15 +21,20 @@ public static class WfAssistApp
     public static void AddWfAssistServices(this IServiceCollection services)
     {
         var wfAssistAssembly = typeof(WfAssistApp).Assembly;
-        services.AddSingleton<IDbConnectionFactory, SqliteDbConnectionFactory>();
-        services.AddScoped<IDbConnectionProvider, DbConnectionProvider>();
 
         services.AddFluentMigratorCore()
-            .ConfigureRunner(rb => rb
+            .ConfigureRunner(cfg => cfg
                 .AddSQLite()
                 .WithGlobalConnectionString(Constants.SqliteDbConnectionString)
                 .ScanIn(wfAssistAssembly).For.Migrations())
-            .AddLogging(lb => lb.AddFluentMigratorConsole());
+            .AddLogging(cfg => cfg.AddFluentMigratorConsole());
+
+        // Dapper types customization
+        SqlMapper.AddTypeHandler(new WorkflowDataTypeHandler());
+
+        services.AddSingleton<IDbConnectionFactory, SqliteDbConnectionFactory>();
+        services.AddScoped<IDbConnectionProvider, DbConnectionProvider>();
+        services.AddScoped<IWorkflowRepository, WorkflowRepository>();
 
         FeatureModuleManager.RegisterModules(services, wfAssistAssembly);
     }
