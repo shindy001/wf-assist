@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using WfAssist.AspNetCore.Shared;
@@ -20,7 +21,9 @@ internal sealed class WorkflowsFeature : IFeatureModule
 
     public void MapEndpoints(IEndpointRouteBuilder endpointBuilder)
     {
-        var workflowsGroup = endpointBuilder.MapGroup("/workflows");
+        var workflowsGroup = endpointBuilder
+            .MapGroup("/workflows")
+            .WithTags($"{Constants.AppName}_Workflows");
 
         workflowsGroup.MapGetIdentitiesEndpoint();
         workflowsGroup.MapCreateEndpoint();

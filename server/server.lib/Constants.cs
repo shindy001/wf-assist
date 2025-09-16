@@ -4,6 +4,7 @@ namespace WfAssist.AspNetCore;
 
 internal static class Constants
 {
+    public const string AppName = "WfAssist";
     public const string AppRoute = "wfAssist";
     public static readonly PathString AppRouteSegment = new($"/{AppRoute}");
 

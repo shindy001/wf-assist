@@ -58,7 +58,10 @@ public static class WfAssistApp
         var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger($"{nameof(UseWfAssistApp)}-API_and_UI_registration");
 
-        var wfAssistDefaultRouteGroup = app.MapGroup(Constants.AppRoute);
+        var wfAssistDefaultRouteGroup = app
+            .MapGroup(Constants.AppRoute)
+            .WithTags(Constants.AppName);
+
         if (excludeFromOpenApi)
         {
             wfAssistDefaultRouteGroup.ExcludeFromDescription();
