@@ -9,8 +9,8 @@ public class Workflow
 
 public sealed record WorkflowData
 {
-    public required IEnumerable<WorkflowNode> Nodes { get; init; }
-    public required IEnumerable<WorkflowEdge> Edges { get; init; }
+    public IEnumerable<WorkflowNode> Nodes { get; init; } = [];
+    public IEnumerable<WorkflowEdge> Edges { get; init; } = [];
 }
 
 public sealed record WorkflowNode
