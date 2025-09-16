@@ -1,8 +1,11 @@
-﻿namespace WfAssist.AspNetCore;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace WfAssist.AspNetCore;
 
 internal static class Constants
 {
     public const string AppRoute = "wfAssist";
+    public static readonly PathString AppRouteSegment = new($"/{AppRoute}");
 
     public const string WwwRootDirectory = "wwwroot";
     public const string IndexHtmlFile = "index.html";
