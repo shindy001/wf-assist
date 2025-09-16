@@ -18,11 +18,8 @@ public static class WfAssistApp
     public static void AddWfAssistServices(this IServiceCollection services)
     {
         var wfAssistAssembly = typeof(WfAssistApp).Assembly;
-        services.AddSingleton<IReadOnlyDbConnectionFactory, SqliteReadOnlyDbConnectionFactory>();
         services.AddSingleton<IDbConnectionFactory, SqliteDbConnectionFactory>();
-
-        services.AddScoped<IReadOnlyUnitOfWork, ReadOnlyUnitOfWork>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IDbConnectionProvider, DbConnectionProvider>();
 
         services.AddFluentMigratorCore()
             .ConfigureRunner(rb => rb
@@ -47,6 +44,8 @@ public static class WfAssistApp
     public static async Task UseWfAssistApp(this WebApplication app, bool excludeFromOpenApi = true)
     {
         UpdateDatabase(app);
+
+        app.UseTransactionMiddleware();
 
         var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger($"{nameof(UseWfAssistApp)}-API_and_UI_registration");
