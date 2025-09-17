@@ -11,7 +11,7 @@ public static class UpdateData
 {
     public static void MapUpdateDataEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPatch("/{id:guid}/updateData", async (Guid id, UpdateWorkflowDataRequest request, IWorkflowRepository workflowRepository) =>
+        endpoints.MapPost("/{id:guid}/updateData", async (Guid id, UpdateWorkflowDataRequest request, IWorkflowRepository workflowRepository) =>
             {
                 if (!await workflowRepository.Exists(id))
                 {

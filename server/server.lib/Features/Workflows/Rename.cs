@@ -9,7 +9,7 @@ public static class Rename
 {
     public static void MapRenameEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPatch("/{id:guid}/rename", async (Guid id, RenameWorkflowRequest request, IWorkflowRepository workflowRepository) =>
+        endpoints.MapPost("/{id:guid}/rename", async (Guid id, RenameWorkflowRequest request, IWorkflowRepository workflowRepository) =>
             {
                 if (!await workflowRepository.Exists(id))
                 {
