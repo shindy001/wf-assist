@@ -24,6 +24,7 @@ public sealed record WorkflowEdge
 
 public abstract record WorkflowNode(WorkflowNodeType Type)
 {
+    public WorkflowNodeType Type { get; } = Type;
     public required string Id { get; init; }
     public required Position Position { get; init; }
 }
