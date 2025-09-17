@@ -1,3 +1,6 @@
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using WfAssist.AspNetCore;
@@ -5,6 +8,15 @@ using WfAssist.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddWfAssistServices();
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    options.SerializerOptions.WriteIndented = true;
+    options.SerializerOptions.AllowTrailingCommas = true;
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddOpenApi(opt =>
 {
