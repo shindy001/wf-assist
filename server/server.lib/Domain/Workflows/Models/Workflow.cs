@@ -1,4 +1,6 @@
-﻿namespace WfAssist.AspNetCore.Domain.Workflows.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace WfAssist.AspNetCore.Domain.Workflows.Models;
 
 public class Workflow
 {
@@ -22,28 +24,31 @@ public sealed record WorkflowEdge
 }
 
 
-public abstract record WorkflowNode(WorkflowNodeType Type)
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(PrintTextNode), nameof(WorkflowNodeType.PrintText))]
+[JsonDerivedType(typeof(RequestNode), nameof(WorkflowNodeType.Request))]
+[JsonDerivedType(typeof(ExtractPropertyNode), nameof(WorkflowNodeType.ExtractProperty))]
+public abstract record WorkflowNode
 {
-    public WorkflowNodeType Type { get; } = Type;
     public required string Id { get; init; }
     public required Position Position { get; init; }
 }
 
-public sealed record PrintTextNode() : WorkflowNode(WorkflowNodeType.PrintText)
+public sealed record PrintTextNode : WorkflowNode
 {
     public required string Text { get; init; }
     public bool UseConsole { get; init; }
     public string? TargetId { get; init; }
 }
 
-public sealed record RequestNode() : WorkflowNode(WorkflowNodeType.Request)
+public sealed record RequestNode : WorkflowNode
 {
     public required string RequestType { get; init; }
     public required string Url { get; init; }
     public string? RequestBody { get; init; }
 }
 
-public sealed record ExtractPropertyNode() : WorkflowNode(WorkflowNodeType.ExtractProperty)
+public sealed record ExtractPropertyNode : WorkflowNode
 {
     public required string Path { get; init; }
     public required string TargetId { get; init; }
