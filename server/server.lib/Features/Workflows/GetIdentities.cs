@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using WfAssist.AspNetCore.Domain.Workflows.Contracts;
+using WfAssist.AspNetCore.Features.Workflows.Dtos;
 
 namespace WfAssist.AspNetCore.Features.Workflows;
 
@@ -21,8 +22,6 @@ public static class GetIdentities
             })
             .Produces<GetIdentitiesResponse>();
     }
-
-    private sealed record WorkFlowIdentityDto(string Id, string Name);
 
     private sealed record GetIdentitiesResponse
     {
