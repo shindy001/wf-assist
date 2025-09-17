@@ -26,6 +26,7 @@ internal sealed class WorkflowsFeature : IFeatureModule
             .WithTags($"{Constants.AppName}_Workflows");
 
         workflowsGroup.MapGetIdentitiesEndpoint();
+        workflowsGroup.MapGetByIdEndpoint();
         workflowsGroup.MapCreateEndpoint();
     }
 }
