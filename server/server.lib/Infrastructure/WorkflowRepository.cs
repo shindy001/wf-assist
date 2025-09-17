@@ -24,16 +24,16 @@ public sealed class WorkflowRepository : IWorkflowRepository
 
     public async Task<Workflow?> GetById(Guid id)
     {
-        const string sql = "SELECT * FROM Workflows WHERE Id = @id";
+        const string sql = "SELECT * FROM Workflows WHERE Id = @Id";
 
-        return await _dbConnection.QuerySingleOrDefaultAsync<Workflow>(sql, new { id });
+        return await _dbConnection.QuerySingleOrDefaultAsync<Workflow>(sql, new { Id = id });
     }
 
     public async Task<bool> Exists(Guid id)
     {
-        const string sql = "SELECT COUNT(1) FROM Workflows WHERE Id = @id";
+        const string sql = "SELECT COUNT(1) FROM Workflows WHERE Id = @Id";
 
-        return await _dbConnection.ExecuteScalarAsync<bool>(sql, new { id });
+        return await _dbConnection.ExecuteScalarAsync<bool>(sql, new { Id = id });
     }
 
     public async Task Create(Workflow workflow)
@@ -54,7 +54,7 @@ public sealed class WorkflowRepository : IWorkflowRepository
     {
         const string sql = "UPDATE Workflows SET Data = @Data WHERE Id = @Id";
 
-        await _dbConnection.ExecuteAsync(sql, data);
+        await _dbConnection.ExecuteAsync(sql, new { Id = id, Data = data});
     }
 
     public async Task Delete(Guid id)
@@ -63,7 +63,7 @@ public sealed class WorkflowRepository : IWorkflowRepository
 
         if (await Exists(id))
         {
-            await _dbConnection.ExecuteAsync(sql, new {id});
+            await _dbConnection.ExecuteAsync(sql, new {Id = id});
         }
     }
 }
