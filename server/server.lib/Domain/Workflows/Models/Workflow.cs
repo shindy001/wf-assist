@@ -18,7 +18,7 @@ public sealed record WorkflowNode
     public required string Id { get; init; }
     public required WorkflowNodeType Type { get; init; }
     public required Position Position { get; init; }
-    public required IWorkflowNodeData Data { get; init; }
+    public required WorkflowNodeData Data { get; init; }
 }
 
 public sealed record WorkflowEdge
