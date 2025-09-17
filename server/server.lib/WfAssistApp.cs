@@ -31,6 +31,7 @@ public static class WfAssistApp
 
         // Dapper types customization
         SqlMapper.AddTypeHandler(new WorkflowDataTypeHandler());
+        SqlMapper.AddTypeHandler(new GuidTypeHandler());
 
         services.AddSingleton<IDbConnectionFactory, SqliteDbConnectionFactory>();
         services.AddScoped<IDbConnectionProvider, DbConnectionProvider>();
