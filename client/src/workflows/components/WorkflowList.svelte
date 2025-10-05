@@ -8,8 +8,11 @@
     import type {ClassValue} from "svelte/elements";
     import {Button} from "$lib/components/ui/button";
     import {Icon} from "$lib/components/ui/icons";
+    import { createQuery } from "@tanstack/svelte-query";
+    import { getWfAssistWorkflowsIdentitiesQuery } from "$api/@tanstack/svelte-query.gen";
 
     const props: { class?: ClassValue } = $props();
+    const query = createQuery(() => getWfAssistWorkflowsIdentitiesQuery());
 
     let contextMenuIsOpen = $state(false);
     let contextMenuPosition = $state<{x: number, y: number}>({x: 0, y: 0});
@@ -50,21 +53,27 @@
         </Button>
     </div>
     <div class="flex flex-col gap-1">
-        {#each ["workflow1", "workflow2"] as workflow}
-            <Button
-                    variant="ghost"
-                    class={[ workflow === appState.lastActiveWorkflowName ? 'bg-accent/50' : ''
+        {#if query.isLoading}
+            <p>Loading...</p>
+        {:else if query.isError}
+            <p>Error: {query.error.message}</p>
+        {:else if query.isSuccess}
+            {#each query.data.identities as workflowIdentity}
+                <Button
+                        variant="ghost"
+                        class={[ workflowIdentity.name === appState.lastActiveWorkflowName ? 'bg-accent/50' : ''
                     ]}
-                    onclick={() => appState.setActiveWorkflowName(workflow)}
-                    oncontextmenu={showContextMenu}
-            >
-                <Icon name="material-symbols--folder-data-outline-sharp"/>
-                <span class="w-full text-left">{workflow}</span>
-            </Button>
-        {:else}
-            <div class="px-2 flex gap-2 items-center content-center rounded-md cursor-pointer hover:bg-gray-100">
-                <p>No workflows yet, try adding one.</p>
-            </div>
-        {/each}
+                        onclick={() => appState.setActiveWorkflowName(workflowIdentity.name)}
+                        oncontextmenu={showContextMenu}
+                >
+                    <Icon name="material-symbols--folder-data-outline-sharp"/>
+                    <span class="w-full text-left">{workflowIdentity.name}</span>
+                </Button>
+            {:else}
+                <div class="px-2 flex gap-2 items-center content-center rounded-md cursor-pointer hover:bg-gray-100">
+                    <p>No workflows yet, try adding one.</p>
+                </div>
+            {/each}
+        {/if}
     </div>
 </div>
