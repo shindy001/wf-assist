@@ -171,54 +171,6 @@
           }
         }
       }
-    },
-    "/wfAssist/index.html": {
-      "get": {
-        "tags": [
-          "WfAssist"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/wfAssist/index.css": {
-      "get": {
-        "tags": [
-          "WfAssist"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/wfAssist/index.js": {
-      "get": {
-        "tags": [
-          "WfAssist"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/wfAssist/favicon.ico": {
-      "get": {
-        "tags": [
-          "WfAssist"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
     }
   },
   "components": {
@@ -239,6 +191,9 @@
         }
       },
       "GetIdentitiesResponse": {
+        "required": [
+          "identities"
+        ],
         "type": "object",
         "properties": {
           "identities": {
@@ -495,9 +450,6 @@
   "tags": [
     {
       "name": "WfAssist_Workflows"
-    },
-    {
-      "name": "WfAssist"
     }
   ]
 }
