@@ -25,6 +25,6 @@ public static class GetIdentities
 
     private sealed record GetIdentitiesResponse
     {
-        public IEnumerable<WorkFlowIdentityDto> Identities { get; init; } = [];
+        public required IEnumerable<WorkFlowIdentityDto> Identities { get; init; } = [];
     }
 }
