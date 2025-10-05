@@ -73,6 +73,10 @@ internal static class WfAssistClientEndpoints
                   {Constants.IndexCssFile}: {(indexCssFileInfo is null ? "missing": "found")}
                   {Constants.IndexJsFile}: {(indexJsFileInfo is null ? "missing": "found")}
                   {Constants.FaviconFile}: {(faviconFileInfo is null ? "missing": "found")}
+                  
+                  If your are developing or debugging WFAssist server and need the client UI, copy built client UI binaries to the specified directory.
+                  Otherwise only server API will be available.
+                  (You can ignore this message if you are only using the API or running WFAssist UI as separate process.)
                   *****
                   """;
 
