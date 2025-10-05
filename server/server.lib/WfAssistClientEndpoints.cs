@@ -25,7 +25,7 @@ internal static class WfAssistClientEndpoints
         {
             context.Response.Redirect($"/{Constants.AppRoute}/{Constants.IndexHtmlFile}");
             return Task.CompletedTask;
-        });
+        }).ExcludeFromDescription();
 
         MapWfAssistClientResources(endpoints, logger);
     }
@@ -96,13 +96,18 @@ internal static class WfAssistClientEndpoints
         if (!documentFileInfo.Exists) return;
 
         var fileContent = File.ReadAllText(documentFileInfo.FullName);
-        endpoints.MapGet($"{documentFileInfo.Name}", () => Results.Content(fileContent, "text/html"));
+        endpoints
+            .MapGet($"{documentFileInfo.Name}", () => Results.Content(fileContent, "text/html"))
+            // Documents should be excluded from openapi by default
+            .ExcludeFromDescription();
     }
 
     private static void MapStaticAsset(this IEndpointRouteBuilder endpoints, FileInfo asset, string contentType)
     {
-        endpoints.MapGet($"{asset.Name}", (HttpContext httpContext) => HandleStaticAsset(asset, contentType, httpContext))
-            .AllowAnonymous();
+        endpoints
+            .MapGet($"{asset.Name}", (HttpContext httpContext) => HandleStaticAsset(asset, contentType, httpContext))
+            // Static assets should be excluded from openapi by default
+            .ExcludeFromDescription();
     }
 
     private static IResult HandleStaticAsset(FileInfo fileInfo, string contentType, HttpContext httpContext)

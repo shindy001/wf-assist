@@ -41,7 +41,7 @@ public static class WfAssistApp
     }
 
     /// <summary>
-    /// Sets up WfAssist resources and api.<br/><br/>
+    /// Sets up WfAssist resources and api. Api and resources use AllowAnonymous by default (auth is unsupported)<br/><br/>
     /// <b>Client endpoints:</b><br/>
     /// <inheritdoc cref="WfAssistClientEndpoints.RegisterWfAssistClientEndpoints"/><br/><br/>
     /// <b>Feature modules (api):</b><br/>
@@ -61,7 +61,9 @@ public static class WfAssistApp
 
         var wfAssistDefaultRouteGroup = app
             .MapGroup(Constants.AppRoute)
-            .WithTags(Constants.AppName);
+            .WithTags(Constants.AppName)
+            // TODO - remove when auth is supported
+            .AllowAnonymous();
 
         if (excludeFromOpenApi)
         {
