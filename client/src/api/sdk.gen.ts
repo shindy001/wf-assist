@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { DeleteWfAssistWorkflowsByIdData, DeleteWfAssistWorkflowsByIdResponses, GetWfAssistFaviconIcoData, GetWfAssistFaviconIcoResponses, GetWfAssistIndexCssData, GetWfAssistIndexCssResponses, GetWfAssistIndexHtmlData, GetWfAssistIndexHtmlResponses, GetWfAssistIndexJsData, GetWfAssistIndexJsResponses, GetWfAssistWorkflowsByIdData, GetWfAssistWorkflowsByIdErrors, GetWfAssistWorkflowsByIdResponses, GetWfAssistWorkflowsIdentitiesData, GetWfAssistWorkflowsIdentitiesResponses, PostWfAssistWorkflowsByIdRenameData, PostWfAssistWorkflowsByIdRenameErrors, PostWfAssistWorkflowsByIdRenameResponses, PostWfAssistWorkflowsByIdUpdateDataData, PostWfAssistWorkflowsByIdUpdateDataErrors, PostWfAssistWorkflowsByIdUpdateDataResponses, PostWfAssistWorkflowsData, PostWfAssistWorkflowsResponses } from './types.gen';
+import type { DeleteWfAssistWorkflowsByIdData, DeleteWfAssistWorkflowsByIdResponses, GetWfAssistWorkflowsByIdData, GetWfAssistWorkflowsByIdErrors, GetWfAssistWorkflowsByIdResponses, GetWfAssistWorkflowsIdentitiesData, GetWfAssistWorkflowsIdentitiesResponses, PostWfAssistWorkflowsByIdRenameData, PostWfAssistWorkflowsByIdRenameErrors, PostWfAssistWorkflowsByIdRenameResponses, PostWfAssistWorkflowsByIdUpdateDataData, PostWfAssistWorkflowsByIdUpdateDataErrors, PostWfAssistWorkflowsByIdUpdateDataResponses, PostWfAssistWorkflowsData, PostWfAssistWorkflowsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -69,33 +69,5 @@ export const postWfAssistWorkflowsByIdUpdateData = <ThrowOnError extends boolean
             'Content-Type': 'application/json',
             ...options.headers
         }
-    });
-};
-
-export const getWfAssistIndexHtml = <ThrowOnError extends boolean = false>(options?: Options<GetWfAssistIndexHtmlData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetWfAssistIndexHtmlResponses, unknown, ThrowOnError>({
-        url: '/wfAssist/index.html',
-        ...options
-    });
-};
-
-export const getWfAssistIndexCss = <ThrowOnError extends boolean = false>(options?: Options<GetWfAssistIndexCssData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetWfAssistIndexCssResponses, unknown, ThrowOnError>({
-        url: '/wfAssist/index.css',
-        ...options
-    });
-};
-
-export const getWfAssistIndexJs = <ThrowOnError extends boolean = false>(options?: Options<GetWfAssistIndexJsData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetWfAssistIndexJsResponses, unknown, ThrowOnError>({
-        url: '/wfAssist/index.js',
-        ...options
-    });
-};
-
-export const getWfAssistFaviconIco = <ThrowOnError extends boolean = false>(options?: Options<GetWfAssistFaviconIcoData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetWfAssistFaviconIcoResponses, unknown, ThrowOnError>({
-        url: '/wfAssist/favicon.ico',
-        ...options
     });
 };

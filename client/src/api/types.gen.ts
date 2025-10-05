@@ -10,7 +10,7 @@ export type CreateWorkflowRequest = {
 };
 
 export type GetIdentitiesResponse = {
-    identities?: Array<WorkFlowIdentityDto>;
+    identities: Array<WorkFlowIdentityDto>;
 };
 
 export type GetWorkflowByIdResponse = {
@@ -211,59 +211,3 @@ export type PostWfAssistWorkflowsByIdUpdateDataResponses = {
 };
 
 export type PostWfAssistWorkflowsByIdUpdateDataResponse = PostWfAssistWorkflowsByIdUpdateDataResponses[keyof PostWfAssistWorkflowsByIdUpdateDataResponses];
-
-export type GetWfAssistIndexHtmlData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/wfAssist/index.html';
-};
-
-export type GetWfAssistIndexHtmlResponses = {
-    /**
-     * OK
-     */
-    200: unknown;
-};
-
-export type GetWfAssistIndexCssData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/wfAssist/index.css';
-};
-
-export type GetWfAssistIndexCssResponses = {
-    /**
-     * OK
-     */
-    200: unknown;
-};
-
-export type GetWfAssistIndexJsData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/wfAssist/index.js';
-};
-
-export type GetWfAssistIndexJsResponses = {
-    /**
-     * OK
-     */
-    200: unknown;
-};
-
-export type GetWfAssistFaviconIcoData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/wfAssist/favicon.ico';
-};
-
-export type GetWfAssistFaviconIcoResponses = {
-    /**
-     * OK
-     */
-    200: unknown;
-};
