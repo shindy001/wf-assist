@@ -1,0 +1,503 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "WFAssist API Reference",
+    "description": "API for WFAssist client."
+  },
+  "paths": {
+    "/wfAssist/workflows/identities": {
+      "get": {
+        "tags": [
+          "WfAssist_Workflows"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetIdentitiesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/wfAssist/workflows/{id}": {
+      "get": {
+        "tags": [
+          "WfAssist_Workflows"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkflowByIdResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "WfAssist_Workflows"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/wfAssist/workflows": {
+      "post": {
+        "tags": [
+          "WfAssist_Workflows"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkflowRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/wfAssist/workflows/{id}/rename": {
+      "post": {
+        "tags": [
+          "WfAssist_Workflows"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenameWorkflowRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/wfAssist/workflows/{id}/updateData": {
+      "post": {
+        "tags": [
+          "WfAssist_Workflows"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkflowDataRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/wfAssist/index.html": {
+      "get": {
+        "tags": [
+          "WfAssist"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/wfAssist/index.css": {
+      "get": {
+        "tags": [
+          "WfAssist"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/wfAssist/index.js": {
+      "get": {
+        "tags": [
+          "WfAssist"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/wfAssist/favicon.ico": {
+      "get": {
+        "tags": [
+          "WfAssist"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateWorkflowRequest": {
+        "required": [
+          "name",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/WorkflowDataDto"
+          }
+        }
+      },
+      "GetIdentitiesResponse": {
+        "type": "object",
+        "properties": {
+          "identities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkFlowIdentityDto"
+            }
+          }
+        }
+      },
+      "GetWorkflowByIdResponse": {
+        "required": [
+          "item"
+        ],
+        "type": "object",
+        "properties": {
+          "item": {
+            "$ref": "#/components/schemas/WorkflowDto"
+          }
+        }
+      },
+      "PositionDto": {
+        "required": [
+          "x",
+          "y"
+        ],
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number",
+            "format": "float"
+          },
+          "y": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
+      "RenameWorkflowRequest": {
+        "required": [
+          "newName"
+        ],
+        "type": "object",
+        "properties": {
+          "newName": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateWorkflowDataRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/WorkflowDataDto"
+          }
+        }
+      },
+      "WorkflowDataDto": {
+        "type": "object",
+        "properties": {
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowNodeDto"
+            }
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowEdgeDto"
+            }
+          }
+        }
+      },
+      "WorkflowDto": {
+        "required": [
+          "id",
+          "name",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/WorkflowDataDto"
+          }
+        }
+      },
+      "WorkflowEdgeDto": {
+        "required": [
+          "id",
+          "position",
+          "source",
+          "target"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "position": {
+            "$ref": "#/components/schemas/PositionDto"
+          },
+          "source": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "WorkFlowIdentityDto": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "WorkflowNodeDto": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/WorkflowNodeDtoPrintTextNodeDto"
+          },
+          {
+            "$ref": "#/components/schemas/WorkflowNodeDtoRequestNodeDto"
+          },
+          {
+            "$ref": "#/components/schemas/WorkflowNodeDtoExtractPropertyNodeDto"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "PrintText": "#/components/schemas/WorkflowNodeDtoPrintTextNodeDto",
+            "Request": "#/components/schemas/WorkflowNodeDtoRequestNodeDto",
+            "ExtractProperty": "#/components/schemas/WorkflowNodeDtoExtractPropertyNodeDto"
+          }
+        }
+      },
+      "WorkflowNodeDtoExtractPropertyNodeDto": {
+        "required": [
+          "path",
+          "targetId",
+          "id",
+          "position"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "ExtractProperty"
+            ],
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "position": {
+            "$ref": "#/components/schemas/PositionDto"
+          }
+        }
+      },
+      "WorkflowNodeDtoPrintTextNodeDto": {
+        "required": [
+          "text",
+          "id",
+          "position"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "PrintText"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "useConsole": {
+            "type": "boolean"
+          },
+          "targetId": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string"
+          },
+          "position": {
+            "$ref": "#/components/schemas/PositionDto"
+          }
+        }
+      },
+      "WorkflowNodeDtoRequestNodeDto": {
+        "required": [
+          "requestType",
+          "url",
+          "id",
+          "position"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "Request"
+            ],
+            "type": "string"
+          },
+          "requestType": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "requestBody": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string"
+          },
+          "position": {
+            "$ref": "#/components/schemas/PositionDto"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "WfAssist_Workflows"
+    },
+    {
+      "name": "WfAssist"
+    }
+  ]
+}
