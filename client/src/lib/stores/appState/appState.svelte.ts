@@ -1,28 +1,31 @@
-﻿const lastActiveWorkflowLocalStorageKey = "appState_lastActiveWorkflowName";
+﻿import type {WorkflowIdentity} from "$lib/components/types";
+
+const selectedWorkflowStorageKey = "appState_selectedWorkflow";
 let appStateInstance: AppState;
 let initializeAppStatePromise: Promise<void> | null = null;
 
 class AppState {
-    lastActiveWorkflowName = $state<string>("");
+    selectedWorkflowIdentity: WorkflowIdentity = $state<WorkflowIdentity>({ id: "", name: "" });
 
     constructor() {
         $effect.root(() => {
             $effect(() => {
-                localStorage.setItem(lastActiveWorkflowLocalStorageKey, this.lastActiveWorkflowName);
+                localStorage.setItem(selectedWorkflowStorageKey, JSON.stringify(this.selectedWorkflowIdentity));
             });
         });
     }
 
-    setActiveWorkflowName = (name: string) => {
-        if (this.lastActiveWorkflowName !== name) {
-            this.lastActiveWorkflowName = name;
+    setSelectedWorkflow = (workflowIdentity: WorkflowIdentity) => {
+        if (this.selectedWorkflowIdentity.id !== workflowIdentity.id
+        || this.selectedWorkflowIdentity.name !== workflowIdentity.name) {
+            this.selectedWorkflowIdentity = workflowIdentity;
         }
     }
 }
 
 async function initializeAppState(appState: AppState) {
-    const item = localStorage.getItem(lastActiveWorkflowLocalStorageKey);
-    appState.lastActiveWorkflowName = item ?? "";
+    const item = localStorage.getItem(selectedWorkflowStorageKey);
+    appState.selectedWorkflowIdentity = item === null ? { id: "", name: "" } : JSON.parse(item);
 }
 
 export type { AppState };

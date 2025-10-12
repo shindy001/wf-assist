@@ -57,9 +57,9 @@
             {#each query.data.identities as workflowIdentity}
                 <Button
                         variant="ghost"
-                        class={[ workflowIdentity.name === appState.lastActiveWorkflowName ? 'bg-accent/50' : ''
+                        class={[ workflowIdentity.name === appState.selectedWorkflowIdentity.name ? 'bg-accent/50' : ''
                     ]}
-                        onclick={() => appState.setActiveWorkflowName(workflowIdentity.name)}
+                        onclick={() => appState.setSelectedWorkflow(workflowIdentity)}
                         oncontextmenu={showContextMenu}
                 >
                     <Icon name="material-symbols--folder-data-outline-sharp"/>
