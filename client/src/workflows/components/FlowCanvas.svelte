@@ -5,13 +5,7 @@
     import RequestNode from "./nodes/RequestNode.svelte";
     import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
     import PrintTextNode from "./nodes/PrintTextNode.svelte";
-    import {
-        createSvelteFlowExtractPropertyNodeData,
-        createSvelteFlowPrintTextNodeData, createSvelteFlowRequestNodeData,
-        type WorkflowNode,
-        type WorkflowNodeData,
-        WorkflowNodeType
-    } from "$lib/components/types";
+    import {createWorkflowNodeData, type WorkflowNode, WorkflowNodeType} from "$lib/components/types";
 
     const dragAndDropContext = useDragAndDrop();
     const additionalNodeTypes = {
@@ -44,7 +38,7 @@
             y: event.clientY,
         });
 
-        const data = CreateWorkflowNodeData(dragAndDropContext.nodeType);
+        const data = createWorkflowNodeData(dragAndDropContext.nodeType);
         const newNode: WorkflowNode = {
             id: `${Date.now()}`,
             type: data.type,
@@ -54,19 +48,6 @@
 
         nodes = [...nodes, { ...newNode, data: {...newNode.data} } ];
     };
-
-    function CreateWorkflowNodeData(nodeType: WorkflowNodeType): WorkflowNodeData {
-        switch (nodeType) {
-            case WorkflowNodeType.PrintText:
-                return createSvelteFlowPrintTextNodeData();
-            case WorkflowNodeType.ExtractProperty:
-                return createSvelteFlowExtractPropertyNodeData();
-            case WorkflowNodeType.Request:
-                return createSvelteFlowRequestNodeData();
-            default:
-                throw new Error(`Unsupported WorkflowNode type '${nodeType}'`);
-        }
-    }
 </script>
 
 <div class="size-full">

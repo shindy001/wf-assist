@@ -1,7 +1,7 @@
 ﻿import {
     type ExtractPropertyNodeData,
     type PrintTextNodeData,
-    type RequestNodeData,
+    type RequestNodeData, type WorkflowNodeData,
     WorkflowNodeType
 } from "$lib/components/types/workflow";
 
@@ -26,4 +26,17 @@ export function createSvelteFlowRequestNodeData(
     data?: Partial<Omit<RequestNodeData, "type">>
 ): SvelteFlowRequestNodeData {
     return { type: WorkflowNodeType.Request, requestType: "GET", ...data }
+}
+
+export function createWorkflowNodeData(nodeType: WorkflowNodeType): WorkflowNodeData {
+    switch (nodeType) {
+        case WorkflowNodeType.PrintText:
+            return createSvelteFlowPrintTextNodeData();
+        case WorkflowNodeType.ExtractProperty:
+            return createSvelteFlowExtractPropertyNodeData();
+        case WorkflowNodeType.Request:
+            return createSvelteFlowRequestNodeData();
+        default:
+            throw new Error(`Unsupported WorkflowNode type '${nodeType}'`);
+    }
 }
