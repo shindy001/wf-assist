@@ -14,7 +14,9 @@ class AppState {
     }
 
     setActiveWorkflowName = (name: string) => {
-        this.lastActiveWorkflowName = name;
+        if (this.lastActiveWorkflowName !== name) {
+            this.lastActiveWorkflowName = name;
+        }
     }
 }
 
