@@ -57,3 +57,8 @@ export interface Workflow {
     name: string;
     data: WorkflowData;
 }
+
+export interface WorkflowIdentity {
+    id: string;
+    name: string;
+}
