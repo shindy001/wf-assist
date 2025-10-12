@@ -1,16 +1,12 @@
-﻿<script lang="ts" module>
-    import {useAppState} from "$lib/stores/appState";
-
-    const appState = await useAppState();
-</script>
-
-<script lang="ts">
+﻿<script lang="ts">
     import type {ClassValue} from "svelte/elements";
     import {Button} from "$lib/components/ui/button";
     import {Icon} from "$lib/components/ui/icons";
     import { createQuery } from "@tanstack/svelte-query";
     import { getWfAssistWorkflowsIdentitiesQuery } from "$api/@tanstack/svelte-query.gen";
+    import {useAppState} from "$lib/stores/appState";
 
+    const appState = await useAppState();
     const props: { class?: ClassValue } = $props();
     const query = createQuery(() => getWfAssistWorkflowsIdentitiesQuery());
 
