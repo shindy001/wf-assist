@@ -1,13 +1,13 @@
 ﻿<script lang="ts">
     import {Background, Controls, type Edge, MiniMap, type Node, SvelteFlow, useSvelteFlow} from '@xyflow/svelte';
     import '@xyflow/svelte/dist/style.css';
-    import { useDragAndDrop } from '$lib/components/ui/dragAndDrop';
+    import { useSelectedNodeTypeContext } from '$lib/components/ui/state';
     import RequestNode from "./nodes/RequestNode.svelte";
     import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
     import PrintTextNode from "./nodes/PrintTextNode.svelte";
     import {createWorkflowNodeData, type WorkflowNode, WorkflowNodeType} from "$lib/components/types";
 
-    const dragAndDropContext = useDragAndDrop();
+    const selectedNodeTypeContext = useSelectedNodeTypeContext();
     const additionalNodeTypes = {
         [WorkflowNodeType.ExtractProperty]: ExtractPropertyNode,
         [WorkflowNodeType.PrintText]: PrintTextNode,
@@ -29,16 +29,12 @@
     const onDrop = (event: DragEvent) => {
         event.preventDefault();
 
-        if (!dragAndDropContext.nodeType) {
-            return;
-        }
-
         const position = screenToFlowPosition({
             x: event.clientX,
             y: event.clientY,
         });
 
-        const data = createWorkflowNodeData(dragAndDropContext.nodeType);
+        const data = createWorkflowNodeData(selectedNodeTypeContext.nodeType);
         const newNode: WorkflowNode = {
             id: `${Date.now()}`,
             type: data.type,
