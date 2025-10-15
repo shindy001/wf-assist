@@ -4,7 +4,7 @@
     import {Icon} from "$lib/components/ui/icons";
     import { createQuery } from "@tanstack/svelte-query";
     import { getWfAssistWorkflowsIdentitiesQuery } from "$api/@tanstack/svelte-query.gen";
-    import {useAppState} from "$lib/stores/appState";
+    import {useAppState} from "$lib/stores";
 
     const appState = await useAppState();
     const props: { class?: ClassValue } = $props();
