@@ -2,14 +2,14 @@
     import {SvelteFlowProvider} from "@xyflow/svelte";
     import FlowSidebar from "./components/FlowSidebar.svelte";
     import FlowCanvas from "./components/FlowCanvas.svelte";
-    import {SelectedNodeTypeProvider} from "$lib/components/ui/state";
+    import {FlowCanvasContextProvider} from "./state";
 </script>
 
 <div class="flex w-full h-full">
     <SvelteFlowProvider>
-        <SelectedNodeTypeProvider>
+        <FlowCanvasContextProvider>
             <FlowSidebar/>
             <FlowCanvas/>
-        </SelectedNodeTypeProvider>
+        </FlowCanvasContextProvider>
     </SvelteFlowProvider>
 </div>

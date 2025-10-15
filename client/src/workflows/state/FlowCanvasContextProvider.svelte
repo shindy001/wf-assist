@@ -2,9 +2,9 @@
     import {getContext, setContext} from "svelte";
     import {WorkflowNodeType} from "$lib/components/types";
 
-    const contextKey = Symbol("SelectedNodeTypeContext");
+    const contextKey = Symbol("FlowCanvasContext");
 
-    export const useSelectedNodeTypeContext = () => {
+    export const useFlowCanvasContext = () => {
         return getContext(contextKey) as { nodeType: WorkflowNodeType };
     }
 </script>
