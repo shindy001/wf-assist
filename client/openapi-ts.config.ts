@@ -5,13 +5,5 @@ export default defineConfig({
     output: {
         path: "src/api",
         lint: null,
-    },
-    plugins: [
-        {
-            name: "@tanstack/svelte-query",
-            queryOptions: {
-                name: "{{name}}Query",
-            },
-        },
-    ],
+    }
 });
