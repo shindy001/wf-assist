@@ -2,13 +2,12 @@
     import type {ClassValue} from "svelte/elements";
     import {Button} from "$lib/components/ui/button";
     import {Icon} from "$lib/components/ui/icons";
-    import { createQuery } from "@tanstack/svelte-query";
-    import { getWfAssistWorkflowsIdentitiesQuery } from "$api/@tanstack/svelte-query.gen";
     import {useAppState} from "$lib/stores";
+    import {createGetWorkflowIdentitiesQuery} from "../actions/getWorkflowIdentitiesQuery.svelte";
 
-    const appState = await useAppState();
     const props: { class?: ClassValue } = $props();
-    const query = createQuery(() => getWfAssistWorkflowsIdentitiesQuery());
+    const appState = await useAppState();
+    const query = createGetWorkflowIdentitiesQuery();
 
     let contextMenuIsOpen = $state(false);
     let contextMenuPosition = $state<{x: number, y: number}>({x: 0, y: 0});
@@ -49,27 +48,29 @@
         </Button>
     </div>
     <div class="flex flex-col gap-1">
-        {#if query.isLoading}
+        {#await query()}
             <p>Loading...</p>
-        {:else if query.isError}
-            <p>Error: {query.error.message}</p>
-        {:else if query.isSuccess}
-            {#each query.data.identities as workflowIdentity}
-                <Button
-                        variant="ghost"
-                        class={[ workflowIdentity.name === appState.selectedWorkflowIdentity.name ? 'bg-accent/50' : ''
-                    ]}
-                        onclick={() => appState.setSelectedWorkflow(workflowIdentity)}
-                        oncontextmenu={showContextMenu}
-                >
-                    <Icon name="material-symbols--folder-data-outline-sharp"/>
-                    <span class="w-full text-left">{workflowIdentity.name}</span>
-                </Button>
-            {:else}
+        {:then data }
+            {#if data.identities.length <= 0}
                 <div class="px-2 flex gap-2 items-center content-center rounded-md cursor-pointer hover:bg-gray-100">
                     <p>No workflows yet, try adding one.</p>
                 </div>
-            {/each}
-        {/if}
+            {:else}
+                {#each data.identities as workflowIdentity}
+                    <Button
+                            variant="ghost"
+                            class={[ workflowIdentity.name === appState.selectedWorkflowIdentity.name ? 'bg-accent/50' : ''
+                    ]}
+                            onclick={() => appState.setSelectedWorkflow(workflowIdentity)}
+                            oncontextmenu={showContextMenu}
+                    >
+                        <Icon name="material-symbols--folder-data-outline-sharp"/>
+                        <span class="w-full text-left">{workflowIdentity.name}</span>
+                    </Button>
+                {/each}
+            {/if}
+        {:catch error}
+            <p>Error loading data: {error.message}</p>
+        {/await}
     </div>
 </div>
