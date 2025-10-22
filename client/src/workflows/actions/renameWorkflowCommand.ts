@@ -1,8 +1,14 @@
-﻿export function createRenameWorkflowCommand() {
-    return async (currentName: string, newName: string)=> {
-        if (currentName === newName) {
-            return;
+﻿import {postWfAssistWorkflowsByIdRename} from "$api";
+
+export function createRenameWorkflowCommand() {
+    return async (workflowId: string, newName: string) => {
+        {
+            const result = await postWfAssistWorkflowsByIdRename({ path: { id: workflowId }, body: { newName: newName } });
+
+            if (result.error) {
+                // TODO - consume with some error service and show message box or something like that???
+                console.error(result.error);
+            }
         }
-        // TODO - send rename request to server - should unique name be required ???
     }
 }
