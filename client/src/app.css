@@ -194,3 +194,9 @@
         transform: translate(-50%, -50%) rotate(-360deg);
     }
 }
+
+/* Handle element left by shadcn svelte(bits-ui) Dialog which has 1x1 size which causes body overflow after dialog disappears */
+[id="1p-live-region"] {
+    width: 0 !important;
+    height: 0 !important;
+}
