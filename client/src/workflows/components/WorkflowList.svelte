@@ -1,26 +1,30 @@
 ﻿<script lang="ts">
     import * as Dialog from "$lib/components/ui/dialog/index.js";
+    import * as AlertDialog from "$lib/components/ui/alert-dialog/index.js";
     import { Input } from "$lib/components/ui/input/index.js";
     import { Label } from "$lib/components/ui/label/index.js";
     import {Button} from "$lib/components/ui/button";
     import {Icon} from "$lib/components/ui/icons";
     import type {ClassValue} from "svelte/elements";
+    import type {WorkflowIdentity} from "$lib/components/types";
     import {useAppState} from "$lib/stores";
     import {createGetWorkflowIdentitiesQuery} from "../actions/getWorkflowIdentitiesQuery.svelte";
     import {createRenameWorkflowCommand} from "../actions/renameWorkflowCommand";
-    import type {WorkflowIdentity} from "$lib/components/types";
+    import {createRemoveWorkflowCommand} from "../actions/removeWorkflowCommand";
 
     const props: { class?: ClassValue } = $props();
     const appState = await useAppState();
     const getWorkflowIdentitiesQuery = createGetWorkflowIdentitiesQuery();
     const renameWorkflowCommand = createRenameWorkflowCommand();
+    const removeWorkflowCommand = createRemoveWorkflowCommand();
 
     let getWorkflowIdentities = $state(getWorkflowIdentitiesQuery());
     let contextMenuIsOpen = $state(false);
     let contextMenuPosition = $state<{x: number, y: number}>({x: 0, y: 0});
-    let contextMenuWorkflowIdentity: WorkflowIdentity | null = null;
+    let contextMenuWorkflowIdentity: WorkflowIdentity | null = $state(null);
 
     let showRenameDialog = $state(false);
+    let showRemoveWorkflowDialog = $state(false);
     let newWorkflowName = $state("");
 
     function showContextMenu(event: MouseEvent, workflowIdentity: WorkflowIdentity) {
@@ -40,7 +44,15 @@
 
         await renameWorkflowCommand(contextMenuWorkflowIdentity.id, newWorkflowName);
         refreshWorkflowIdentities();
-        newWorkflowName = "";
+    }
+
+    async function removeWorkflow() {
+        if (contextMenuWorkflowIdentity === null || !contextMenuWorkflowIdentity.id) {
+            return;
+        }
+
+        await removeWorkflowCommand(contextMenuWorkflowIdentity.id);
+        refreshWorkflowIdentities();
     }
 
     function refreshWorkflowIdentities() {
@@ -61,7 +73,7 @@
             <Icon name="material-symbols--edit-square-outline"/>
             <span>Rename</span>
         </Button>
-        <Button variant="ghost">
+        <Button variant="ghost" onclick={() => showRemoveWorkflowDialog = true}>
             <Icon name="material-symbols--delete-outline"/>
             <span>Remove</span>
         </Button>
@@ -80,12 +92,25 @@
             </div>
         </div>
         <Dialog.Footer>
-            <Dialog.Close>
-                <Button onclick={() => renameWorkflow()}>Save</Button>
-            </Dialog.Close>
+            <Button onclick={() => renameWorkflow().then(() => showRenameDialog = false)}>Save</Button>
         </Dialog.Footer>
     </Dialog.Content>
 </Dialog.Root>
+
+<AlertDialog.Root bind:open={showRemoveWorkflowDialog}>
+    <AlertDialog.Content interactOutsideBehavior="close">
+        <AlertDialog.Header>
+            <AlertDialog.Title>Remove Workflow</AlertDialog.Title>
+            <AlertDialog.Description>
+                Are you sure you want to remove Workflow <b>{contextMenuWorkflowIdentity?.name}</b>?
+            </AlertDialog.Description>
+        </AlertDialog.Header>
+        <AlertDialog.Footer>
+            <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+            <AlertDialog.Action onclick={() => removeWorkflow().then(() => showRemoveWorkflowDialog = false)}>Remove</AlertDialog.Action>
+        </AlertDialog.Footer>
+    </AlertDialog.Content>
+</AlertDialog.Root>
 
 <div class={props.class}>
     <div class="flex justify-between items-center">
