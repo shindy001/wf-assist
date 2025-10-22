@@ -5,11 +5,11 @@
     import {FlowCanvasContextProvider} from "./state";
 </script>
 
-<div class="flex w-full h-full">
-    <SvelteFlowProvider>
-        <FlowCanvasContextProvider>
+<SvelteFlowProvider>
+    <FlowCanvasContextProvider>
+        <div class="flex size-full">
             <FlowSidebar/>
             <FlowCanvas/>
-        </FlowCanvasContextProvider>
-    </SvelteFlowProvider>
-</div>
+        </div>
+    </FlowCanvasContextProvider>
+</SvelteFlowProvider>
