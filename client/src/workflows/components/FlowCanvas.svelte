@@ -46,7 +46,7 @@
     };
 </script>
 
-<div class="size-full">
+<div class="w-full">
     <SvelteFlow
             colorMode="system"
             bind:nodes={nodes}
