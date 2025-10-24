@@ -1,1 +1,1 @@
-﻿export * from "./appState.svelte";
+export * from "./appState.svelte";
