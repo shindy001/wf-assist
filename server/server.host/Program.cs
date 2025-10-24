@@ -1,14 +1,18 @@
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
+using Serilog;
 using WfAssist.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddWfAssistServices();
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
 
+builder.Services.AddSerilog();
+builder.Services.AddWfAssistServices();
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
