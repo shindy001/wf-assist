@@ -1,4 +1,4 @@
-﻿namespace WfAssist.AspNetCore.Features.Workflows.Dtos;
+namespace WfAssist.AspNetCore.Features.Workflows.Dtos;
 
 public enum WorkflowNodeTypeDto
 {

@@ -1,4 +1,4 @@
-﻿using WfAssist.AspNetCore.Domain.Workflows.Models;
+using WfAssist.AspNetCore.Domain.Workflows.Models;
 
 namespace WfAssist.AspNetCore.Domain.Workflows.Contracts;
 

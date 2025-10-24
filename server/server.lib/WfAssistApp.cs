@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

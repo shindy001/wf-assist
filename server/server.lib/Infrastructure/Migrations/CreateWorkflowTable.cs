@@ -1,4 +1,4 @@
-﻿using FluentMigrator;
+using FluentMigrator;
 using JetBrains.Annotations;
 
 namespace WfAssist.AspNetCore.Infrastructure.Migrations;

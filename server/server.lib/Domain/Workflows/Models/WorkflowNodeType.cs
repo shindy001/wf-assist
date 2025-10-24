@@ -1,4 +1,4 @@
-﻿namespace WfAssist.AspNetCore.Domain.Workflows.Models;
+namespace WfAssist.AspNetCore.Domain.Workflows.Models;
 
 public enum WorkflowNodeType
 {

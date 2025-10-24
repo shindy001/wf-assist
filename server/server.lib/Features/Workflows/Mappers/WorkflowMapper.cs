@@ -1,4 +1,4 @@
-﻿using WfAssist.AspNetCore.Domain.Workflows.Models;
+using WfAssist.AspNetCore.Domain.Workflows.Models;
 using WfAssist.AspNetCore.Features.Workflows.Dtos;
 
 namespace WfAssist.AspNetCore.Features.Workflows.Mappers;

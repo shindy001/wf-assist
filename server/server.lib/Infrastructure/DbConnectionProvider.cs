@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using WfAssist.AspNetCore.Shared;
 
 namespace WfAssist.AspNetCore.Infrastructure;
