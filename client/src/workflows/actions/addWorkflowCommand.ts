@@ -1,21 +1,26 @@
-import { postWfAssistWorkflows, type CreateWorkflowRequest } from "$api";
-import type { WorkflowData } from "$lib/components/types";
+import {
+  postWfAssistWorkflows,
+  type CreateWorkflowRequest,
+  type WorkflowNodeDto,
+} from "$api";
+import { failed, successful, type WorkflowData } from "$lib/components/types";
 
 export function createAddWorkflowCommand() {
-  return async (workflowName: string, workflowData: WorkflowData) => {
+  return async (workflowName: string, workflowData?: WorkflowData) => {
     {
-      workflowData;
       const requestData: CreateWorkflowRequest = {
         name: workflowName,
-        data: {},
+        data: {
+          nodes: workflowData?.nodes?.map(
+            (x) => x as unknown as WorkflowNodeDto,
+          ),
+          edges: workflowData?.edges,
+        },
       };
 
-      // const result = await postWfAssistWorkflows({ body: { name: workflowName, data: workflowData ?? {} } });
-      //
-      // if (result.error) {
-      //     // TODO - consume with some error service and show message box or something like that???
-      //     console.error(result.error);
-      // }
+      const result = await postWfAssistWorkflows({ body: requestData });
+
+      return result.error ? failed(result.error.toString()) : successful();
     }
   };
 }

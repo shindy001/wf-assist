@@ -1,4 +1,5 @@
 import { deleteWfAssistWorkflowsById } from "$api";
+import { failed, successful } from "$lib/components/types";
 
 export function createRemoveWorkflowCommand() {
   return async (workflowId: string) => {
@@ -6,9 +7,6 @@ export function createRemoveWorkflowCommand() {
       path: { id: workflowId },
     });
 
-    if (result.error) {
-      // TODO - consume with some error service and show message box or something like that???
-      console.error(result.error);
-    }
+    return result.error ? failed(result.error.toString()) : successful();
   };
 }

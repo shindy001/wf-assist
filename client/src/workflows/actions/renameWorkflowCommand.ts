@@ -1,4 +1,5 @@
 import { postWfAssistWorkflowsByIdRename } from "$api";
+import { failed, successful } from "$lib/components/types";
 
 export function createRenameWorkflowCommand() {
   return async (workflowId: string, newName: string) => {
@@ -8,10 +9,7 @@ export function createRenameWorkflowCommand() {
         body: { newName: newName },
       });
 
-      if (result.error) {
-        // TODO - consume with some error service and show message box or something like that???
-        console.error(result.error);
-      }
+      return result.error ? failed(result.error.toString()) : successful();
     }
   };
 }
