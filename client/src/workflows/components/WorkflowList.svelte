@@ -6,19 +6,21 @@
   import { Button } from "$lib/components/ui/button";
   import { Icon } from "$lib/components/ui/icons";
   import type { ClassValue } from "svelte/elements";
-  import type { WorkflowIdentity } from "$lib/components/types";
+  import { type Result, type WorkflowIdentity } from "$lib/components/types";
   import { useAppState } from "$lib/stores";
   import { createGetWorkflowIdentitiesQuery } from "../actions/getWorkflowIdentitiesQuery.svelte";
   import { createRenameWorkflowCommand } from "../actions/renameWorkflowCommand";
   import { createRemoveWorkflowCommand } from "../actions/removeWorkflowCommand";
+  import { createAddWorkflowCommand } from "../actions/addWorkflowCommand";
 
   const props: { class?: ClassValue } = $props();
   const appState = await useAppState();
   const getWorkflowIdentitiesQuery = createGetWorkflowIdentitiesQuery();
   const renameWorkflowCommand = createRenameWorkflowCommand();
   const removeWorkflowCommand = createRemoveWorkflowCommand();
+  const addWorkflowCommand = createAddWorkflowCommand();
 
-  let getWorkflowIdentities = $state(getWorkflowIdentitiesQuery());
+  let workflowIdentitiesQueryResult = $state<Result<WorkflowIdentity[]>>();
   let contextMenuIsOpen = $state(false);
   let contextMenuPosition = $state<{ x: number; y: number }>({ x: 0, y: 0 });
   let contextMenuWorkflowIdentity: WorkflowIdentity | null = $state(null);
@@ -26,6 +28,13 @@
   let showRenameDialog = $state(false);
   let showRemoveWorkflowDialog = $state(false);
   let newWorkflowName = $state("");
+  let actionError;
+
+  refreshWorkflowIdentities();
+
+  async function refreshWorkflowIdentities() {
+    workflowIdentitiesQueryResult = await getWorkflowIdentitiesQuery();
+  }
 
   function showContextMenu(
     event: MouseEvent,
@@ -37,6 +46,11 @@
     newWorkflowName = contextMenuWorkflowIdentity.name;
     contextMenuPosition = { x: event.clientX, y: event.clientY };
     contextMenuIsOpen = true;
+  }
+
+  async function addNewWorkflow() {
+    await addWorkflowCommand("New Workflow", undefined);
+    refreshWorkflowIdentities();
   }
 
   async function renameWorkflow() {
@@ -64,10 +78,6 @@
 
     await removeWorkflowCommand(contextMenuWorkflowIdentity.id);
     refreshWorkflowIdentities();
-  }
-
-  function refreshWorkflowIdentities() {
-    getWorkflowIdentities = getWorkflowIdentitiesQuery();
   }
 
   function hideContextMenu() {
@@ -141,39 +151,37 @@
 <div class={props.class}>
   <div class="flex justify-between items-center">
     <p class="text-lg">Workflows</p>
-    <Button variant="ghost" size="icon">
+    <Button variant="ghost" size="icon" onclick={() => addNewWorkflow()}>
       <Icon name="material-symbols--add" class="size-6" />
     </Button>
   </div>
   <div class="flex flex-col gap-1">
-    {#await getWorkflowIdentities}
+    {#if workflowIdentitiesQueryResult === undefined}
       <p>Loading...</p>
-    {:then data}
-      {#if data.identities.length <= 0}
-        <div
-          class="px-2 flex gap-2 items-center content-center rounded-md cursor-pointer hover:bg-gray-100"
+    {:else if workflowIdentitiesQueryResult.error}
+      <p>Error loading data: {workflowIdentitiesQueryResult.error}</p>
+    {:else if (workflowIdentitiesQueryResult.data ?? []).length <= 0}
+      <div
+        class="px-2 flex gap-2 items-center content-center rounded-md cursor-pointer hover:bg-gray-100"
+      >
+        <p>No workflows yet, try adding one.</p>
+      </div>
+    {:else}
+      {#each workflowIdentitiesQueryResult.data as workflowIdentity}
+        <Button
+          variant="ghost"
+          class={[
+            workflowIdentity.id === appState.selectedWorkflowIdentity.id
+              ? "bg-accent/50"
+              : "",
+          ]}
+          onclick={() => appState.setSelectedWorkflow(workflowIdentity)}
+          oncontextmenu={(event) => showContextMenu(event, workflowIdentity)}
         >
-          <p>No workflows yet, try adding one.</p>
-        </div>
-      {:else}
-        {#each data.identities as workflowIdentity}
-          <Button
-            variant="ghost"
-            class={[
-              workflowIdentity.name === appState.selectedWorkflowIdentity.name
-                ? "bg-accent/50"
-                : "",
-            ]}
-            onclick={() => appState.setSelectedWorkflow(workflowIdentity)}
-            oncontextmenu={(event) => showContextMenu(event, workflowIdentity)}
-          >
-            <Icon name="material-symbols--folder-data-outline-sharp" />
-            <span class="w-full text-left">{workflowIdentity.name}</span>
-          </Button>
-        {/each}
-      {/if}
-    {:catch error}
-      <p>Error loading data: {error.message}</p>
-    {/await}
+          <Icon name="material-symbols--folder-data-outline-sharp" />
+          <span class="w-full text-left">{workflowIdentity.name}</span>
+        </Button>
+      {/each}
+    {/if}
   </div>
 </div>
