@@ -5,14 +5,14 @@
   const contextKey = Symbol("FlowCanvasContext");
 
   export const useFlowCanvasContext = () => {
-    return getContext(contextKey) as { nodeType: WorkflowNodeType };
+    return getContext(contextKey) as { selectedNodeType: WorkflowNodeType };
   };
 </script>
 
 <script lang="ts">
   let { children } = $props();
 
-  setContext(contextKey, { nodeType: WorkflowNodeType.Default });
+  setContext(contextKey, { selectedNodeType: WorkflowNodeType.Default });
 </script>
 
 {@render children()}

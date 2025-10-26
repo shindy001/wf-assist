@@ -46,7 +46,7 @@
       y: event.clientY,
     });
 
-    const data = createWorkflowNodeData(flowCanvasContext.nodeType);
+    const data = createWorkflowNodeData(flowCanvasContext.selectedNodeType);
     const newNode: WorkflowNode = {
       id: `${Date.now()}`,
       type: data.type,

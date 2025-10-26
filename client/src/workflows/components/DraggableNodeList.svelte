@@ -7,12 +7,15 @@
   const props: { class?: ClassValue } = $props();
   const flowCanvasContext = useFlowCanvasContext();
 
-  const onDragStart = (event: DragEvent, nodeType: WorkflowNodeType) => {
+  const onDragStart = (
+    event: DragEvent,
+    selectedNodeType: WorkflowNodeType,
+  ) => {
     if (!event.dataTransfer) {
       return null;
     }
 
-    flowCanvasContext.nodeType = nodeType;
+    flowCanvasContext.selectedNodeType = selectedNodeType;
     event.dataTransfer.effectAllowed = "move";
   };
 
