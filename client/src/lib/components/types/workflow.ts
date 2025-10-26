@@ -32,9 +32,9 @@ export interface RequestNodeData extends WorkflowNodeDataBase {
 }
 
 export type WorkflowNodeData =
-  | PrintTextNodeData
-  | ExtractPropertyNodeData
-  | RequestNodeData;
+  | (PrintTextNodeData & Record<string, unknown>)
+  | (ExtractPropertyNodeData & Record<string, unknown>)
+  | (RequestNodeData & Record<string, unknown>);
 
 export interface WorkflowNode {
   id: string;

@@ -1,13 +1,13 @@
 <script lang="ts" module>
   import {
     WorkflowNodeType,
-    type SvelteFlowRequestNodeData,
+    type RequestNodeData,
   } from "$lib/components/types";
   import { type Connection, type Node } from "@xyflow/svelte";
   import type { EdgeBase } from "@xyflow/system";
 
   export type RequestNodeType = Node<
-    SvelteFlowRequestNodeData,
+    RequestNodeData & Record<string, unknown>,
     WorkflowNodeType.Request
   >;
 </script>
@@ -21,7 +21,7 @@
     useSvelteFlow,
   } from "@xyflow/svelte";
   import NodeWrapper from "./NodeWrapper.svelte";
-  import { createSvelteFlowRequestNodeData } from "$lib/components/types";
+  import { createRequestNodeData } from "$lib/components/types";
 
   const { updateNodeData, updateNode } = useSvelteFlow();
   const connections = useNodeConnections({ handleType: "target" });
@@ -51,7 +51,7 @@
   });
 
   $effect(() => {
-    const data: SvelteFlowRequestNodeData = createSvelteFlowRequestNodeData({
+    const data = createRequestNodeData({
       url: urlInputText,
       requestType: selectedRequestType,
       requestBody: requestBodyInputText,

@@ -1,12 +1,12 @@
 <script lang="ts" module>
   import {
-    type SvelteFlowExtractPropertyNodeData,
+    type ExtractPropertyNodeData,
     WorkflowNodeType,
   } from "$lib/components/types";
   import { type Node } from "@xyflow/svelte";
 
   export type ExtractPropertyNodeType = Node<
-    SvelteFlowExtractPropertyNodeData,
+    ExtractPropertyNodeData & Record<string, unknown>,
     WorkflowNodeType.ExtractProperty
   >;
 </script>
@@ -20,7 +20,7 @@
     useNodeConnections,
     useSvelteFlow,
   } from "@xyflow/svelte";
-  import { createSvelteFlowExtractPropertyNodeData } from "$lib/components/types";
+  import { createExtractPropertyNodeData } from "$lib/components/types";
 
   const { updateNodeData } = useSvelteFlow();
   const connections = useNodeConnections({ handleType: "target" });
@@ -30,11 +30,10 @@
   let inputIsConnectable = $derived(connections.current.length === 0);
 
   $effect(() => {
-    const data: SvelteFlowExtractPropertyNodeData =
-      createSvelteFlowExtractPropertyNodeData({
-        path: pathInput,
-        targetId: currentConnectionId,
-      });
+    const data = createExtractPropertyNodeData({
+      path: pathInput,
+      targetId: currentConnectionId,
+    });
     updateNodeData(id, data);
   });
 </script>

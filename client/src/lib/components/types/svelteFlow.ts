@@ -6,17 +6,10 @@ import {
   WorkflowNodeType,
 } from "$lib/components/types/workflow";
 
-export type SvelteFlowPrintTextNodeData = PrintTextNodeData &
-  Record<string, unknown>;
-export type SvelteFlowExtractPropertyNodeData = ExtractPropertyNodeData &
-  Record<string, unknown>;
-export type SvelteFlowRequestNodeData = RequestNodeData &
-  Record<string, unknown>;
-
 /* Node data factories */
-export function createSvelteFlowPrintTextNodeData(
+export function createPrintTextNodeData(
   data?: Partial<Omit<PrintTextNodeData, "type">>,
-): SvelteFlowPrintTextNodeData {
+): WorkflowNodeData {
   return {
     type: WorkflowNodeType.PrintText,
     text: "Printing text...",
@@ -25,28 +18,28 @@ export function createSvelteFlowPrintTextNodeData(
   };
 }
 
-export function createSvelteFlowExtractPropertyNodeData(
+export function createExtractPropertyNodeData(
   data?: Partial<Omit<ExtractPropertyNodeData, "type">>,
-): SvelteFlowExtractPropertyNodeData {
+): WorkflowNodeData {
   return { type: WorkflowNodeType.ExtractProperty, ...data };
 }
 
-export function createSvelteFlowRequestNodeData(
+export function createRequestNodeData(
   data?: Partial<Omit<RequestNodeData, "type">>,
-): SvelteFlowRequestNodeData {
+): WorkflowNodeData {
   return { type: WorkflowNodeType.Request, requestType: "GET", ...data };
 }
 
-export function createWorkflowNodeData(
+export function createDefaultWorkflowNodeData(
   nodeType: WorkflowNodeType,
 ): WorkflowNodeData {
   switch (nodeType) {
     case WorkflowNodeType.PrintText:
-      return createSvelteFlowPrintTextNodeData();
+      return createPrintTextNodeData();
     case WorkflowNodeType.ExtractProperty:
-      return createSvelteFlowExtractPropertyNodeData();
+      return createExtractPropertyNodeData();
     case WorkflowNodeType.Request:
-      return createSvelteFlowRequestNodeData();
+      return createRequestNodeData();
     default:
       throw new Error(`Unsupported WorkflowNode type '${nodeType}'`);
   }
