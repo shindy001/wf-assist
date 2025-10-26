@@ -8,7 +8,7 @@
   import type { ClassValue } from "svelte/elements";
   import { type Result, type WorkflowIdentity } from "$lib/components/types";
   import { useAppState } from "$lib/stores";
-  import { createGetWorkflowIdentitiesQuery } from "../actions/getWorkflowIdentitiesQuery.svelte";
+  import { createGetWorkflowIdentitiesQuery } from "../actions/getWorkflowIdentitiesQuery";
   import { createRenameWorkflowCommand } from "../actions/renameWorkflowCommand";
   import { createRemoveWorkflowCommand } from "../actions/removeWorkflowCommand";
   import { createAddWorkflowCommand } from "../actions/addWorkflowCommand";
