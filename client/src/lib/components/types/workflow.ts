@@ -3,11 +3,12 @@ export interface Position {
   y: number;
 }
 
+// These enum values needs to be exact match to the values on server, see "workflowMapper.ts => toWorkflowData" to more info
 export enum WorkflowNodeType {
-  Default = "default",
-  PrintText = "printText",
-  ExtractProperty = "extractProperty",
-  Request = "request",
+  Default = "Default",
+  PrintText = "PrintText",
+  ExtractProperty = "ExtractProperty",
+  Request = "Request",
 }
 
 export interface WorkflowNodeDataBase {

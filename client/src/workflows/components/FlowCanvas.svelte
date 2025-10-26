@@ -36,7 +36,6 @@
 
   $effect(() => {
     const selectedWorkflowIdentity = appState.selectedWorkflowIdentity;
-    console.log(selectedWorkflowIdentity);
     if (selectedWorkflowIdentity) {
       fetchSelectedWorkflow(selectedWorkflowIdentity.id);
     }
