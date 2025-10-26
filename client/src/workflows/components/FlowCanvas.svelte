@@ -13,12 +13,16 @@
   import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
   import PrintTextNode from "./nodes/PrintTextNode.svelte";
   import {
-    createWorkflowNodeData,
+    createDefaultWorkflowNodeData,
     type WorkflowNode,
     WorkflowNodeType,
   } from "$lib/components/types";
   import { useFlowCanvasContext } from "../state";
+  import { createGetWorkflowQuery } from "../actions/getWorkflowQuery";
+  import { useAppState } from "$lib/stores";
 
+  const getWorkflowQuery = createGetWorkflowQuery();
+  const appState = await useAppState();
   const flowCanvasContext = useFlowCanvasContext();
   const additionalNodeTypes = {
     [WorkflowNodeType.ExtractProperty]: ExtractPropertyNode,
@@ -29,6 +33,22 @@
   const { screenToFlowPosition } = $derived(useSvelteFlow());
   let nodes = $state.raw<Node[]>([]);
   let edges = $state.raw<Edge[]>([]);
+
+  $effect(() => {
+    const selectedWorkflowIdentity = appState.selectedWorkflowIdentity;
+    console.log(selectedWorkflowIdentity);
+    if (selectedWorkflowIdentity) {
+      fetchSelectedWorkflow(selectedWorkflowIdentity.id);
+    }
+  });
+
+  const fetchSelectedWorkflow = async (id: string) => {
+    const result = await getWorkflowQuery(id);
+    if (result.isSuccessful && result.data) {
+      const workflow = result.data;
+      nodes = [...workflow.data.nodes];
+    }
+  };
 
   const onDragOver = (event: DragEvent) => {
     event.preventDefault();
@@ -46,7 +66,9 @@
       y: event.clientY,
     });
 
-    const data = createWorkflowNodeData(flowCanvasContext.selectedNodeType);
+    const data = createDefaultWorkflowNodeData(
+      flowCanvasContext.selectedNodeType,
+    );
     const newNode: WorkflowNode = {
       id: `${Date.now()}`,
       type: data.type,
