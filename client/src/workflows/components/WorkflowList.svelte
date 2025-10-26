@@ -28,7 +28,6 @@
   let showRenameDialog = $state(false);
   let showRemoveWorkflowDialog = $state(false);
   let newWorkflowName = $state("");
-  let actionError;
 
   refreshWorkflowIdentities();
 
