@@ -13,8 +13,10 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Services.AddSerilog();
 builder.Services.AddWfAssistServices();
+// TODO - set custom json options in WfAssistApp to avoid possible conflict with default/user serializer options
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
+    options.SerializerOptions.AllowOutOfOrderMetadataProperties = true;
     options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     options.SerializerOptions.WriteIndented = true;
