@@ -25,7 +25,7 @@
   import { useAppState } from "$lib/stores";
   import { createSaveWorkflowCommand } from "../actions/saveWorkflowCommand";
   import { onMount } from "svelte";
-  import { flatten, merge } from "lodash";
+  import { merge } from "lodash";
 
   const saveWorkflowRateInMiliseconds = 500;
   const getWorkflowQuery = createGetWorkflowQuery();
@@ -40,7 +40,7 @@
     [WorkflowNodeType.Request]: RequestNode,
   };
 
-  const { screenToFlowPosition } = $derived(useSvelteFlow());
+  const { screenToFlowPosition, fitView } = $derived(useSvelteFlow());
   let nodes = $state.raw<Node[]>([]);
   let edges = $state.raw<Edge[]>([]);
   let workflowDataState = WorkflowDataState.Uninitialized;
@@ -61,7 +61,7 @@
   $effect(() => {
     const selectedWorkflowIdentity = appState.selectedWorkflowIdentity;
     if (selectedWorkflowIdentity) {
-      fetchSelectedWorkflow(selectedWorkflowIdentity.id);
+      fetchSelectedWorkflow(selectedWorkflowIdentity.id).then(() => fitView());
     }
   });
 
