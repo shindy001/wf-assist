@@ -26,13 +26,15 @@
   const connections = useNodeConnections({ handleType: "target" });
   let { id, data }: NodeProps<ExtractPropertyNodeType> = $props();
   let pathInput = $state(data.path);
-  let currentConnectionId = $derived(connections.current[0]?.target);
+  let currentConnectionId = $derived<string | undefined>(
+    connections.current[0]?.target,
+  );
   let inputIsConnectable = $derived(connections.current.length === 0);
 
   $effect(() => {
     const data = createExtractPropertyNodeData({
       path: pathInput,
-      targetId: currentConnectionId,
+      targetId: currentConnectionId ?? "",
     });
     updateNodeData(id, data);
   });

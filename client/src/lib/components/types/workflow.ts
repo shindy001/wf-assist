@@ -22,8 +22,8 @@ export interface PrintTextNodeData extends WorkflowNodeDataBase {
 }
 
 export interface ExtractPropertyNodeData extends WorkflowNodeDataBase {
-  path?: string;
-  targetId?: string;
+  path: string;
+  targetId: string;
 }
 
 export interface RequestNodeData extends WorkflowNodeDataBase {
@@ -80,9 +80,14 @@ export function createPrintTextNodeData(
 }
 
 export function createExtractPropertyNodeData(
-  data?: Partial<Omit<ExtractPropertyNodeData, "type">>,
+  data?: Omit<ExtractPropertyNodeData, "type">,
 ): WorkflowNodeData {
-  return { type: WorkflowNodeType.ExtractProperty, ...data };
+  return {
+    type: WorkflowNodeType.ExtractProperty,
+    path: "",
+    targetId: "",
+    ...data,
+  };
 }
 
 export function createRequestNodeData(
