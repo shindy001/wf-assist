@@ -1,3 +1,3 @@
 namespace WfAssist.AspNetCore.Features.Workflows.Dtos;
 
-internal sealed record WorkFlowIdentityDto(string Id, string Name);
+internal sealed record WorkFlowIdentityDto(Guid Id, string Name);
