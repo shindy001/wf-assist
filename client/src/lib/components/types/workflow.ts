@@ -15,8 +15,6 @@ export enum WorkflowDataState {
   Uninitialized = "Uninitialized",
   Initialized = "Initialized",
   ReadyToChange = "ReadyToChange",
-  ReadyToSave = "ReadyToSave",
-  Saving = "Saving",
 }
 
 export interface WorkflowNodeDataBase {

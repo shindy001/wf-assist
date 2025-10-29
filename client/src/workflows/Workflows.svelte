@@ -2,14 +2,15 @@
   import { SvelteFlowProvider } from "@xyflow/svelte";
   import FlowSidebar from "./components/FlowSidebar.svelte";
   import FlowCanvas from "./components/FlowCanvas.svelte";
-  import { FlowCanvasContextProvider } from "./state";
+  import { useWorkflowsAppState } from "./state";
+
+  const workflowsAppState = useWorkflowsAppState();
+  await workflowsAppState.fetchWorkflowIdentities();
 </script>
 
 <SvelteFlowProvider>
-  <FlowCanvasContextProvider>
-    <div class="flex size-full">
-      <FlowSidebar />
-      <FlowCanvas />
-    </div>
-  </FlowCanvasContextProvider>
+  <div class="flex size-full">
+    <FlowSidebar />
+    <FlowCanvas />
+  </div>
 </SvelteFlowProvider>

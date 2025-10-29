@@ -2,10 +2,10 @@
   import { WorkflowNodeType } from "$lib/components/types";
   import type { ClassValue } from "svelte/elements";
   import { Button } from "$lib/components/ui/button";
-  import { useFlowCanvasContext } from "../state";
+  import { useWorkflowsAppState } from "../state";
 
   const props: { class?: ClassValue } = $props();
-  const flowCanvasContext = useFlowCanvasContext();
+  const workflowsAppState = useWorkflowsAppState();
 
   const onDragStart = (
     event: DragEvent,
@@ -15,7 +15,7 @@
       return null;
     }
 
-    flowCanvasContext.selectedNodeType = selectedNodeType;
+    workflowsAppState.selectedNodeType = selectedNodeType;
     event.dataTransfer.effectAllowed = "move";
   };
 
