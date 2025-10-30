@@ -43,7 +43,6 @@ export type WorkflowDto = {
 
 export type WorkflowEdgeDto = {
     id: string;
-    position: PositionDto;
     source: string;
     target: string;
 };
@@ -53,38 +52,38 @@ export type WorkFlowIdentityDto = {
     name: string;
 };
 
-export type WorkflowNodeDto = ({
-    type?: 'PrintText';
-} & WorkflowNodeDtoPrintTextNodeDto) | ({
-    type?: 'Request';
-} & WorkflowNodeDtoRequestNodeDto) | ({
+export type WorkflowNodeDataDto = ({
     type?: 'ExtractProperty';
-} & WorkflowNodeDtoExtractPropertyNodeDto);
+} & WorkflowNodeDataDtoExtractPropertyNodeDataDto) | ({
+    type?: 'PrintText';
+} & WorkflowNodeDataDtoPrintTextNodeDataDto) | ({
+    type?: 'Request';
+} & WorkflowNodeDataDtoRequestNodeDataDto);
 
-export type WorkflowNodeDtoExtractPropertyNodeDto = {
+export type WorkflowNodeDataDtoExtractPropertyNodeDataDto = {
     type?: 'ExtractProperty';
     path: string;
     targetId: string;
-    id: string;
-    position: PositionDto;
 };
 
-export type WorkflowNodeDtoPrintTextNodeDto = {
+export type WorkflowNodeDataDtoPrintTextNodeDataDto = {
     type?: 'PrintText';
     text: string;
     useConsole?: boolean;
     targetId?: string | null;
-    id: string;
-    position: PositionDto;
 };
 
-export type WorkflowNodeDtoRequestNodeDto = {
+export type WorkflowNodeDataDtoRequestNodeDataDto = {
     type?: 'Request';
     requestType: string;
     url: string;
     requestBody?: string | null;
+};
+
+export type WorkflowNodeDto = {
     id: string;
     position: PositionDto;
+    data: WorkflowNodeDataDto;
 };
 
 export type GetWfAssistWorkflowsIdentitiesData = {
