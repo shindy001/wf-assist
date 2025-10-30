@@ -12,16 +12,16 @@
   import PrintTextNode from "./nodes/PrintTextNode.svelte";
   import {
     createDefaultWorkflowNodeData,
-    type WorkflowNode,
-    WorkflowNodeType,
+    type SvelteFlowWorkflowNode,
+    WorkflowNodeDataType,
   } from "$lib/components/types";
   import { useWorkflowsAppState } from "../state/";
 
   const workflowsAppState = useWorkflowsAppState();
   const additionalNodeTypes = {
-    [WorkflowNodeType.ExtractProperty]: ExtractPropertyNode,
-    [WorkflowNodeType.PrintText]: PrintTextNode,
-    [WorkflowNodeType.Request]: RequestNode,
+    [WorkflowNodeDataType.ExtractProperty]: ExtractPropertyNode,
+    [WorkflowNodeDataType.PrintText]: PrintTextNode,
+    [WorkflowNodeDataType.Request]: RequestNode,
   };
 
   const { screenToFlowPosition } = $derived(useSvelteFlow());
@@ -53,17 +53,15 @@
     const data = createDefaultWorkflowNodeData(
       workflowsAppState.selectedNodeType,
     );
-    const newNode: WorkflowNode = {
+
+    const newNode: SvelteFlowWorkflowNode = {
       id: `${Date.now()}`,
-      type: data.type,
       position,
+      type: data.type,
       data: data,
     };
 
-    workflowsAppState.addFlowCanvasNode({
-      ...newNode,
-      data: { ...newNode.data },
-    });
+    workflowsAppState.addFlowCanvasNode(newNode);
   };
 </script>
 

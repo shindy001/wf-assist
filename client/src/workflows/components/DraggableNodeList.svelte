@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { WorkflowNodeType } from "$lib/components/types";
+  import { WorkflowNodeDataType } from "$lib/components/types";
   import type { ClassValue } from "svelte/elements";
   import { Button } from "$lib/components/ui/button";
   import { useWorkflowsAppState } from "../state";
@@ -9,7 +9,7 @@
 
   const onDragStart = (
     event: DragEvent,
-    selectedNodeType: WorkflowNodeType,
+    selectedNodeType: WorkflowNodeDataType,
   ) => {
     if (!event.dataTransfer) {
       return null;
@@ -20,8 +20,8 @@
   };
 
   const nodeTypes = [
-    ...Object.values(WorkflowNodeType).filter(
-      (x) => x !== WorkflowNodeType.Default,
+    ...Object.values(WorkflowNodeDataType).filter(
+      (x) => x !== WorkflowNodeDataType.Default,
     ),
   ];
 </script>
