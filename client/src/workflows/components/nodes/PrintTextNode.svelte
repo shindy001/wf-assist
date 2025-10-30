@@ -1,13 +1,13 @@
 <script lang="ts" module>
   import {
-    WorkflowNodeType,
+    WorkflowNodeDataType,
     type PrintTextNodeData,
   } from "$lib/components/types";
   import { type Node } from "@xyflow/svelte";
 
   export type PrintStringNodeType = Node<
-    PrintTextNodeData & Record<string, unknown>,
-    WorkflowNodeType.PrintText
+    PrintTextNodeData,
+    WorkflowNodeDataType.PrintText
   >;
 </script>
 
@@ -20,7 +20,6 @@
     useNodeConnections,
     useSvelteFlow,
   } from "@xyflow/svelte";
-  import { createPrintTextNodeData } from "$lib/components/types";
 
   const { updateNodeData } = useSvelteFlow();
   let { id }: NodeProps<PrintStringNodeType> = $props();
@@ -30,10 +29,7 @@
   let inputIsConnectable = $derived(connections.current.length === 0);
 
   $effect(() => {
-    const data = createPrintTextNodeData({
-      targetId: currentConnectionId,
-    });
-    updateNodeData(id, data);
+    updateNodeData(id, { targetId: currentConnectionId });
   });
 </script>
 
