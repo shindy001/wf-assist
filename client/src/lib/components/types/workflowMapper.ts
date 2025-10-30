@@ -1,10 +1,19 @@
-import type { WorkflowDto, WorkflowEdgeDto, WorkflowNodeDto } from "$api";
+import type {
+  WorkflowDataDto,
+  WorkflowDto,
+  WorkflowEdgeDto,
+  WorkflowNodeDataDto,
+  WorkflowNodeDataDtoExtractPropertyNodeDataDto,
+  WorkflowNodeDataDtoPrintTextNodeDataDto,
+  WorkflowNodeDataDtoRequestNodeDataDto,
+  WorkflowNodeDto,
+} from "$api";
 import {
-  WorkflowNodeType,
   type ExtractPropertyNodeData,
   type PrintTextNodeData,
   type RequestNodeData,
   type Workflow,
+  type WorkflowData,
   type WorkflowEdge,
   type WorkflowNode,
   type WorkflowNodeData,
@@ -14,41 +23,78 @@ export function toWorkflow(dto: WorkflowDto): Workflow {
   return {
     id: dto.id,
     name: dto.name,
-    data: {
-      edges: dto.data.edges?.map((x) => toWorkflowEdge(x)) ?? [],
-      nodes: dto.data.nodes?.map((x) => toWorkflowNode(x)) ?? [],
-    },
+    data: toWorkflowData(dto.data),
+  };
+}
+
+export function toWorkflowData(dto: WorkflowDataDto): WorkflowData {
+  return {
+    nodes: dto.nodes?.map((x) => toWorkflowNode(x)) ?? [],
+    edges: dto.edges?.map((x) => toWorkflowEdge(x)) ?? [],
+  };
+}
+
+export function toWorkflowDataDto(data: WorkflowData): WorkflowDataDto {
+  return {
+    nodes: data.nodes?.map((x) => toWorkflowNodeDto(x)) ?? [],
+    edges: data.edges?.map((x) => toWorkflowEdgeDto(x)) ?? [],
   };
 }
 
 function toWorkflowEdge(dto: WorkflowEdgeDto): WorkflowEdge {
   return {
     id: dto.id,
-    position: { x: dto.position.x, y: dto.position.y },
     source: dto.source,
     target: dto.target,
+  };
+}
+
+function toWorkflowEdgeDto(data: WorkflowEdge): WorkflowEdgeDto {
+  return {
+    id: data.id,
+    source: data.source,
+    target: data.target,
   };
 }
 
 function toWorkflowNode(dto: WorkflowNodeDto): WorkflowNode {
   return {
     id: dto.id,
-    type: dto.type as WorkflowNodeType,
     position: { x: dto.position.x, y: dto.position.y },
-    data: toWorkflowData(dto),
+    data: toWorkflowNodeData(dto),
   };
 }
 
-function toWorkflowData(dto: WorkflowNodeDto): WorkflowNodeData {
-  switch (dto.type) {
+function toWorkflowNodeDto(data: WorkflowNode): WorkflowNodeDto {
+  return {
+    id: data.id,
+    position: { x: data.position.x, y: data.position.y },
+    data: toWorkflowNodeDataDto(data),
+  };
+}
+
+function toWorkflowNodeData(dto: WorkflowNodeDto): WorkflowNodeData {
+  switch (dto.data.type) {
     case "PrintText":
-      return dto as unknown as PrintTextNodeData & Record<string, unknown>;
+      return dto.data as PrintTextNodeData;
     case "ExtractProperty":
-      return dto as unknown as ExtractPropertyNodeData &
-        Record<string, unknown>;
+      return dto.data as ExtractPropertyNodeData;
     case "Request":
-      return dto as unknown as RequestNodeData & Record<string, unknown>;
+      return dto.data as RequestNodeData;
     default:
-      throw new Error(`Unknown WorkflowNodeDto type '${dto.type}'`);
+      throw new Error(`Unknown WorkflowNodeDataDto type '${dto.data.type}'`);
+  }
+}
+
+function toWorkflowNodeDataDto(node: WorkflowNode): WorkflowNodeDataDto {
+  switch (node.data.type) {
+    case "PrintText":
+      return node.data as WorkflowNodeDataDtoPrintTextNodeDataDto;
+    case "ExtractProperty":
+      return node.data as WorkflowNodeDataDtoExtractPropertyNodeDataDto;
+    case "Request":
+      return node.data as WorkflowNodeDataDtoRequestNodeDataDto;
+    default:
+      throw new Error(`Unknown WorkflowNodeData type '${node.data.type}'`);
   }
 }

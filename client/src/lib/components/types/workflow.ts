@@ -1,10 +1,67 @@
+export interface Workflow {
+  id: string;
+  name: string;
+  data: WorkflowData;
+}
+
+export interface WorkflowData {
+  nodes: Array<WorkflowNode>;
+  edges: Array<WorkflowEdge>;
+}
+
+export interface WorkflowEdge {
+  id: string;
+  source: string;
+  target: string;
+}
+
+export interface WorkflowNode {
+  id: string;
+  position: Position;
+  data: WorkflowNodeData;
+}
+
+// SvelteFlow node contract (needs type prop at the top level)
+export interface SvelteFlowWorkflowNode
+  extends WorkflowNode,
+    WorkflowNodeDataBase {}
+
+// SvelteFlow edge contract
+export interface SvelteFlowWorkflowEdge extends WorkflowEdge {}
+
+export type WorkflowNodeData =
+  | PrintTextNodeData
+  | ExtractPropertyNodeData
+  | RequestNodeData;
+
+export type WorkflowNodeDataBase = {
+  type: WorkflowNodeDataType;
+};
+
+export type PrintTextNodeData = {
+  targetId?: string;
+  text: string;
+  useConsole: boolean;
+} & WorkflowNodeDataBase;
+
+export type ExtractPropertyNodeData = {
+  path: string;
+  targetId: string;
+} & WorkflowNodeDataBase;
+
+export type RequestNodeData = {
+  url: string;
+  requestType: string;
+  requestBody?: string;
+} & WorkflowNodeDataBase;
+
 export interface Position {
   x: number;
   y: number;
 }
 
-// These enum values needs to be exact match to the values on server, see "workflowMapper.ts => toWorkflowData" to more info
-export enum WorkflowNodeType {
+// These enum values (except Default) needs to be exact match to the values on server as they are mapped in "workflowMapper.ts"
+export enum WorkflowNodeDataType {
   Default = "Default",
   PrintText = "PrintText",
   ExtractProperty = "ExtractProperty",
@@ -17,100 +74,54 @@ export enum WorkflowDataState {
   ReadyToChange = "ReadyToChange",
 }
 
-export interface WorkflowNodeDataBase {
-  type: WorkflowNodeType;
-}
-
-export interface PrintTextNodeData extends WorkflowNodeDataBase {
-  targetId?: string;
-  text: string;
-  useConsole: boolean;
-}
-
-export interface ExtractPropertyNodeData extends WorkflowNodeDataBase {
-  path: string;
-  targetId: string;
-}
-
-export interface RequestNodeData extends WorkflowNodeDataBase {
-  url?: string;
-  requestType: string;
-  requestBody?: string;
-}
-
-export type WorkflowNodeData =
-  | (PrintTextNodeData & Record<string, unknown>)
-  | (ExtractPropertyNodeData & Record<string, unknown>)
-  | (RequestNodeData & Record<string, unknown>);
-
-export interface WorkflowNode {
-  id: string;
-  type: WorkflowNodeType;
-  position: Position;
-  data: WorkflowNodeData;
-}
-
-export interface WorkflowEdge {
-  id: string;
-  position: Position;
-  source: string;
-  target: string;
-}
-
-export interface WorkflowData {
-  nodes: Array<WorkflowNode>;
-  edges: Array<WorkflowEdge>;
-}
-
-export interface Workflow {
-  id: string;
-  name: string;
-  data: WorkflowData;
-}
-
 export interface WorkflowIdentity {
   id: string;
   name: string;
 }
 
 /* Node data factories */
-export function createPrintTextNodeData(
+function createPrintTextNodeData(
   data?: Partial<Omit<PrintTextNodeData, "type">>,
 ): WorkflowNodeData {
   return {
-    type: WorkflowNodeType.PrintText,
+    type: WorkflowNodeDataType.PrintText,
     text: "Printing text...",
     useConsole: false,
     ...data,
   };
 }
 
-export function createExtractPropertyNodeData(
+function createExtractPropertyNodeData(
   data?: Omit<ExtractPropertyNodeData, "type">,
 ): WorkflowNodeData {
   return {
-    type: WorkflowNodeType.ExtractProperty,
+    type: WorkflowNodeDataType.ExtractProperty,
     path: "",
     targetId: "",
     ...data,
   };
 }
 
-export function createRequestNodeData(
+function createRequestNodeData(
   data?: Partial<Omit<RequestNodeData, "type">>,
 ): WorkflowNodeData {
-  return { type: WorkflowNodeType.Request, requestType: "GET", ...data };
+  return {
+    type: WorkflowNodeDataType.Request,
+    url: "",
+    requestType: "GET",
+    ...data,
+  };
 }
 
 export function createDefaultWorkflowNodeData(
-  nodeType: WorkflowNodeType,
+  nodeType: WorkflowNodeDataType,
 ): WorkflowNodeData {
   switch (nodeType) {
-    case WorkflowNodeType.PrintText:
+    case WorkflowNodeDataType.PrintText:
       return createPrintTextNodeData();
-    case WorkflowNodeType.ExtractProperty:
+    case WorkflowNodeDataType.ExtractProperty:
       return createExtractPropertyNodeData();
-    case WorkflowNodeType.Request:
+    case WorkflowNodeDataType.Request:
       return createRequestNodeData();
     default:
       throw new Error(`Unsupported WorkflowNode type '${nodeType}'`);
