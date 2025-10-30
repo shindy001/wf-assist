@@ -1,8 +1,6 @@
-import {
-  postWfAssistWorkflowsByIdUpdateData,
-  type WorkflowNodeDto,
-} from "$api";
+import { postWfAssistWorkflowsByIdUpdateData } from "$api";
 import { failed, successful, type WorkflowData } from "$lib/components/types";
+import { toWorkflowDataDto } from "$lib/components/types/workflowMapper";
 import { throttle } from "lodash";
 
 export function createSaveWorkflowCommand(saveRateLimitInMilliseconds: number) {
@@ -11,15 +9,9 @@ export function createSaveWorkflowCommand(saveRateLimitInMilliseconds: number) {
       path: {
         id: id,
       },
-      body: {
-        data: {
-          nodes: workflowData?.nodes?.map(
-            (x) => x as unknown as WorkflowNodeDto,
-          ),
-          edges: workflowData.edges,
-        },
-      },
+      body: { data: toWorkflowDataDto(workflowData) },
     });
+
     return result.error ? failed(result.error.toString()) : successful();
   }, saveRateLimitInMilliseconds);
 }
