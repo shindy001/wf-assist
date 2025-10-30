@@ -68,6 +68,9 @@
 
     await removeWorkflowCommand(contextMenuWorkflowIdentity.id);
     await workflowsAppState.fetchWorkflowIdentities();
+    await workflowsAppState.setSelectedWorkflow(
+      workflowsAppState.workflowIdentities?.[0]?.id,
+    );
   }
 
   function hideContextMenu() {
@@ -149,11 +152,7 @@
     {#if workflowsAppState.workflowIdentities === undefined}
       <p>Loading...</p>
     {:else if workflowsAppState.workflowIdentities.length <= 0}
-      <div
-        class="px-2 flex gap-2 items-center content-center rounded-md cursor-pointer hover:bg-gray-100"
-      >
-        <p>No workflows yet, try adding one.</p>
-      </div>
+      <p>No workflows yet, try adding one.</p>
     {:else}
       {#each workflowsAppState.workflowIdentities as workflowIdentity}
         <Button

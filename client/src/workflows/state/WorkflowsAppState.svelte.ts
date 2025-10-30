@@ -53,7 +53,12 @@ class WorkflowsAppState {
     this.#workflowIdentities = result.data ?? [];
   }
 
-  async setSelectedWorkflow(id: string) {
+  async setSelectedWorkflow(id: string | undefined) {
+    if (!id) {
+      this.#selectedWorkflowIdentity = undefined;
+      return;
+    }
+
     const query = createGetWorkflowQuery();
     const workflow = (await query(id)).data;
 
