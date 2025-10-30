@@ -1,14 +1,14 @@
 <script lang="ts" module>
   import {
-    WorkflowNodeType,
+    WorkflowNodeDataType,
     type RequestNodeData,
   } from "$lib/components/types";
   import { type Connection, type Node } from "@xyflow/svelte";
   import type { EdgeBase } from "@xyflow/system";
 
   export type RequestNodeType = Node<
-    RequestNodeData & Record<string, unknown>,
-    WorkflowNodeType.Request
+    RequestNodeData,
+    WorkflowNodeDataType.Request
   >;
 </script>
 
@@ -21,7 +21,6 @@
     useSvelteFlow,
   } from "@xyflow/svelte";
   import NodeWrapper from "./NodeWrapper.svelte";
-  import { createRequestNodeData } from "$lib/components/types";
 
   const { updateNodeData, updateNode } = useSvelteFlow();
   const connections = useNodeConnections({ handleType: "target" });
@@ -48,15 +47,6 @@
 
   $effect(() => {
     updateNode(id, { width: getNodeWidth(), height: getNodeHeight() });
-  });
-
-  $effect(() => {
-    const data = createRequestNodeData({
-      url: urlInputText,
-      requestType: selectedRequestType,
-      requestBody: requestBodyInputText,
-    });
-    updateNodeData(id, data);
   });
 </script>
 
