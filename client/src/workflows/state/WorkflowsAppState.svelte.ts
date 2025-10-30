@@ -1,23 +1,22 @@
 import {
   type WorkflowIdentity,
-  WorkflowNodeType,
-  type WorkflowData,
+  WorkflowNodeDataType,
   failed,
-  type WorkflowNode,
-  type WorkflowEdge,
+  type SvelteFlowWorkflowNode,
+  type SvelteFlowWorkflowEdge,
 } from "$lib/components/types";
-import type { Node, Edge } from "@xyflow/svelte";
 import { createGetWorkflowIdentitiesQuery } from "../actions/getWorkflowIdentitiesQuery";
 import { createGetWorkflowQuery } from "../actions/getWorkflowQuery";
 import { createSaveWorkflowCommand } from "../actions/saveWorkflowCommand";
-import { merge } from "lodash";
 
 class WorkflowsAppState {
   #workflowIdentities = $state<WorkflowIdentity[] | undefined>();
   #selectedWorkflowIdentity = $state<WorkflowIdentity | undefined>();
-  #selectedNodeType = $state<WorkflowNodeType>(WorkflowNodeType.Default);
-  flowCanvasNodes = $state.raw<Node[]>([]);
-  flowCanvasEdges = $state.raw<Edge[]>([]);
+  #selectedNodeType = $state<WorkflowNodeDataType>(
+    WorkflowNodeDataType.Default,
+  );
+  flowCanvasNodes = $state.raw<SvelteFlowWorkflowNode[]>([]);
+  flowCanvasEdges = $state.raw<SvelteFlowWorkflowEdge[]>([]);
 
   private saveRateLimitInMiliseconds = 1000;
   private saveWorkflowCommand = createSaveWorkflowCommand(
@@ -36,15 +35,15 @@ class WorkflowsAppState {
     return this.#selectedNodeType;
   }
 
-  set selectedNodeType(nodeType: WorkflowNodeType) {
+  set selectedNodeType(nodeType: WorkflowNodeDataType) {
     this.#selectedNodeType = nodeType;
   }
 
-  addFlowCanvasNode(node: Node) {
+  addFlowCanvasNode(node: SvelteFlowWorkflowNode) {
     this.flowCanvasNodes = [...this.flowCanvasNodes, node];
   }
 
-  addFlowCanvasEdge(edge: Edge) {
+  addFlowCanvasEdge(edge: SvelteFlowWorkflowEdge) {
     this.flowCanvasEdges = [...this.flowCanvasEdges, edge];
   }
 
@@ -60,11 +59,15 @@ class WorkflowsAppState {
 
     if (workflow) {
       this.#selectedWorkflowIdentity = {
-        id: workflow?.id,
-        name: workflow?.name,
+        id: workflow.id,
+        name: workflow.name,
       };
-      this.flowCanvasNodes = [...(workflow?.data.nodes ?? [])];
-      this.flowCanvasEdges = [...(workflow?.data.edges ?? [])];
+
+      this.flowCanvasNodes = workflow.data.nodes.map((x) => ({
+        type: x.data.type,
+        ...x,
+      }));
+      this.flowCanvasEdges = workflow.data.edges;
     }
   }
 
@@ -74,12 +77,8 @@ class WorkflowsAppState {
     }
 
     const newData = {
-      nodes: this.flowCanvasNodes.map(
-        (x) => merge(x, x.data) as unknown as WorkflowNode,
-      ),
-      edges: this.flowCanvasEdges.map(
-        (x) => merge(x, x.data) as unknown as WorkflowEdge,
-      ),
+      nodes: this.flowCanvasNodes,
+      edges: this.flowCanvasEdges,
     };
     return await this.saveWorkflowCommand(
       this.selectedWorkflowIdentity.id,
