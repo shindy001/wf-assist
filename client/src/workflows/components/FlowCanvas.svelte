@@ -75,7 +75,7 @@
     ondragover={onDragOver}
     ondrop={onDrop}
   >
-    <Controls showLock={false} position="top-right" />
+    <Controls showLock={false} />
     <Background />
     <MiniMap />
   </SvelteFlow>
