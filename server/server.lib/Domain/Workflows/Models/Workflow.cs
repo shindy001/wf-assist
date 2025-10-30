@@ -18,38 +18,39 @@ public sealed record WorkflowData
 public sealed record WorkflowEdge
 {
     public required string Id { get; init; }
-    public required Position Position { get; init; }
     public required string Source { get; init; }
     public required string Target { get; init; }
 }
 
-
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(PrintTextNode), nameof(WorkflowNodeType.PrintText))]
-[JsonDerivedType(typeof(RequestNode), nameof(WorkflowNodeType.Request))]
-[JsonDerivedType(typeof(ExtractPropertyNode), nameof(WorkflowNodeType.ExtractProperty))]
-public abstract record WorkflowNode
+public sealed record WorkflowNode
 {
     public required string Id { get; init; }
     public required Position Position { get; init; }
+    public required WorkflowNodeData Data { get; init; }
 }
 
-public sealed record PrintTextNode : WorkflowNode
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(ExtractPropertyNodeData), nameof(WorkflowNodeDataType.ExtractProperty))]
+[JsonDerivedType(typeof(PrintTextNodeData), nameof(WorkflowNodeDataType.PrintText))]
+[JsonDerivedType(typeof(RequestNodeData), nameof(WorkflowNodeDataType.Request))]
+public abstract record WorkflowNodeData;
+
+public sealed record ExtractPropertyNodeData : WorkflowNodeData
+{
+    public required string Path { get; init; }
+    public required string TargetId { get; init; }
+}
+
+public sealed record PrintTextNodeData : WorkflowNodeData
 {
     public required string Text { get; init; }
     public bool UseConsole { get; init; }
     public string? TargetId { get; init; }
 }
 
-public sealed record RequestNode : WorkflowNode
+public sealed record RequestNodeData : WorkflowNodeData
 {
     public required string RequestType { get; init; }
     public required string Url { get; init; }
     public string? RequestBody { get; init; }
-}
-
-public sealed record ExtractPropertyNode : WorkflowNode
-{
-    public required string Path { get; init; }
-    public required string TargetId { get; init; }
 }

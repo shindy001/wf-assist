@@ -1,6 +1,6 @@
 namespace WfAssist.AspNetCore.Domain.Workflows.Models;
 
-public enum WorkflowNodeType
+public enum WorkflowNodeDataType
 {
     PrintText,
     ExtractProperty,

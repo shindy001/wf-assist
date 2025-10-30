@@ -18,37 +18,39 @@ public sealed record WorkflowDataDto
 public sealed record WorkflowEdgeDto
 {
     public required string Id { get; init; }
-    public required PositionDto Position { get; init; }
     public required string Source { get; init; }
     public required string Target { get; init; }
 }
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(PrintTextNodeDto), nameof(WorkflowNodeTypeDto.PrintText))]
-[JsonDerivedType(typeof(RequestNodeDto), nameof(WorkflowNodeTypeDto.Request))]
-[JsonDerivedType(typeof(ExtractPropertyNodeDto), nameof(WorkflowNodeTypeDto.ExtractProperty))]
-public abstract record WorkflowNodeDto
+public sealed record WorkflowNodeDto
 {
     public required string Id { get; init; }
     public required PositionDto Position { get; init; }
+    public required WorkflowNodeDataDto Data { get; init; }
 }
 
-public sealed record PrintTextNodeDto : WorkflowNodeDto
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(ExtractPropertyNodeDataDto), nameof(WorkflowNodeDataTypeDto.ExtractProperty))]
+[JsonDerivedType(typeof(PrintTextNodeDataDto), nameof(WorkflowNodeDataTypeDto.PrintText))]
+[JsonDerivedType(typeof(RequestNodeDataDto), nameof(WorkflowNodeDataTypeDto.Request))]
+public abstract record WorkflowNodeDataDto;
+
+public sealed record ExtractPropertyNodeDataDto : WorkflowNodeDataDto
+{
+    public required string Path { get; init; }
+    public required string TargetId { get; init; }
+}
+
+public sealed record PrintTextNodeDataDto : WorkflowNodeDataDto
 {
     public required string Text { get; init; }
     public bool UseConsole { get; init; }
     public string? TargetId { get; init; }
 }
 
-public sealed record RequestNodeDto : WorkflowNodeDto
+public sealed record RequestNodeDataDto : WorkflowNodeDataDto
 {
     public required string RequestType { get; init; }
     public required string Url { get; init; }
     public string? RequestBody { get; init; }
-}
-
-public sealed record ExtractPropertyNodeDto : WorkflowNodeDto
-{
-    public required string Path { get; init; }
-    public required string TargetId { get; init; }
 }

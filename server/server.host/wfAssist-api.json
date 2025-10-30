@@ -294,7 +294,6 @@
       "WorkflowEdgeDto": {
         "required": [
           "id",
-          "position",
           "source",
           "target"
         ],
@@ -302,9 +301,6 @@
         "properties": {
           "id": {
             "type": "string"
-          },
-          "position": {
-            "$ref": "#/components/schemas/PositionDto"
           },
           "source": {
             "type": "string"
@@ -330,37 +326,35 @@
           }
         }
       },
-      "WorkflowNodeDto": {
+      "WorkflowNodeDataDto": {
         "required": [
           "type"
         ],
         "type": "object",
         "anyOf": [
           {
-            "$ref": "#/components/schemas/WorkflowNodeDtoPrintTextNodeDto"
+            "$ref": "#/components/schemas/WorkflowNodeDataDtoExtractPropertyNodeDataDto"
           },
           {
-            "$ref": "#/components/schemas/WorkflowNodeDtoRequestNodeDto"
+            "$ref": "#/components/schemas/WorkflowNodeDataDtoPrintTextNodeDataDto"
           },
           {
-            "$ref": "#/components/schemas/WorkflowNodeDtoExtractPropertyNodeDto"
+            "$ref": "#/components/schemas/WorkflowNodeDataDtoRequestNodeDataDto"
           }
         ],
         "discriminator": {
           "propertyName": "type",
           "mapping": {
-            "PrintText": "#/components/schemas/WorkflowNodeDtoPrintTextNodeDto",
-            "Request": "#/components/schemas/WorkflowNodeDtoRequestNodeDto",
-            "ExtractProperty": "#/components/schemas/WorkflowNodeDtoExtractPropertyNodeDto"
+            "ExtractProperty": "#/components/schemas/WorkflowNodeDataDtoExtractPropertyNodeDataDto",
+            "PrintText": "#/components/schemas/WorkflowNodeDataDtoPrintTextNodeDataDto",
+            "Request": "#/components/schemas/WorkflowNodeDataDtoRequestNodeDataDto"
           }
         }
       },
-      "WorkflowNodeDtoExtractPropertyNodeDto": {
+      "WorkflowNodeDataDtoExtractPropertyNodeDataDto": {
         "required": [
           "path",
-          "targetId",
-          "id",
-          "position"
+          "targetId"
         ],
         "properties": {
           "type": {
@@ -374,20 +368,12 @@
           },
           "targetId": {
             "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "position": {
-            "$ref": "#/components/schemas/PositionDto"
           }
         }
       },
-      "WorkflowNodeDtoPrintTextNodeDto": {
+      "WorkflowNodeDataDtoPrintTextNodeDataDto": {
         "required": [
-          "text",
-          "id",
-          "position"
+          "text"
         ],
         "properties": {
           "type": {
@@ -405,21 +391,13 @@
           "targetId": {
             "type": "string",
             "nullable": true
-          },
-          "id": {
-            "type": "string"
-          },
-          "position": {
-            "$ref": "#/components/schemas/PositionDto"
           }
         }
       },
-      "WorkflowNodeDtoRequestNodeDto": {
+      "WorkflowNodeDataDtoRequestNodeDataDto": {
         "required": [
           "requestType",
-          "url",
-          "id",
-          "position"
+          "url"
         ],
         "properties": {
           "type": {
@@ -437,12 +415,25 @@
           "requestBody": {
             "type": "string",
             "nullable": true
-          },
+          }
+        }
+      },
+      "WorkflowNodeDto": {
+        "required": [
+          "id",
+          "position",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
           "id": {
             "type": "string"
           },
           "position": {
             "$ref": "#/components/schemas/PositionDto"
+          },
+          "data": {
+            "$ref": "#/components/schemas/WorkflowNodeDataDto"
           }
         }
       }

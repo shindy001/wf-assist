@@ -1,6 +1,6 @@
 namespace WfAssist.AspNetCore.Features.Workflows.Dtos;
 
-public enum WorkflowNodeTypeDto
+public enum WorkflowNodeDataTypeDto
 {
     PrintText,
     ExtractProperty,

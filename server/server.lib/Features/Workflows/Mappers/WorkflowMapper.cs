@@ -39,7 +39,6 @@ public static class WorkflowMapper
         => new()
         {
             Id = entity.Id,
-            Position = entity.Position.ToDto(),
             Source = entity.Source,
             Target = entity.Target,
         };
@@ -48,70 +47,99 @@ public static class WorkflowMapper
         => new()
         {
             Id = dto.Id,
-            Position = dto.Position.ToDomain(),
             Source = dto.Source,
             Target = dto.Target,
         };
 
     public static WorkflowNodeDto ToDto(this WorkflowNode entity)
     {
-        return entity switch
+        return new WorkflowNodeDto
         {
-            PrintTextNode printTextNode => new PrintTextNodeDto
-            {
-                Id = printTextNode.Id,
-                Position = printTextNode.Position.ToDto(),
-                Text = printTextNode.Text,
-                UseConsole = printTextNode.UseConsole,
-                TargetId = printTextNode.TargetId
-            },
-            RequestNode requestNode => new RequestNodeDto
-            {
-                Id = requestNode.Id,
-                Position = requestNode.Position.ToDto(),
-                RequestType = requestNode.RequestType,
-                Url = requestNode.Url,
-                RequestBody = requestNode.RequestBody
-            },
-            ExtractPropertyNode extractPropertyNode => new ExtractPropertyNodeDto
-            {
-                Id = extractPropertyNode.Id,
-                Position = extractPropertyNode.Position.ToDto(),
-                Path = extractPropertyNode.Path,
-                TargetId = extractPropertyNode.TargetId
-            },
-            _ => throw new InvalidOperationException($"Unknown WorkflowNodeDto type {entity.GetType().Name}")
+            Id = entity.Id,
+            Position = entity.Position.ToDto(),
+            Data = entity.Data.ToDto()
         };
     }
 
     public static WorkflowNode ToDomain(this WorkflowNodeDto dto)
     {
+        return new WorkflowNode
+        {
+            Id = dto.Id,
+            Position = dto.Position.ToDomain(),
+            Data = dto.Data.ToDomain()
+        };
+    }
+
+    public static WorkflowNodeDataDto ToDto(this WorkflowNodeData workflowNodeData)
+    {
+        return workflowNodeData switch
+        {
+            PrintTextNodeData data => new PrintTextNodeDataDto
+            {
+                Text = data.Text,
+                UseConsole = data.UseConsole,
+                TargetId = data.TargetId
+            },
+            ExtractPropertyNodeData data => new ExtractPropertyNodeDataDto
+            {
+                Path = data.Path,
+                TargetId = data.TargetId
+            },
+            RequestNodeData data => new RequestNodeDataDto
+            {
+                RequestType = data.RequestType,
+                Url = data.Url,
+                RequestBody = data.RequestBody
+            },
+            _ => throw new InvalidOperationException($"Unknown WorkflowNodeData type {workflowNodeData.GetType().Name}")
+        };
+    }
+
+    public static WorkflowNodeData ToDomain(this WorkflowNodeDataDto dto)
+    {
         return dto switch
         {
-            PrintTextNodeDto printTextNodeDto => new PrintTextNode
+            PrintTextNodeDataDto data => new PrintTextNodeData
             {
-                Id = printTextNodeDto.Id,
-                Position = printTextNodeDto.Position.ToDomain(),
-                Text = printTextNodeDto.Text,
-                UseConsole = printTextNodeDto.UseConsole,
-                TargetId = printTextNodeDto.TargetId
+                Text = data.Text,
+                UseConsole = data.UseConsole,
+                TargetId = data.TargetId
             },
-            RequestNodeDto requestNodeDto => new RequestNode
+            ExtractPropertyNodeDataDto data => new ExtractPropertyNodeData
             {
-                Id = requestNodeDto.Id,
-                Position = requestNodeDto.Position.ToDomain(),
-                RequestType = requestNodeDto.RequestType,
-                Url = requestNodeDto.Url,
-                RequestBody = requestNodeDto.RequestBody
+                Path = data.Path,
+                TargetId = data.TargetId
             },
-            ExtractPropertyNodeDto extractPropertyNodeDto => new ExtractPropertyNode
+            RequestNodeDataDto data => new RequestNodeData
             {
-                Id = extractPropertyNodeDto.Id,
-                Position = extractPropertyNodeDto.Position.ToDomain(),
-                Path = extractPropertyNodeDto.Path,
-                TargetId = extractPropertyNodeDto.TargetId
+                RequestType = data.RequestType,
+                Url = data.Url,
+                RequestBody = data.RequestBody
             },
-            _ => throw new InvalidOperationException($"Unknown WorkflowNodeDto type {dto.GetType().Name}")
+            _ => throw new InvalidOperationException($"Unknown WorkflowNodeDataDto type {dto.GetType().Name}")
+        };
+    }
+
+    public static WorkflowNodeDataTypeDto ToDto(this WorkflowNodeDataType nodeDataType)
+    {
+        return nodeDataType switch
+        {
+            WorkflowNodeDataType.PrintText => WorkflowNodeDataTypeDto.PrintText,
+            WorkflowNodeDataType.ExtractProperty => WorkflowNodeDataTypeDto.ExtractProperty,
+            WorkflowNodeDataType.Request => WorkflowNodeDataTypeDto.Request,
+            _ => throw new InvalidOperationException($"Unknown WorkflowNodeType type {nodeDataType}")
+        };
+    }
+
+    public static WorkflowNodeDataType ToDomain(this WorkflowNodeDataTypeDto nodeDataTypeDto)
+    {
+        return nodeDataTypeDto switch
+        {
+            WorkflowNodeDataTypeDto.PrintText => WorkflowNodeDataType.PrintText,
+            WorkflowNodeDataTypeDto.ExtractProperty => WorkflowNodeDataType.ExtractProperty,
+            WorkflowNodeDataTypeDto.Request => WorkflowNodeDataType.Request,
+            _ => throw new InvalidOperationException($"Unknown WorkflowNodeTypeDto type {nodeDataTypeDto}")
         };
     }
 
