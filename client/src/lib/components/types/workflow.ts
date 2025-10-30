@@ -21,13 +21,12 @@ export interface WorkflowNode {
   data: WorkflowNodeData;
 }
 
-// SvelteFlow node contract (needs type prop at the top level)
-export interface SvelteFlowWorkflowNode
-  extends WorkflowNode,
-    WorkflowNodeDataBase {}
+// SvelteFlow node (needs type prop at the top level)
+export type SvelteFlowWorkflowNode = WorkflowNode &
+  Pick<WorkflowNodeData, "type">;
 
-// SvelteFlow edge contract
-export interface SvelteFlowWorkflowEdge extends WorkflowEdge {}
+// SvelteFlow edge
+export type SvelteFlowWorkflowEdge = WorkflowEdge;
 
 export type WorkflowNodeData =
   | PrintTextNodeData
