@@ -29,7 +29,7 @@
 <div class={props.class}>
   <p class="text-lg">Nodes</p>
   {#if !workflowsAppState.selectedWorkflowIdentity}
-    <p>Select or create a workflow to see nodes.</p>
+    <p>Select a workflow to see available nodes.</p>
   {:else}
     <div class="w-full flex flex-wrap gap-3 px-2 py-4 rounded-md">
       {#each nodeTypes as nodeType}
