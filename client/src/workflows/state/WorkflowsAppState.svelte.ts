@@ -53,7 +53,7 @@ class WorkflowsAppState {
     this.#workflowIdentities = result.data ?? [];
   }
 
-  async setSelectedWorkflow(id: string | undefined) {
+  async setSelectedWorkflow(id?: string) {
     if (!id) {
       this.#selectedWorkflowIdentity = undefined;
       return;

@@ -11,8 +11,10 @@
   import { createRemoveWorkflowCommand } from "../actions/removeWorkflowCommand";
   import { createAddWorkflowCommand } from "../actions/addWorkflowCommand";
   import { useWorkflowsAppState } from "../state";
+  import { useSvelteFlow } from "@xyflow/svelte";
 
   const props: { class?: ClassValue } = $props();
+  const { fitView } = useSvelteFlow();
   const workflowsAppState = useWorkflowsAppState();
   const renameWorkflowCommand = createRenameWorkflowCommand();
   const removeWorkflowCommand = createRemoveWorkflowCommand();
@@ -68,9 +70,12 @@
 
     await removeWorkflowCommand(contextMenuWorkflowIdentity.id);
     await workflowsAppState.fetchWorkflowIdentities();
-    await workflowsAppState.setSelectedWorkflow(
-      workflowsAppState.workflowIdentities?.[0]?.id,
-    );
+    await selectWorkflow(workflowsAppState.workflowIdentities?.[0]?.id);
+  }
+
+  async function selectWorkflow(id?: string) {
+    await workflowsAppState.setSelectedWorkflow(id);
+    fitView();
   }
 
   function hideContextMenu() {
@@ -163,8 +168,7 @@
               ? "bg-accent/50"
               : "",
           ]}
-          onclick={() =>
-            workflowsAppState.setSelectedWorkflow(workflowIdentity.id)}
+          onclick={() => selectWorkflow(workflowIdentity.id)}
           oncontextmenu={(event) => showContextMenu(event, workflowIdentity)}
         >
           <Icon name="material-symbols--folder-data-outline-sharp" />

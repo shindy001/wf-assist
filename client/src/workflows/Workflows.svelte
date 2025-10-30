@@ -6,9 +6,6 @@
 
   const workflowsAppState = useWorkflowsAppState();
   await workflowsAppState.fetchWorkflowIdentities();
-  await workflowsAppState.setSelectedWorkflow(
-    workflowsAppState.workflowIdentities?.[0]?.id,
-  );
 </script>
 
 <SvelteFlowProvider>
