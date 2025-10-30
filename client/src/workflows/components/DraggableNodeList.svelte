@@ -28,14 +28,18 @@
 
 <div class={props.class}>
   <p class="text-lg">Nodes</p>
-  <div class="w-full flex flex-wrap gap-3 px-2 py-4 rounded-md">
-    {#each nodeTypes as nodeType}
-      <Button
-        variant="outline"
-        class="p-4 cursor-grab translate-px"
-        ondragstart={(event) => onDragStart(event, nodeType)}
-        draggable={true}>{nodeType}</Button
-      >
-    {/each}
-  </div>
+  {#if !workflowsAppState.selectedWorkflowIdentity}
+    <p>Select or create a workflow to see nodes.</p>
+  {:else}
+    <div class="w-full flex flex-wrap gap-3 px-2 py-4 rounded-md">
+      {#each nodeTypes as nodeType}
+        <Button
+          variant="outline"
+          class="p-4 cursor-grab translate-px"
+          ondragstart={(event) => onDragStart(event, nodeType)}
+          draggable={true}>{nodeType}</Button
+        >
+      {/each}
+    </div>
+  {/if}
 </div>
