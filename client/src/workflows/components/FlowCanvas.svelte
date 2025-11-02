@@ -27,10 +27,6 @@
   const { screenToFlowPosition } = $derived(useSvelteFlow());
 
   $effect(() => {
-    const workflowData = {
-      nodes: workflowsAppState.flowCanvasNodes,
-      edges: workflowsAppState.flowCanvasEdges,
-    };
     workflowsAppState.saveWorkflowData();
   });
 
