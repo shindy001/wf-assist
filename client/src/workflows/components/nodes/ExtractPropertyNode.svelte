@@ -3,7 +3,8 @@
     type ExtractPropertyNodeData,
     WorkflowNodeDataType,
   } from "$lib/types";
-  import { type Node } from "@xyflow/svelte";
+  import { type Connection, type Node } from "@xyflow/svelte";
+  import type { EdgeBase } from "@xyflow/system";
 
   export type ExtractPropertyNodeType = Node<
     ExtractPropertyNodeData,
@@ -33,6 +34,14 @@
   $effect(() => {
     updateNodeData(id, { targetId: currentConnectionId ?? "" });
   });
+
+  function isValidInputConnection(connection: Connection | EdgeBase) {
+    return connection.source !== id && connection.targetHandle !== "output";
+  }
+
+  function isValidOutputConnection(connection: Connection | EdgeBase) {
+    return connection.target !== id && connection.targetHandle === "input";
+  }
 </script>
 
 <NodeWrapper label="Extract Property" class="w-[280px]">
@@ -43,9 +52,10 @@
       class="node-pin"
       position={Position.Left}
       isConnectable={inputIsConnectable}
+      isValidConnection={isValidInputConnection}
     />
-    <fieldset class="">
-      <legend class="">Path</legend>
+    <fieldset>
+      <legend>Path</legend>
       <input
         class="nodrag w-full"
         placeholder="Enter a property path (e.g. user.id)..."
@@ -54,10 +64,11 @@
       />
     </fieldset>
     <Handle
-      id="input"
+      id="output"
       type="source"
       class="node-pin"
       position={Position.Right}
+      isValidConnection={isValidOutputConnection}
     />
   </div>
 </NodeWrapper>
