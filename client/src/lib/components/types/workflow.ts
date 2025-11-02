@@ -1,25 +1,25 @@
-export interface Workflow {
+export type Workflow = {
   id: string;
   name: string;
   data: WorkflowData;
-}
+};
 
-export interface WorkflowData {
+export type WorkflowData = {
   nodes: Array<WorkflowNode>;
   edges: Array<WorkflowEdge>;
-}
+};
 
-export interface WorkflowEdge {
+export type WorkflowEdge = {
   id: string;
   source: string;
   target: string;
-}
+};
 
-export interface WorkflowNode {
+export type WorkflowNode = {
   id: string;
   position: Position;
   data: WorkflowNodeData;
-}
+};
 
 // SvelteFlow node (needs type prop at the top level)
 export type SvelteFlowWorkflowNode = WorkflowNode &
@@ -54,10 +54,10 @@ export type RequestNodeData = {
   requestBody?: string;
 } & WorkflowNodeDataBase;
 
-export interface Position {
+export type Position = {
   x: number;
   y: number;
-}
+};
 
 // These enum values (except Default) needs to be exact match to the values on server as they are mapped in "workflowMapper.ts"
 export enum WorkflowNodeDataType {
@@ -73,10 +73,10 @@ export enum WorkflowDataState {
   ReadyToChange = "ReadyToChange",
 }
 
-export interface WorkflowIdentity {
+export type WorkflowIdentity = {
   id: string;
   name: string;
-}
+};
 
 /* Node data factories */
 function createPrintTextNodeData(
