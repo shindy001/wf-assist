@@ -50,22 +50,22 @@
   minResizableWidth={initialWidth}
   minResizableHeight={initialHeight}
 >
-  <div class="flex-col space-y-2 w-full">
-    <Handle
-      id="input"
-      type="target"
-      class="node-pin"
-      position={Position.Left}
-      isValidConnection={isValidInputConnection}
-    />
-    <Handle
-      id="output"
-      type="source"
-      class="node-pin"
-      position={Position.Right}
-      isValidConnection={isValidOutputConnection}
-    />
+  <Handle
+    id="input"
+    type="target"
+    class="node-pin"
+    position={Position.Left}
+    isValidConnection={isValidInputConnection}
+  />
+  <Handle
+    id="output"
+    type="source"
+    class="node-pin"
+    position={Position.Right}
+    isValidConnection={isValidOutputConnection}
+  />
 
+  <div class="flex-col space-y-2 w-full">
     <fieldset>
       <legend>Url</legend>
       <input

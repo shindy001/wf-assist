@@ -45,30 +45,29 @@
 </script>
 
 <NodeWrapper label="Extract Property" class="w-[280px]">
-  <div class="flex-col space-y-2 w-full">
-    <Handle
-      id="input"
-      type="target"
-      class="node-pin"
-      position={Position.Left}
-      isConnectable={inputIsConnectable}
-      isValidConnection={isValidInputConnection}
+  <Handle
+    id="input"
+    type="target"
+    class="node-pin"
+    position={Position.Left}
+    isConnectable={inputIsConnectable}
+    isValidConnection={isValidInputConnection}
+  />
+  <Handle
+    id="output"
+    type="source"
+    class="node-pin"
+    position={Position.Right}
+    isValidConnection={isValidOutputConnection}
+  />
+
+  <fieldset>
+    <legend>Path</legend>
+    <input
+      class="nodrag w-full"
+      placeholder="Enter a property path (e.g. user.id)..."
+      bind:value={pathInput}
+      onchange={() => updateNodeData(id, { path: pathInput })}
     />
-    <fieldset>
-      <legend>Path</legend>
-      <input
-        class="nodrag w-full"
-        placeholder="Enter a property path (e.g. user.id)..."
-        bind:value={pathInput}
-        onchange={() => updateNodeData(id, { path: pathInput })}
-      />
-    </fieldset>
-    <Handle
-      id="output"
-      type="source"
-      class="node-pin"
-      position={Position.Right}
-      isValidConnection={isValidOutputConnection}
-    />
-  </div>
+  </fieldset>
 </NodeWrapper>

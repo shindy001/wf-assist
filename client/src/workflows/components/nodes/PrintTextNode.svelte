@@ -31,13 +31,13 @@
 </script>
 
 <NodeWrapper label="Print String" class="w-38">
-  <div class="flex-col space-y-2 w-full">
-    <Handle
-      id="input"
-      type="target"
-      class="node-pin"
-      position={Position.Left}
-      isConnectable={inputIsConnectable}
-    />
-  </div>
+  <Handle
+    id="input"
+    type="target"
+    class="node-pin"
+    position={Position.Left}
+    isConnectable={inputIsConnectable}
+  />
+
+  <div class="flex-col space-y-2 w-full"></div>
 </NodeWrapper>
