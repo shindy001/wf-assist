@@ -1,5 +1,5 @@
 import { postWfAssistWorkflowsByIdRename } from "$api";
-import { failed, successful } from "$lib/components/types";
+import { failed, successful } from "$lib/types";
 
 export function createRenameWorkflowCommand() {
   return async (workflowId: string, newName: string) => {

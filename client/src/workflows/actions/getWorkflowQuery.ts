@@ -1,6 +1,6 @@
 import { getWfAssistWorkflowsById } from "$api";
-import { failed, successful } from "$lib/components/types";
-import { toWorkflow } from "$lib/components/types/workflowMapper";
+import { failed, successful } from "$lib/types";
+import { toWorkflow } from "$lib/types/workflowMapper";
 
 export function createGetWorkflowQuery() {
   return async (id: string) => {

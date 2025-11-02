@@ -1,6 +1,6 @@
 import { postWfAssistWorkflowsByIdUpdateData } from "$api";
-import { failed, successful, type WorkflowData } from "$lib/components/types";
-import { toWorkflowDataDto } from "$lib/components/types/workflowMapper";
+import { failed, successful, type WorkflowData } from "$lib/types";
+import { toWorkflowDataDto } from "$lib/types/workflowMapper";
 import { throttle } from "lodash";
 
 export function createSaveWorkflowCommand(saveRateLimitInMilliseconds: number) {

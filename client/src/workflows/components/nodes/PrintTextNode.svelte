@@ -1,8 +1,5 @@
 <script lang="ts" module>
-  import {
-    WorkflowNodeDataType,
-    type PrintTextNodeData,
-  } from "$lib/components/types";
+  import { WorkflowNodeDataType, type PrintTextNodeData } from "$lib/types";
   import { type Node } from "@xyflow/svelte";
 
   export type PrintStringNodeType = Node<

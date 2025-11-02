@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { WorkflowNodeDataType } from "$lib/components/types";
+  import { WorkflowNodeDataType } from "$lib/types";
   import type { ClassValue } from "svelte/elements";
   import { Button } from "$lib/components/ui/button";
   import { useWorkflowsAppState } from "../state";

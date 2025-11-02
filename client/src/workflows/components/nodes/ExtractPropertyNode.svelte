@@ -2,7 +2,7 @@
   import {
     type ExtractPropertyNodeData,
     WorkflowNodeDataType,
-  } from "$lib/components/types";
+  } from "$lib/types";
   import { type Node } from "@xyflow/svelte";
 
   export type ExtractPropertyNodeType = Node<

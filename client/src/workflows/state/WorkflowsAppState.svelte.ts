@@ -4,7 +4,7 @@ import {
   failed,
   type SvelteFlowWorkflowNode,
   type SvelteFlowWorkflowEdge,
-} from "$lib/components/types";
+} from "$lib/types";
 import { createGetWorkflowIdentitiesQuery } from "../actions/getWorkflowIdentitiesQuery";
 import { createGetWorkflowQuery } from "../actions/getWorkflowQuery";
 import { createSaveWorkflowCommand } from "../actions/saveWorkflowCommand";

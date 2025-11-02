@@ -1,9 +1,5 @@
 import { getWfAssistWorkflowsIdentities } from "$api";
-import {
-  failed,
-  successful,
-  type WorkflowIdentity,
-} from "$lib/components/types";
+import { failed, successful, type WorkflowIdentity } from "$lib/types";
 
 export function createGetWorkflowIdentitiesQuery() {
   return async () => {

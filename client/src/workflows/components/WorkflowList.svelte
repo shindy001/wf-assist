@@ -6,7 +6,7 @@
   import { Button } from "$lib/components/ui/button";
   import { Icon } from "$lib/components/ui/icons";
   import type { ClassValue } from "svelte/elements";
-  import { type WorkflowIdentity } from "$lib/components/types";
+  import { type WorkflowIdentity } from "$lib/types";
   import { createRenameWorkflowCommand } from "../actions/renameWorkflowCommand";
   import { createRemoveWorkflowCommand } from "../actions/removeWorkflowCommand";
   import { createAddWorkflowCommand } from "../actions/addWorkflowCommand";

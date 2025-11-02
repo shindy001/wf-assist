@@ -14,7 +14,7 @@
     createDefaultWorkflowNodeData,
     type SvelteFlowWorkflowNode,
     WorkflowNodeDataType,
-  } from "$lib/components/types";
+  } from "$lib/types";
   import { useWorkflowsAppState } from "../state/";
 
   const workflowsAppState = useWorkflowsAppState();

@@ -1,8 +1,5 @@
 <script lang="ts" module>
-  import {
-    WorkflowNodeDataType,
-    type RequestNodeData,
-  } from "$lib/components/types";
+  import { WorkflowNodeDataType, type RequestNodeData } from "$lib/types";
   import { type Connection, type Node } from "@xyflow/svelte";
   import type { EdgeBase } from "@xyflow/system";
 

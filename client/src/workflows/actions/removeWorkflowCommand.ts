@@ -1,5 +1,5 @@
 import { deleteWfAssistWorkflowsById } from "$api";
-import { failed, successful } from "$lib/components/types";
+import { failed, successful } from "$lib/types";
 
 export function createRemoveWorkflowCommand() {
   return async (workflowId: string) => {
