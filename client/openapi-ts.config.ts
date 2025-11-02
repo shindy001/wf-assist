@@ -4,6 +4,6 @@ export default defineConfig({
   input: "./../server/server.host/wfAssist-api.json",
   output: {
     path: "src/api",
-    lint: false,
+    lint: null,
   },
 });
