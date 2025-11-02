@@ -9,7 +9,7 @@
 </script>
 
 <script lang="ts">
-  import NodeWrapper from "./NodeWrapper.svelte";
+  import TurboNode from "./TurboNode.svelte";
   import {
     type NodeProps,
     useNodeConnections,
@@ -29,8 +29,8 @@
   });
 </script>
 
-<NodeWrapper label="Print String" class="w-38">
+<TurboNode label="Print String" class="w-38">
   <InputHandle nodeId={id} isConnectable={inputIsConnectable} />
 
   <div class="flex-col space-y-2 w-full"></div>
-</NodeWrapper>
+</TurboNode>

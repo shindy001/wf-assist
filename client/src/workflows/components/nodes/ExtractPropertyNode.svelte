@@ -12,7 +12,7 @@
 </script>
 
 <script lang="ts">
-  import NodeWrapper from "./NodeWrapper.svelte";
+  import TurboNode from "./TurboNode.svelte";
   import {
     type NodeProps,
     useNodeConnections,
@@ -35,7 +35,7 @@
   });
 </script>
 
-<NodeWrapper label="Extract Property" class="w-[280px]">
+<TurboNode label="Extract Property" class="w-[280px]">
   <InputHandle nodeId={id} isConnectable={inputIsConnectable} />
   <OutputHandle nodeId={id} />
 
@@ -48,4 +48,4 @@
       onchange={() => updateNodeData(id, { path: pathInput })}
     />
   </fieldset>
-</NodeWrapper>
+</TurboNode>

@@ -10,7 +10,7 @@
 
 <script lang="ts">
   import { type NodeProps, useSvelteFlow } from "@xyflow/svelte";
-  import NodeWrapper from "./NodeWrapper.svelte";
+  import TurboNode from "./TurboNode.svelte";
   import InputHandle from "./InputHandle.svelte";
   import OutputHandle from "./OutputHandle.svelte";
 
@@ -32,7 +32,7 @@
   });
 </script>
 
-<NodeWrapper
+<TurboNode
   label="Request"
   resizable
   minResizableWidth={initialWidth}
@@ -82,4 +82,4 @@
       </fieldset>
     {/if}
   </div>
-</NodeWrapper>
+</TurboNode>
