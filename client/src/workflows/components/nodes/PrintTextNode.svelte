@@ -11,12 +11,11 @@
 <script lang="ts">
   import NodeWrapper from "./NodeWrapper.svelte";
   import {
-    Handle,
     type NodeProps,
-    Position,
     useNodeConnections,
     useSvelteFlow,
   } from "@xyflow/svelte";
+  import InputHandle from "./InputHandle.svelte";
 
   const { updateNodeData } = useSvelteFlow();
   let { id }: NodeProps<PrintStringNodeType> = $props();
@@ -31,13 +30,7 @@
 </script>
 
 <NodeWrapper label="Print String" class="w-38">
-  <Handle
-    id="input"
-    type="target"
-    class="node-pin"
-    position={Position.Left}
-    isConnectable={inputIsConnectable}
-  />
+  <InputHandle nodeId={id} isConnectable={inputIsConnectable} />
 
   <div class="flex-col space-y-2 w-full"></div>
 </NodeWrapper>

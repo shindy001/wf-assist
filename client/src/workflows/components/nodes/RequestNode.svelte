@@ -1,7 +1,6 @@
 <script lang="ts" module>
   import { WorkflowNodeDataType, type RequestNodeData } from "$lib/types";
-  import { type Connection, type Node } from "@xyflow/svelte";
-  import type { EdgeBase } from "@xyflow/system";
+  import { type Node } from "@xyflow/svelte";
 
   export type RequestNodeType = Node<
     RequestNodeData,
@@ -10,13 +9,10 @@
 </script>
 
 <script lang="ts">
-  import {
-    Handle,
-    type NodeProps,
-    Position,
-    useSvelteFlow,
-  } from "@xyflow/svelte";
+  import { type NodeProps, useSvelteFlow } from "@xyflow/svelte";
   import NodeWrapper from "./NodeWrapper.svelte";
+  import InputHandle from "./InputHandle.svelte";
+  import OutputHandle from "./OutputHandle.svelte";
 
   const { updateNodeData, updateNode } = useSvelteFlow();
   const requestTypes = ["GET", "POST", "PUT"];
@@ -31,14 +27,6 @@
   let initialWidth = $derived(getNodeWidth());
   let initialHeight = $derived(getNodeHeight());
 
-  function isValidInputConnection(connection: Connection | EdgeBase) {
-    return connection.source !== id && connection.targetHandle !== "output";
-  }
-
-  function isValidOutputConnection(connection: Connection | EdgeBase) {
-    return connection.target !== id && connection.targetHandle === "input";
-  }
-
   $effect(() => {
     updateNode(id, { width: getNodeWidth(), height: getNodeHeight() });
   });
@@ -50,20 +38,8 @@
   minResizableWidth={initialWidth}
   minResizableHeight={initialHeight}
 >
-  <Handle
-    id="input"
-    type="target"
-    class="node-pin"
-    position={Position.Left}
-    isValidConnection={isValidInputConnection}
-  />
-  <Handle
-    id="output"
-    type="source"
-    class="node-pin"
-    position={Position.Right}
-    isValidConnection={isValidOutputConnection}
-  />
+  <InputHandle nodeId={id} />
+  <OutputHandle nodeId={id} />
 
   <div class="flex-col space-y-2 w-full">
     <fieldset>
