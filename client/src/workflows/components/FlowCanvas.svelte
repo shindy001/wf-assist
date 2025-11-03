@@ -16,6 +16,7 @@
     WorkflowNodeDataType,
   } from "$lib/types";
   import { useWorkflowsAppState } from "../state/";
+  import TurboEdge from "./nodes/TurboEdge.svelte";
 
   const workflowsAppState = useWorkflowsAppState();
   const additionalNodeTypes = {
@@ -67,6 +68,8 @@
     bind:nodes={workflowsAppState.flowCanvasNodes}
     bind:edges={workflowsAppState.flowCanvasEdges}
     nodeTypes={additionalNodeTypes}
+    edgeTypes={{ turbo: TurboEdge }}
+    defaultEdgeOptions={{ type: "turbo" }}
     fitView
     ondragover={onDragOver}
     ondrop={onDrop}
