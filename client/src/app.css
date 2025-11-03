@@ -128,22 +128,6 @@
   }
 }
 
-.svelte-flow__handle-left.node-pin {
-  left: -10px; /* Move standard left pin outside the node box */
-  background: transparent;
-  border: 2px solid #c24298;
-  min-width: 10px;
-  min-height: 10px;
-}
-
-.svelte-flow__handle-right.node-pin {
-  right: -10px; /* Move standard right pin outside the node box */
-  background: transparent;
-  border: 2px solid #3b82ea;
-  min-width: 10px;
-  min-height: 10px;
-}
-
 /* Turbo style - inspired by https://turborepo.com/ */
 .turbo-node {
   width: 100%;
@@ -196,6 +180,28 @@
   100% {
     transform: translate(-50%, -50%) rotate(-360deg);
   }
+}
+
+.svelte-flow__handle-left.node-pin {
+  left: -10px; /* Move standard left pin outside the node box */
+  background: transparent;
+  border: 2px solid #c24298;
+  min-width: 10px;
+  min-height: 10px;
+}
+
+.svelte-flow__handle-right.node-pin {
+  right: -10px; /* Move standard right pin outside the node box */
+  background: transparent;
+  border: 2px solid #3b82ea;
+  min-width: 10px;
+  min-height: 10px;
+}
+
+.svelte-flow__edge .svelte-flow__edge-path {
+  stroke: url(#turbo-edge-gradient);
+  stroke-width: 2;
+  stroke-opacity: 0.75;
 }
 
 /* Handle element left by shadcn svelte(bits-ui) Dialog which has 1x1 size which causes body overflow after dialog disappears */
