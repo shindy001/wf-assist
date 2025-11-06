@@ -33,8 +33,7 @@ public static class WfAssistApp
         SqlMapper.AddTypeHandler(new WorkflowDataTypeHandler());
         SqlMapper.AddTypeHandler(new GuidTypeHandler());
 
-        services.AddSingleton<IDbConnectionFactory, SqliteDbConnectionFactory>();
-        services.AddScoped<IDbConnectionProvider, DbConnectionProvider>();
+        services.AddScoped<IDbConnectionProvider, SqliteDbConnectionProvider>();
         services.AddScoped<IWorkflowRepository, WorkflowRepository>();
 
         FeatureModuleManager.RegisterModules(services, wfAssistAssembly);

@@ -1,15 +1,16 @@
 using System.Data;
+using Microsoft.Data.Sqlite;
 using WfAssist.AspNetCore.Shared;
 
 namespace WfAssist.AspNetCore.Infrastructure;
 
-public sealed class DbConnectionProvider : IDbConnectionProvider
+public sealed class SqliteDbConnectionProvider : IDbConnectionProvider
 {
     public IDbConnection DbConnection { get; }
 
-    public DbConnectionProvider(IDbConnectionFactory dbConnectionFactory)
+    public SqliteDbConnectionProvider()
     {
-        DbConnection = dbConnectionFactory.CreateConnection();
+        DbConnection = new SqliteConnection(Constants.SqliteDbConnectionString);
         DbConnection.Open();
     }
 
