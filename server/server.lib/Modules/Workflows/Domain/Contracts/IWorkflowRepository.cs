@@ -1,6 +1,6 @@
-using WfAssist.AspNetCore.Domain.Workflows.Models;
+using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 
-namespace WfAssist.AspNetCore.Domain.Workflows.Contracts;
+namespace WfAssist.AspNetCore.Modules.Workflows.Domain.Contracts;
 
 public interface IWorkflowRepository
 {

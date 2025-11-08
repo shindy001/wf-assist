@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using WfAssist.AspNetCore.Domain.Workflows.Contracts;
+using WfAssist.AspNetCore.Modules.Workflows.Domain.Contracts;
 using WfAssist.AspNetCore.Modules.Workflows.Features;
 using WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
 

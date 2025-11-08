@@ -20,4 +20,8 @@
       <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.9" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Modules\Workflows\Domain\" />
+    </ItemGroup>
+
 </Project>

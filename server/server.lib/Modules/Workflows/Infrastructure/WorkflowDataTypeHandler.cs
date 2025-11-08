@@ -1,8 +1,8 @@
 using System.Data;
 using System.Text.Json;
 using Dapper;
-using WfAssist.AspNetCore.Domain.Workflows.Models;
 using WfAssist.AspNetCore.Infrastructure.Serialization;
+using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
 
