@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace WfAssist.AspNetCore;
+namespace WfAssist.AspNetCore.Core;
 
 internal static class Constants
 {

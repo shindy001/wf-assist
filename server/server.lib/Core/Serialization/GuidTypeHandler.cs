@@ -1,7 +1,7 @@
 using System.Data;
 using Dapper;
 
-namespace WfAssist.AspNetCore.Infrastructure.Serialization;
+namespace WfAssist.AspNetCore.Core.Serialization;
 
 public sealed class GuidTypeHandler : SqlMapper.TypeHandler<Guid>
 {

@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace WfAssist.AspNetCore.Shared;
+namespace WfAssist.AspNetCore.Core;
 
 public interface IDbConnectionProvider : IDisposable
 {

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 
-namespace WfAssist.AspNetCore;
+namespace WfAssist.AspNetCore.Core;
 
 internal static class WfAssistClientEndpoints
 {

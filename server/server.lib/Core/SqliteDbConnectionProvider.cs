@@ -1,8 +1,7 @@
 using System.Data;
 using Microsoft.Data.Sqlite;
-using WfAssist.AspNetCore.Shared;
 
-namespace WfAssist.AspNetCore.Infrastructure;
+namespace WfAssist.AspNetCore.Core;
 
 public sealed class SqliteDbConnectionProvider : IDbConnectionProvider
 {

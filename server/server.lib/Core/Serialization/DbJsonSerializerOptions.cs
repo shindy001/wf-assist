@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace WfAssist.AspNetCore.Infrastructure.Serialization;
+namespace WfAssist.AspNetCore.Core.Serialization;
 
 public static class DbJsonSerializerOptions
 {

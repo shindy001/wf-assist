@@ -2,7 +2,7 @@ using System.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
-namespace WfAssist.AspNetCore.Shared;
+namespace WfAssist.AspNetCore.Core;
 
 public sealed class TransactionMiddleware
 {
