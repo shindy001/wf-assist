@@ -1,25 +1,22 @@
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using WfAssist.AspNetCore.Shared;
 
 namespace WfAssist.AspNetCore.Features.Workflows;
 
-[UsedImplicitly]
-internal sealed class WorkflowsFeature : IFeatureModule
+internal static class WorkflowsModule
 {
-    public void RegisterServices(IServiceCollection services)
+    public static void AddWorkflowsModuleServices(this IServiceCollection services)
     {
     }
 
-    public Task Initialize(AsyncServiceScope serviceScope)
+    public static Task InitializeModule(AsyncServiceScope serviceScope)
     {
         return Task.CompletedTask;
     }
 
-    public void MapEndpoints(IEndpointRouteBuilder endpointBuilder)
+    public static void MapWorkflowsModuleEndpoints(this IEndpointRouteBuilder endpointBuilder)
     {
         var workflowsGroup = endpointBuilder
             .MapGroup("/workflows")
