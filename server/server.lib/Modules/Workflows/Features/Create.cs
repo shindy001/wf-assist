@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using WfAssist.AspNetCore.Domain.Workflows.Contracts;
 using WfAssist.AspNetCore.Domain.Workflows.Models;
-using WfAssist.AspNetCore.Features.Workflows.Dtos;
-using WfAssist.AspNetCore.Features.Workflows.Mappers;
+using WfAssist.AspNetCore.Modules.Workflows.Features.Dtos;
+using WfAssist.AspNetCore.Modules.Workflows.Features.Mappers;
 
-namespace WfAssist.AspNetCore.Features.Workflows;
+namespace WfAssist.AspNetCore.Modules.Workflows.Features;
 
 public static class Create
 {

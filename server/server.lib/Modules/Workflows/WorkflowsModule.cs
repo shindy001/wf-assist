@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using WfAssist.AspNetCore.Domain.Workflows.Contracts;
-using WfAssist.AspNetCore.Features.Workflows.Infrastructure;
+using WfAssist.AspNetCore.Modules.Workflows.Features;
+using WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
 
-namespace WfAssist.AspNetCore.Features.Workflows;
+namespace WfAssist.AspNetCore.Modules.Workflows;
 
 internal static class WorkflowsModule
 {

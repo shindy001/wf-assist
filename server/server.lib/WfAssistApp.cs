@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using WfAssist.AspNetCore.Features.Workflows;
 using WfAssist.AspNetCore.Infrastructure;
 using WfAssist.AspNetCore.Infrastructure.Serialization;
+using WfAssist.AspNetCore.Modules.Workflows;
 using WfAssist.AspNetCore.Shared;
 
 namespace WfAssist.AspNetCore;

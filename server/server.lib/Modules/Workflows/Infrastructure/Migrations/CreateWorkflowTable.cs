@@ -1,7 +1,7 @@
 using FluentMigrator;
 using JetBrains.Annotations;
 
-namespace WfAssist.AspNetCore.Features.Workflows.Infrastructure.Migrations;
+namespace WfAssist.AspNetCore.Modules.Workflows.Infrastructure.Migrations;
 
 [Migration(2025100901)]
 [UsedImplicitly]

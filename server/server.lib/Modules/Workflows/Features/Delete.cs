@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using WfAssist.AspNetCore.Domain.Workflows.Contracts;
 
-namespace WfAssist.AspNetCore.Features.Workflows;
+namespace WfAssist.AspNetCore.Modules.Workflows.Features;
 
 public static class Delete
 {
