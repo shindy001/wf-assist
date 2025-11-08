@@ -4,7 +4,7 @@ using WfAssist.AspNetCore.Domain.Workflows.Contracts;
 using WfAssist.AspNetCore.Domain.Workflows.Models;
 using WfAssist.AspNetCore.Shared;
 
-namespace WfAssist.AspNetCore.Infrastructure;
+namespace WfAssist.AspNetCore.Features.Workflows.Infrastructure;
 
 public sealed class WorkflowRepository : IWorkflowRepository
 {

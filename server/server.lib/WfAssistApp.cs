@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using WfAssist.AspNetCore.Domain.Workflows.Contracts;
 using WfAssist.AspNetCore.Features.Workflows;
 using WfAssist.AspNetCore.Infrastructure;
 using WfAssist.AspNetCore.Infrastructure.Serialization;
@@ -28,24 +27,24 @@ public static class WfAssistApp
                 .ScanIn(wfAssistAssembly).For.Migrations())
             .AddLogging(cfg => cfg.AddFluentMigratorConsole());
 
-        // Dapper types customization
-        SqlMapper.AddTypeHandler(new WorkflowDataTypeHandler());
+        // Dapper shared types customization
         SqlMapper.AddTypeHandler(new GuidTypeHandler());
 
+        // Shared services
         services.AddScoped<IDbConnectionProvider, SqliteDbConnectionProvider>();
-        services.AddScoped<IWorkflowRepository, WorkflowRepository>();
 
+        // Modules registrations
         services.AddWorkflowsModuleServices();
     }
 
     /// <summary>
     /// Sets up WfAssist resources and api. Api and resources use AllowAnonymous by default (auth is unsupported)<br/><br/>
     /// <b>Client endpoints:</b><br/>
-    /// <inheritdoc cref="WfAssistClientEndpoints.RegisterWfAssistClientEndpoints"/><br/><br/>
+    /// <inheritdoc cref="WfAssistClientEndpoints.MapWfAssistClientEndpoints"/><br/><br/>
     /// </summary>
     /// <param name="app">Web application that want to use WfAssist.</param>
     /// <param name="excludeFromOpenApi">Default is true, excludes WfAssist endpoints from OpenApi definitions</param>
-    public static async Task UseWfAssistApp(this WebApplication app, bool excludeFromOpenApi = true)
+    public static Task UseWfAssistApp(this WebApplication app, bool excludeFromOpenApi = true)
     {
         UpdateDatabase(app);
 
@@ -65,8 +64,13 @@ public static class WfAssistApp
             wfAssistDefaultRouteGroup.ExcludeFromDescription();
         }
 
+        wfAssistDefaultRouteGroup.MapWfAssistClientEndpoints(logger);
+
+        // Modules endpoints/initialization
         wfAssistDefaultRouteGroup.MapWorkflowsModuleEndpoints();
-        wfAssistDefaultRouteGroup.RegisterWfAssistClientEndpoints(logger);
+        app.Services.InitializeWorkflowsModule();
+
+        return Task.CompletedTask;
     }
 
     private static void UpdateDatabase(IApplicationBuilder app)

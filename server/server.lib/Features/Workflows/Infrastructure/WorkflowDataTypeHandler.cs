@@ -2,8 +2,9 @@ using System.Data;
 using System.Text.Json;
 using Dapper;
 using WfAssist.AspNetCore.Domain.Workflows.Models;
+using WfAssist.AspNetCore.Infrastructure.Serialization;
 
-namespace WfAssist.AspNetCore.Infrastructure.Serialization;
+namespace WfAssist.AspNetCore.Features.Workflows.Infrastructure;
 
 public sealed class WorkflowDataTypeHandler : SqlMapper.TypeHandler<WorkflowData>
 {

@@ -18,7 +18,7 @@ internal static class WfAssistClientEndpoints
     /// </summary>
     /// <param name="endpoints"></param>
     /// <param name="logger"></param>
-    public static void RegisterWfAssistClientEndpoints(this IEndpointRouteBuilder endpoints, ILogger logger)
+    public static void MapWfAssistClientEndpoints(this IEndpointRouteBuilder endpoints, ILogger logger)
     {
         // Redirect to client index - wfAssist files (from nuget or dist) must be in [server host outputDir]/wwwroot/wfAssist
         endpoints.MapGet($"/", context =>
