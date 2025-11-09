@@ -1,7 +1,7 @@
+using WfAssist.AspNetCore.Modules.Workflows.Api.Dtos;
 using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
-using WfAssist.AspNetCore.Modules.Workflows.Features.Dtos;
 
-namespace WfAssist.AspNetCore.Modules.Workflows.Features.Mappers;
+namespace WfAssist.AspNetCore.Modules.Workflows.Api.Mappers;
 
 public static class WorkflowMapper
 {

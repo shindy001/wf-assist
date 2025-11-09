@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace WfAssist.AspNetCore.Modules.Workflows.Features.Dtos;
+namespace WfAssist.AspNetCore.Modules.Workflows.Api.Dtos;
 
 public class WorkflowDto
 {

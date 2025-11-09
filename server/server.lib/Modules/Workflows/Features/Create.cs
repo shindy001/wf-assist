@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using WfAssist.AspNetCore.Modules.Workflows.Api.Dtos;
+using WfAssist.AspNetCore.Modules.Workflows.Api.Mappers;
 using WfAssist.AspNetCore.Modules.Workflows.Domain.Contracts;
 using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
-using WfAssist.AspNetCore.Modules.Workflows.Features.Dtos;
-using WfAssist.AspNetCore.Modules.Workflows.Features.Mappers;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Features;
 
