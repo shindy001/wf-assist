@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 
-public class Workflow
+public sealed class Workflow
 {
     public required Guid Id { get; init; }
     public required string Name { get; init; }
@@ -27,6 +27,13 @@ public sealed record WorkflowNode
     public required string Id { get; init; }
     public required Position Position { get; init; }
     public required WorkflowNodeData Data { get; init; }
+}
+
+public enum WorkflowNodeDataType
+{
+    PrintText,
+    ExtractProperty,
+    Request
 }
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
