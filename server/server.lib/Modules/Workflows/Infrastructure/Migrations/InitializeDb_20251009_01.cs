@@ -3,9 +3,9 @@ using JetBrains.Annotations;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Infrastructure.Migrations;
 
-[Migration(2025100901)]
+[Migration(20251009_01)]
 [UsedImplicitly]
-public class CreateWorkflowTable : Migration
+public class InitializeDb_20251009_01 : Migration
 {
     public override void Up()
     {
@@ -13,10 +13,16 @@ public class CreateWorkflowTable : Migration
             .WithColumn("Id").AsFixedLengthString(36).PrimaryKey() // uuid
             .WithColumn("Name").AsFixedLengthString(100)
             .WithColumn("Data").AsString();
+
+        Create.Table("WorkflowRuns")
+            .WithColumn("Id").AsFixedLengthString(36).PrimaryKey() // uuid
+            .WithColumn("Status").AsFixedLengthString(100)
+            .WithColumn("Snapshot").AsString();
     }
 
     public override void Down()
     {
         Delete.Table("Workflows");
+        Delete.Table("WorkflowRuns");
     }
 }
