@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WfAssist.AspNetCore.Core;
 using WfAssist.AspNetCore.Modules.Workflows.Features;
 using WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
+using WfAssist.AspNetCore.Modules.Workflows.Runtime;
 
 namespace WfAssist.AspNetCore.Modules.Workflows;
 
@@ -18,6 +19,9 @@ internal static class WorkflowsModule
 
         services.AddScoped<WorkflowRepository>();
         services.AddScoped<WorkflowProcessingRepository>();
+
+        services.AddSingleton<WorkflowExecutor>();
+        services.AddHostedService<WorkflowRunnerBackgroundService>();
     }
 
     public static Task InitializeWorkflowsModule(this IServiceProvider serviceProvider)
