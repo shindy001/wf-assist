@@ -14,9 +14,11 @@ internal static class WorkflowsModule
 {
     public static void AddWorkflowsModuleServices(this IServiceCollection services)
     {
+        SqlMapper.AddTypeHandler(new WorkflowSnapshotTypeHandler());
         SqlMapper.AddTypeHandler(new WorkflowDataTypeHandler());
 
         services.AddScoped<IWorkflowRepository, WorkflowRepository>();
+        services.AddScoped<IWorkflowProcessingRepository, WorkflowProcessingRepository>();
     }
 
     public static Task InitializeWorkflowsModule(this IServiceProvider serviceProvider)
@@ -38,5 +40,7 @@ internal static class WorkflowsModule
         workflowsGroup.MapRenameEndpoint();
         workflowsGroup.MapUpdateDataEndpoint();
         workflowsGroup.MapDeleteEndpoint();
+
+        workflowsGroup.MapQueueRunEndpoint();
     }
 }
