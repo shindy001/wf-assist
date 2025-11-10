@@ -171,6 +171,39 @@
           }
         }
       }
+    },
+    "/wfAssist/workflows/{id}/queueRun": {
+      "post": {
+        "tags": [
+          "WfAssist_Workflows"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunWorkflowResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -240,6 +273,18 @@
         "properties": {
           "newName": {
             "type": "string"
+          }
+        }
+      },
+      "RunWorkflowResponse": {
+        "required": [
+          "runId"
+        ],
+        "type": "object",
+        "properties": {
+          "runId": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
