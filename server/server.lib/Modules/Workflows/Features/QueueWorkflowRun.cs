@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
-using WfAssist.AspNetCore.Modules.Workflows.Domain.Contracts;
 using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
+using WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Features;
 
@@ -13,8 +13,8 @@ public static class QueueWorkflowRun
     {
         endpoints.MapPost("/{id:guid}/queueRun", async Task<Results<Ok<RunWorkflowResponse>, NotFound<string>>> (
                 Guid id,
-                IWorkflowRepository workflowRepository,
-                IWorkflowProcessingRepository workflowProcessingRepository) =>
+                WorkflowRepository workflowRepository,
+                WorkflowProcessingRepository workflowProcessingRepository) =>
             {
                 var workflow = await workflowRepository.GetById(id);
                 if (workflow is null)

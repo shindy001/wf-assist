@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using WfAssist.AspNetCore.Modules.Workflows.Api.Dtos;
 using WfAssist.AspNetCore.Modules.Workflows.Api.Mappers;
-using WfAssist.AspNetCore.Modules.Workflows.Domain.Contracts;
+using WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Features;
 
@@ -11,7 +11,7 @@ public static class GetById
 {
     public static void MapGetByIdEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/{id:guid}", async (Guid id, IWorkflowRepository workflowRepository) =>
+        endpoints.MapGet("/{id:guid}", async (Guid id, WorkflowRepository workflowRepository) =>
             {
                 var workflow = await workflowRepository.GetById(id);
                 if (workflow is null)

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using WfAssist.AspNetCore.Core;
-using WfAssist.AspNetCore.Modules.Workflows.Domain.Contracts;
 using WfAssist.AspNetCore.Modules.Workflows.Features;
 using WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
 
@@ -17,8 +16,8 @@ internal static class WorkflowsModule
         SqlMapper.AddTypeHandler(new WorkflowSnapshotTypeHandler());
         SqlMapper.AddTypeHandler(new WorkflowDataTypeHandler());
 
-        services.AddScoped<IWorkflowRepository, WorkflowRepository>();
-        services.AddScoped<IWorkflowProcessingRepository, WorkflowProcessingRepository>();
+        services.AddScoped<WorkflowRepository>();
+        services.AddScoped<WorkflowProcessingRepository>();
     }
 
     public static Task InitializeWorkflowsModule(this IServiceProvider serviceProvider)

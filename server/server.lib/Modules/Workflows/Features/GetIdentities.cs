@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using WfAssist.AspNetCore.Modules.Workflows.Api.Dtos;
-using WfAssist.AspNetCore.Modules.Workflows.Domain.Contracts;
+using WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Features;
 
@@ -10,7 +10,7 @@ public static class GetIdentities
 {
     public static void MapGetIdentitiesEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/identities", async (IWorkflowRepository workflowRepository) =>
+        endpoints.MapGet("/identities", async (WorkflowRepository workflowRepository) =>
             {
                 var identities = await workflowRepository.GetIdentities();
                 var response = new GetIdentitiesResponse

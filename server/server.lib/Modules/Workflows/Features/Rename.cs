@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using WfAssist.AspNetCore.Modules.Workflows.Domain.Contracts;
+using WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Features;
 
@@ -9,7 +9,7 @@ public static class Rename
 {
     public static void MapRenameEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/{id:guid}/rename", async (Guid id, RenameWorkflowRequest request, IWorkflowRepository workflowRepository) =>
+        endpoints.MapPost("/{id:guid}/rename", async (Guid id, RenameWorkflowRequest request, WorkflowRepository workflowRepository) =>
             {
                 if (!await workflowRepository.Exists(id))
                 {
