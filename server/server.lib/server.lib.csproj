@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>WfAssist.AspNetCore</RootNamespace>
@@ -17,7 +17,7 @@
       <PackageReference Include="FluentMigrator.Runner" Version="7.1.0" />
       <PackageReference Include="FluentMigrator.Runner.SQLite" Version="7.1.0" />
       <PackageReference Include="JetBrains.Annotations" Version="2025.2.2" />
-      <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.9" />
+      <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0" />
     </ItemGroup>
 
 </Project>
