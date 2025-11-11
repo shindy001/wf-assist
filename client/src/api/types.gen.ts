@@ -18,12 +18,16 @@ export type GetWorkflowByIdResponse = {
 };
 
 export type PositionDto = {
-    x: number;
-    y: number;
+    x: number | string;
+    y: number | string;
 };
 
 export type RenameWorkflowRequest = {
     newName: string;
+};
+
+export type RunWorkflowResponse = {
+    runId: string;
 };
 
 export type UpdateWorkflowDataRequest = {
@@ -70,14 +74,14 @@ export type WorkflowNodeDataDtoPrintTextNodeDataDto = {
     type?: 'PrintText';
     text: string;
     useConsole?: boolean;
-    targetId?: string | null;
+    targetId?: null | string;
 };
 
 export type WorkflowNodeDataDtoRequestNodeDataDto = {
     type?: 'Request';
     requestType: string;
     url: string;
-    requestBody?: string | null;
+    requestBody?: null | string;
 };
 
 export type WorkflowNodeDto = {
@@ -210,3 +214,28 @@ export type PostWfAssistWorkflowsByIdUpdateDataResponses = {
 };
 
 export type PostWfAssistWorkflowsByIdUpdateDataResponse = PostWfAssistWorkflowsByIdUpdateDataResponses[keyof PostWfAssistWorkflowsByIdUpdateDataResponses];
+
+export type PostWfAssistWorkflowsByIdQueueRunData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/wfAssist/workflows/{id}/queueRun';
+};
+
+export type PostWfAssistWorkflowsByIdQueueRunErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type PostWfAssistWorkflowsByIdQueueRunResponses = {
+    /**
+     * OK
+     */
+    200: RunWorkflowResponse;
+};
+
+export type PostWfAssistWorkflowsByIdQueueRunResponse = PostWfAssistWorkflowsByIdQueueRunResponses[keyof PostWfAssistWorkflowsByIdQueueRunResponses];

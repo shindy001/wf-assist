@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { DeleteWfAssistWorkflowsByIdData, DeleteWfAssistWorkflowsByIdResponses, GetWfAssistWorkflowsByIdData, GetWfAssistWorkflowsByIdErrors, GetWfAssistWorkflowsByIdResponses, GetWfAssistWorkflowsIdentitiesData, GetWfAssistWorkflowsIdentitiesResponses, PostWfAssistWorkflowsByIdRenameData, PostWfAssistWorkflowsByIdRenameErrors, PostWfAssistWorkflowsByIdRenameResponses, PostWfAssistWorkflowsByIdUpdateDataData, PostWfAssistWorkflowsByIdUpdateDataErrors, PostWfAssistWorkflowsByIdUpdateDataResponses, PostWfAssistWorkflowsData, PostWfAssistWorkflowsResponses } from './types.gen';
+import type { DeleteWfAssistWorkflowsByIdData, DeleteWfAssistWorkflowsByIdResponses, GetWfAssistWorkflowsByIdData, GetWfAssistWorkflowsByIdErrors, GetWfAssistWorkflowsByIdResponses, GetWfAssistWorkflowsIdentitiesData, GetWfAssistWorkflowsIdentitiesResponses, PostWfAssistWorkflowsByIdQueueRunData, PostWfAssistWorkflowsByIdQueueRunErrors, PostWfAssistWorkflowsByIdQueueRunResponses, PostWfAssistWorkflowsByIdRenameData, PostWfAssistWorkflowsByIdRenameErrors, PostWfAssistWorkflowsByIdRenameResponses, PostWfAssistWorkflowsByIdUpdateDataData, PostWfAssistWorkflowsByIdUpdateDataErrors, PostWfAssistWorkflowsByIdUpdateDataResponses, PostWfAssistWorkflowsData, PostWfAssistWorkflowsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -69,5 +69,12 @@ export const postWfAssistWorkflowsByIdUpdateData = <ThrowOnError extends boolean
             'Content-Type': 'application/json',
             ...options.headers
         }
+    });
+};
+
+export const postWfAssistWorkflowsByIdQueueRun = <ThrowOnError extends boolean = false>(options: Options<PostWfAssistWorkflowsByIdQueueRunData, ThrowOnError>) => {
+    return (options.client ?? client).post<PostWfAssistWorkflowsByIdQueueRunResponses, PostWfAssistWorkflowsByIdQueueRunErrors, ThrowOnError>({
+        url: '/wfAssist/workflows/{id}/queueRun',
+        ...options
     });
 };
