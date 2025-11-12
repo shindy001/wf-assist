@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
@@ -11,6 +12,12 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Services.AddSerilog();
 builder.Services.AddWfAssistServices();
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    // Force openapi to use strict number handling instead of default AllowReadingFromString
+    options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict;
+});
 
 builder.Services.AddOpenApi(opt =>
 {
