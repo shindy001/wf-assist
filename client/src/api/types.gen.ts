@@ -18,8 +18,8 @@ export type GetWorkflowByIdResponse = {
 };
 
 export type PositionDto = {
-    x: number | string;
-    y: number | string;
+    x: number;
+    y: number;
 };
 
 export type RenameWorkflowRequest = {
@@ -59,8 +59,6 @@ export type WorkFlowIdentityDto = {
 export type WorkflowNodeDataDto = ({
     type?: 'ExtractProperty';
 } & WorkflowNodeDataDtoExtractPropertyNodeDataDto) | ({
-    type?: 'PrintText';
-} & WorkflowNodeDataDtoPrintTextNodeDataDto) | ({
     type?: 'Request';
 } & WorkflowNodeDataDtoRequestNodeDataDto);
 
@@ -68,13 +66,6 @@ export type WorkflowNodeDataDtoExtractPropertyNodeDataDto = {
     type?: 'ExtractProperty';
     path: string;
     targetId: string;
-};
-
-export type WorkflowNodeDataDtoPrintTextNodeDataDto = {
-    type?: 'PrintText';
-    text: string;
-    useConsole?: boolean;
-    targetId?: null | string;
 };
 
 export type WorkflowNodeDataDtoRequestNodeDataDto = {
