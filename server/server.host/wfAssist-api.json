@@ -389,9 +389,6 @@
             "$ref": "#/components/schemas/WorkflowNodeDataDtoExtractPropertyNodeDataDto"
           },
           {
-            "$ref": "#/components/schemas/WorkflowNodeDataDtoPrintTextNodeDataDto"
-          },
-          {
             "$ref": "#/components/schemas/WorkflowNodeDataDtoRequestNodeDataDto"
           }
         ],
@@ -399,7 +396,6 @@
           "propertyName": "type",
           "mapping": {
             "ExtractProperty": "#/components/schemas/WorkflowNodeDataDtoExtractPropertyNodeDataDto",
-            "PrintText": "#/components/schemas/WorkflowNodeDataDtoPrintTextNodeDataDto",
             "Request": "#/components/schemas/WorkflowNodeDataDtoRequestNodeDataDto"
           }
         }
@@ -421,31 +417,6 @@
           },
           "targetId": {
             "type": "string"
-          }
-        }
-      },
-      "WorkflowNodeDataDtoPrintTextNodeDataDto": {
-        "required": [
-          "text"
-        ],
-        "properties": {
-          "type": {
-            "enum": [
-              "PrintText"
-            ],
-            "type": "string"
-          },
-          "text": {
-            "type": "string"
-          },
-          "useConsole": {
-            "type": "boolean"
-          },
-          "targetId": {
-            "type": [
-              "null",
-              "string"
-            ]
           }
         }
       },

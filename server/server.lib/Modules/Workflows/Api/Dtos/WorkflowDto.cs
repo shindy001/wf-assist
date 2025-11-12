@@ -31,7 +31,6 @@ public sealed record WorkflowNodeDto
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
 [JsonDerivedType(typeof(ExtractPropertyNodeDataDto), nameof(WorkflowNodeDataTypeDto.ExtractProperty))]
-[JsonDerivedType(typeof(PrintTextNodeDataDto), nameof(WorkflowNodeDataTypeDto.PrintText))]
 [JsonDerivedType(typeof(RequestNodeDataDto), nameof(WorkflowNodeDataTypeDto.Request))]
 public abstract record WorkflowNodeDataDto;
 
@@ -39,13 +38,6 @@ public sealed record ExtractPropertyNodeDataDto : WorkflowNodeDataDto
 {
     public required string Path { get; init; }
     public required string TargetId { get; init; }
-}
-
-public sealed record PrintTextNodeDataDto : WorkflowNodeDataDto
-{
-    public required string Text { get; init; }
-    public bool UseConsole { get; init; }
-    public string? TargetId { get; init; }
 }
 
 public sealed record RequestNodeDataDto : WorkflowNodeDataDto

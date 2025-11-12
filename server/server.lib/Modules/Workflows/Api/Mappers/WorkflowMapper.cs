@@ -75,12 +75,6 @@ public static class WorkflowMapper
     {
         return workflowNodeData switch
         {
-            PrintTextNodeData data => new PrintTextNodeDataDto
-            {
-                Text = data.Text,
-                UseConsole = data.UseConsole,
-                TargetId = data.TargetId
-            },
             ExtractPropertyNodeData data => new ExtractPropertyNodeDataDto
             {
                 Path = data.Path,
@@ -100,12 +94,6 @@ public static class WorkflowMapper
     {
         return dto switch
         {
-            PrintTextNodeDataDto data => new PrintTextNodeData
-            {
-                Text = data.Text,
-                UseConsole = data.UseConsole,
-                TargetId = data.TargetId
-            },
             ExtractPropertyNodeDataDto data => new ExtractPropertyNodeData
             {
                 Path = data.Path,
@@ -125,7 +113,6 @@ public static class WorkflowMapper
     {
         return nodeDataType switch
         {
-            WorkflowNodeDataType.PrintText => WorkflowNodeDataTypeDto.PrintText,
             WorkflowNodeDataType.ExtractProperty => WorkflowNodeDataTypeDto.ExtractProperty,
             WorkflowNodeDataType.Request => WorkflowNodeDataTypeDto.Request,
             _ => throw new InvalidOperationException($"Unknown WorkflowNodeType type {nodeDataType}")
@@ -136,7 +123,6 @@ public static class WorkflowMapper
     {
         return nodeDataTypeDto switch
         {
-            WorkflowNodeDataTypeDto.PrintText => WorkflowNodeDataType.PrintText,
             WorkflowNodeDataTypeDto.ExtractProperty => WorkflowNodeDataType.ExtractProperty,
             WorkflowNodeDataTypeDto.Request => WorkflowNodeDataType.Request,
             _ => throw new InvalidOperationException($"Unknown WorkflowNodeTypeDto type {nodeDataTypeDto}")

@@ -31,14 +31,12 @@ public sealed record WorkflowNode
 
 public enum WorkflowNodeDataType
 {
-    PrintText,
     ExtractProperty,
     Request
 }
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
 [JsonDerivedType(typeof(ExtractPropertyNodeData), nameof(WorkflowNodeDataType.ExtractProperty))]
-[JsonDerivedType(typeof(PrintTextNodeData), nameof(WorkflowNodeDataType.PrintText))]
 [JsonDerivedType(typeof(RequestNodeData), nameof(WorkflowNodeDataType.Request))]
 public abstract record WorkflowNodeData;
 
@@ -46,13 +44,6 @@ public sealed record ExtractPropertyNodeData : WorkflowNodeData
 {
     public required string Path { get; init; }
     public required string TargetId { get; init; }
-}
-
-public sealed record PrintTextNodeData : WorkflowNodeData
-{
-    public required string Text { get; init; }
-    public bool UseConsole { get; init; }
-    public string? TargetId { get; init; }
 }
 
 public sealed record RequestNodeData : WorkflowNodeData
