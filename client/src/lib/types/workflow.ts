@@ -29,19 +29,12 @@ export type SvelteFlowWorkflowNode = WorkflowNode &
 export type SvelteFlowWorkflowEdge = WorkflowEdge;
 
 export type WorkflowNodeData =
-  | PrintTextNodeData
   | ExtractPropertyNodeData
   | RequestNodeData;
 
 export type WorkflowNodeDataBase = {
   type: WorkflowNodeDataType;
 };
-
-export type PrintTextNodeData = {
-  targetId?: string;
-  text: string;
-  useConsole: boolean;
-} & WorkflowNodeDataBase;
 
 export type ExtractPropertyNodeData = {
   path: string;
@@ -62,7 +55,6 @@ export type Position = {
 // These enum values (except Default) needs to be exact match to the values on server as they are mapped in "workflowMapper.ts"
 export enum WorkflowNodeDataType {
   Default = "Default",
-  PrintText = "PrintText",
   ExtractProperty = "ExtractProperty",
   Request = "Request",
 }
@@ -79,17 +71,6 @@ export type WorkflowIdentity = {
 };
 
 /* Node data factories */
-function createPrintTextNodeData(
-  data?: Partial<Omit<PrintTextNodeData, "type">>,
-): WorkflowNodeData {
-  return {
-    type: WorkflowNodeDataType.PrintText,
-    text: "Printing text...",
-    useConsole: false,
-    ...data,
-  };
-}
-
 function createExtractPropertyNodeData(
   data?: Omit<ExtractPropertyNodeData, "type">,
 ): WorkflowNodeData {
@@ -116,8 +97,6 @@ export function createDefaultWorkflowNodeData(
   nodeType: WorkflowNodeDataType,
 ): WorkflowNodeData {
   switch (nodeType) {
-    case WorkflowNodeDataType.PrintText:
-      return createPrintTextNodeData();
     case WorkflowNodeDataType.ExtractProperty:
       return createExtractPropertyNodeData();
     case WorkflowNodeDataType.Request:

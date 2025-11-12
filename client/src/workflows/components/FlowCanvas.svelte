@@ -9,7 +9,6 @@
   import "@xyflow/svelte/dist/style.css";
   import RequestNode from "./nodes/RequestNode.svelte";
   import ExtractPropertyNode from "./nodes/ExtractPropertyNode.svelte";
-  import PrintTextNode from "./nodes/PrintTextNode.svelte";
   import {
     createDefaultWorkflowNodeData,
     type SvelteFlowWorkflowNode,
@@ -21,7 +20,6 @@
   const workflowsAppState = useWorkflowsAppState();
   const additionalNodeTypes = {
     [WorkflowNodeDataType.ExtractProperty]: ExtractPropertyNode,
-    [WorkflowNodeDataType.PrintText]: PrintTextNode,
     [WorkflowNodeDataType.Request]: RequestNode,
   };
 
