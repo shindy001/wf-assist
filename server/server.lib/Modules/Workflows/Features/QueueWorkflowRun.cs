@@ -23,7 +23,7 @@ public static class QueueWorkflowRun
                 }
 
                 var queuedRun = WorkflowRunFactory.CreateQueued(workflow);
-                var runId = await workflowProcessingRepository.QueueRun(queuedRun);
+                var runId = await workflowProcessingRepository.AddRun(queuedRun);
 
                 return TypedResults.Ok(new RunWorkflowResponse(runId));
             })

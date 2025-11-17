@@ -45,7 +45,7 @@ public sealed class WorkflowProcessingRepository
         return await _dbConnection.QueryFirstOrDefaultAsync<WorkflowRun>(sql, new { Status = WorkflowRunStatus.Queued });
     }
 
-    public async Task<Guid> QueueRun(WorkflowRun run)
+    public async Task<Guid> AddRun(WorkflowRun run)
     {
         const string sql = "INSERT INTO WorkflowRuns (Id, Status, Snapshot) VALUES (@Id, @Status, @Snapshot)";
 
@@ -54,11 +54,11 @@ public sealed class WorkflowProcessingRepository
         return run.Id;
     }
 
-    public async Task CompleteRun(Guid runId)
+    public async Task UpdateRunStatus(Guid runId, WorkflowRunStatus status)
     {
         const string sql = "UPDATE WorkflowRuns SET Status = @Status WHERE Id = @Id";
 
-        await _dbConnection.ExecuteAsync(sql, new { Id = runId, Status = WorkflowRunStatus.Completed });
+        await _dbConnection.ExecuteAsync(sql, new { Id = runId, Status = status });
     }
 
     private async Task<bool> Exists(Guid runId)
