@@ -11,8 +11,34 @@ public static class WorkflowTopologySorter
     /// <returns><see cref="List{WorkflowNode}"/> in execution order</returns>
     public static List<WorkflowNode> CalculateNodeExecution(WorkflowData data)
     {
+        if (!data.Nodes.Any())
+        {
+            return [];
+        }
+
+        ValidateEdges(data);
+
         var nodeExecutionOrder = CalculateExecutionOrder(data);
         return nodeExecutionOrder.Select(nodeId => data.Nodes.First(x => x.Id == nodeId)).ToList();
+    }
+
+    private static void ValidateEdges(WorkflowData data)
+    {
+        var nodeIds = data.Nodes.Select(x => x.Id).ToList();
+        foreach (var edge in data.Edges)
+        {
+            if (!nodeIds.Contains(edge.Source))
+            {
+                throw new ArgumentException(
+                    $"Invalid edge '{edge.Id}', source node with Id '{edge.Source}' does not exist.");
+            }
+
+            if (!nodeIds.Contains(edge.Target))
+            {
+                throw new ArgumentException(
+                    $"Invalid edge '{edge.Id}', target node with Id '{edge.Target}' does not exist.");
+            }
+        }
     }
 
     /// <summary>
@@ -82,6 +108,8 @@ public static class WorkflowTopologySorter
             }
         }
 
-        return executionOrder;
+        return executionOrder.Count != data.Nodes.Count()
+            ? throw new InvalidOperationException("Cycle detected in workflow graph, cannot calculate execution order.")
+            : executionOrder;
     }
 }
