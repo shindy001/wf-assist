@@ -5,7 +5,7 @@ using WfAssist.AspNetCore.Modules.Workflows.Runtime.NodeProcessors;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Runtime;
 
-public sealed class WorkflowExecutor
+public sealed partial class WorkflowExecutor
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<WorkflowExecutor> _logger;
@@ -26,10 +26,10 @@ public sealed class WorkflowExecutor
     {
         try
         {
-            _logger.LogInformation("Executing workflow '{workflowName}'.", snapshot.Name);
+            LogExecutionStart(snapshot.Name);
 
             var executionOrder = WorkflowTopologySorter.CalculateNodeExecution(snapshot.Data);
-            _logger.LogInformation("Execution order: {executionOrder}", executionOrder.Select(x => x.Id));
+            LogExecutionOrder(executionOrder.Select(x => x.Id));
 
             foreach (var node in executionOrder)
             {
@@ -38,11 +38,7 @@ public sealed class WorkflowExecutor
 
                 if (processor is null)
                 {
-                    _logger.LogError(
-                        """
-                        Processor for node data type {dataTypeName} was not found, ensure that processor is registered.
-                        Aborting workflow run.
-                        """, dataType.Name);
+                    LogProcessorNotFoundError(dataType.Name);
 
                     return Task.FromResult(false);
                 }
@@ -50,7 +46,7 @@ public sealed class WorkflowExecutor
                 processor.Process(node);
             }
 
-            _logger.LogInformation("Workflow '{workflowName}' completed.", snapshot.Name);
+            LogExecutionCompleted(snapshot.Name);
             return Task.FromResult(true);
         }
         catch (Exception)
@@ -59,4 +55,19 @@ public sealed class WorkflowExecutor
             return Task.FromResult(false);
         }
     }
+
+    [LoggerMessage(LogLevel.Information, "Executing workflow '{workflowName}'.")]
+    partial void LogExecutionStart(string workflowName);
+
+    [LoggerMessage(LogLevel.Information, "Execution order: {executionOrder}")]
+    partial void LogExecutionOrder(IEnumerable<string> executionOrder);
+
+    [LoggerMessage(LogLevel.Error, """
+                                   Processor for node data type {dataTypeName} was not found, ensure that processor is registered.
+                                   Aborting workflow run.
+                                   """)]
+    partial void LogProcessorNotFoundError(string dataTypeName);
+
+    [LoggerMessage(LogLevel.Information, "Workflow '{workflowName}' completed.")]
+    partial void LogExecutionCompleted(string workflowName);
 }
