@@ -7,6 +7,7 @@ using WfAssist.AspNetCore.Core;
 using WfAssist.AspNetCore.Modules.Workflows.Features;
 using WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
 using WfAssist.AspNetCore.Modules.Workflows.Runtime;
+using WfAssist.AspNetCore.Modules.Workflows.Runtime.NodeProcessors;
 
 namespace WfAssist.AspNetCore.Modules.Workflows;
 
@@ -19,6 +20,8 @@ internal static class WorkflowsModule
 
         services.AddScoped<WorkflowRepository>();
         services.AddScoped<WorkflowProcessingRepository>();
+
+        services.RegisterRequestNodeKeyedProcessor();
 
         services.AddSingleton<WorkflowExecutor>();
         services.AddHostedService<WorkflowRunnerBackgroundService>();
