@@ -29,6 +29,12 @@ public sealed record WorkflowNodeDto
     public required WorkflowNodeDataDto Data { get; init; }
 }
 
+public enum WorkflowNodeDataTypeDto
+{
+    ExtractProperty,
+    Request
+}
+
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
 [JsonDerivedType(typeof(ExtractPropertyNodeDataDto), nameof(WorkflowNodeDataTypeDto.ExtractProperty))]
 [JsonDerivedType(typeof(RequestNodeDataDto), nameof(WorkflowNodeDataTypeDto.Request))]

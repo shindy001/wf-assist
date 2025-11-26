@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 
@@ -29,15 +30,9 @@ public sealed record WorkflowNode
     public required WorkflowNodeData Data { get; init; }
 }
 
-public enum WorkflowNodeDataType
-{
-    ExtractProperty,
-    Request
-}
-
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(ExtractPropertyNodeData), nameof(WorkflowNodeDataType.ExtractProperty))]
-[JsonDerivedType(typeof(RequestNodeData), nameof(WorkflowNodeDataType.Request))]
+[JsonDerivedType(typeof(ExtractPropertyNodeData), nameof(ExtractPropertyNodeData))]
+[JsonDerivedType(typeof(RequestNodeData), nameof(RequestNodeData))]
 public abstract record WorkflowNodeData;
 
 public sealed record ExtractPropertyNodeData : WorkflowNodeData
@@ -48,7 +43,8 @@ public sealed record ExtractPropertyNodeData : WorkflowNodeData
 
 public sealed record RequestNodeData : WorkflowNodeData
 {
-    public required string RequestType { get; init; }
+    // TODO enum for allowed values - GET, POST, UPDATE, PATCH, DELETE
+    public required string RequestType { get; init; } = HttpMethods.Get;
     public required string Url { get; init; }
     public string? RequestBody { get; init; }
 }

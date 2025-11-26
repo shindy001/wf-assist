@@ -21,13 +21,6 @@ public static class WorkflowMapper
             Data = dto.Data.ToDomain()
         };
 
-    public static WorkflowDataDto ToDto(this WorkflowData entity)
-        => new()
-        {
-            Edges = entity.Edges.Select(ToDto),
-            Nodes = entity.Nodes.Select(ToDto)
-        };
-
     public static WorkflowData ToDomain(this WorkflowDataDto dto)
         => new()
         {
@@ -35,7 +28,14 @@ public static class WorkflowMapper
             Nodes = dto.Nodes.Select(ToDomain)
         };
 
-    public static WorkflowEdgeDto ToDto(this WorkflowEdge entity)
+    private static WorkflowDataDto ToDto(this WorkflowData entity)
+        => new()
+        {
+            Edges = entity.Edges.Select(ToDto),
+            Nodes = entity.Nodes.Select(ToDto)
+        };
+
+    private static WorkflowEdgeDto ToDto(this WorkflowEdge entity)
         => new()
         {
             Id = entity.Id,
@@ -43,7 +43,7 @@ public static class WorkflowMapper
             Target = entity.Target,
         };
 
-    public static WorkflowEdge ToDomain(this WorkflowEdgeDto dto)
+    private static WorkflowEdge ToDomain(this WorkflowEdgeDto dto)
         => new()
         {
             Id = dto.Id,
@@ -51,27 +51,27 @@ public static class WorkflowMapper
             Target = dto.Target,
         };
 
-    public static WorkflowNodeDto ToDto(this WorkflowNode entity)
+    private static WorkflowNodeDto ToDto(this WorkflowNode entity)
     {
         return new WorkflowNodeDto
         {
             Id = entity.Id,
-            Position = entity.Position.ToDto(),
+            Position = new PositionDto(entity.Position.X, entity.Position.Y),
             Data = entity.Data.ToDto()
         };
     }
 
-    public static WorkflowNode ToDomain(this WorkflowNodeDto dto)
+    private static WorkflowNode ToDomain(this WorkflowNodeDto dto)
     {
         return new WorkflowNode
         {
             Id = dto.Id,
-            Position = dto.Position.ToDomain(),
+            Position = new Position(dto.Position.X, dto.Position.Y),
             Data = dto.Data.ToDomain()
         };
     }
 
-    public static WorkflowNodeDataDto ToDto(this WorkflowNodeData workflowNodeData)
+    private static WorkflowNodeDataDto ToDto(this WorkflowNodeData workflowNodeData)
     {
         return workflowNodeData switch
         {
@@ -90,7 +90,7 @@ public static class WorkflowMapper
         };
     }
 
-    public static WorkflowNodeData ToDomain(this WorkflowNodeDataDto dto)
+    private static WorkflowNodeData ToDomain(this WorkflowNodeDataDto dto)
     {
         return dto switch
         {
@@ -108,27 +108,4 @@ public static class WorkflowMapper
             _ => throw new InvalidOperationException($"Unknown WorkflowNodeDataDto type {dto.GetType().Name}")
         };
     }
-
-    public static WorkflowNodeDataTypeDto ToDto(this WorkflowNodeDataType nodeDataType)
-    {
-        return nodeDataType switch
-        {
-            WorkflowNodeDataType.ExtractProperty => WorkflowNodeDataTypeDto.ExtractProperty,
-            WorkflowNodeDataType.Request => WorkflowNodeDataTypeDto.Request,
-            _ => throw new InvalidOperationException($"Unknown WorkflowNodeType type {nodeDataType}")
-        };
-    }
-
-    public static WorkflowNodeDataType ToDomain(this WorkflowNodeDataTypeDto nodeDataTypeDto)
-    {
-        return nodeDataTypeDto switch
-        {
-            WorkflowNodeDataTypeDto.ExtractProperty => WorkflowNodeDataType.ExtractProperty,
-            WorkflowNodeDataTypeDto.Request => WorkflowNodeDataType.Request,
-            _ => throw new InvalidOperationException($"Unknown WorkflowNodeTypeDto type {nodeDataTypeDto}")
-        };
-    }
-
-    public static PositionDto ToDto(this Position entity) => new(entity.X, entity.Y);
-    public static Position ToDomain(this PositionDto dto) => new(dto.X, dto.Y);
 }
