@@ -4,5 +4,5 @@ namespace WfAssist.AspNetCore.Modules.Workflows.Runtime.NodeProcessors;
 
 public interface IWorkflowNodeProcessor
 {
-    Task<ProcessResult> Process(WorkflowNode workflowNode);
+    Task<ProcessingResult> Process(WorkflowNode workflowNode);
 }
