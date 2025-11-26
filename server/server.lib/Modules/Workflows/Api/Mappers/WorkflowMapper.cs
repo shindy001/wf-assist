@@ -82,7 +82,7 @@ public static class WorkflowMapper
             },
             RequestNodeData data => new RequestNodeDataDto
             {
-                RequestType = data.RequestType,
+                RequestType = data.RequestType.ToDto(),
                 Url = data.Url,
                 RequestBody = data.RequestBody
             },
@@ -101,11 +101,37 @@ public static class WorkflowMapper
             },
             RequestNodeDataDto data => new RequestNodeData
             {
-                RequestType = data.RequestType,
+                RequestType = data.RequestType.ToDomain(),
                 Url = data.Url,
                 RequestBody = data.RequestBody
             },
             _ => throw new InvalidOperationException($"Unknown WorkflowNodeDataDto type {dto.GetType().Name}")
+        };
+    }
+
+    private static RequestType ToDomain(this RequestTypeDto dto)
+    {
+        return dto switch
+        {
+            RequestTypeDto.Get => RequestType.Get,
+            RequestTypeDto.Post => RequestType.Post,
+            RequestTypeDto.Put => RequestType.Put,
+            RequestTypeDto.Patch => RequestType.Patch,
+            RequestTypeDto.Delete => RequestType.Delete,
+            _ => throw new InvalidOperationException($"Unknown RequestType type {dto}")
+        };
+    }
+
+    private static RequestTypeDto ToDto(this RequestType requestType)
+    {
+        return requestType switch
+        {
+            RequestType.Get => RequestTypeDto.Get,
+            RequestType.Post => RequestTypeDto.Post,
+            RequestType.Put => RequestTypeDto.Put,
+            RequestType.Patch => RequestTypeDto.Patch,
+            RequestType.Delete => RequestTypeDto.Delete,
+            _ => throw new InvalidOperationException($"Unknown RequestType type {requestType}")
         };
     }
 }

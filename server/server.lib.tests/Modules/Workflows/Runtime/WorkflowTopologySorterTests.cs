@@ -258,7 +258,7 @@ public class WorkflowTopologySorterTests
         {
             Id = Guid.NewGuid().ToString(),
             Position = new Position(0, 0),
-            Data = new RequestNodeData { RequestType = "GET", Url = string.Empty }
+            Data = new RequestNodeData { RequestType = RequestType.Get, Url = string.Empty }
         };
     }
 

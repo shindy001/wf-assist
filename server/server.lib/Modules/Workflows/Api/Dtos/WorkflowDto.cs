@@ -48,7 +48,7 @@ public sealed record ExtractPropertyNodeDataDto : WorkflowNodeDataDto
 
 public sealed record RequestNodeDataDto : WorkflowNodeDataDto
 {
-    public required string RequestType { get; init; }
+    public required RequestTypeDto RequestType { get; init; }
     public required string Url { get; init; }
     public string? RequestBody { get; init; }
 }

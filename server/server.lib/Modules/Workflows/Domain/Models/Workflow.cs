@@ -43,8 +43,7 @@ public sealed record ExtractPropertyNodeData : WorkflowNodeData
 
 public sealed record RequestNodeData : WorkflowNodeData
 {
-    // TODO enum for allowed values - GET, POST, UPDATE, PATCH, DELETE
-    public required string RequestType { get; init; } = HttpMethods.Get;
+    public required RequestType RequestType { get; init; }
     public required string Url { get; init; }
     public string? RequestBody { get; init; }
 }
