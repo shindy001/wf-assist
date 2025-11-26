@@ -14,9 +14,9 @@ public class WorkflowTopologySorterTests
         // └───────┘       └───────┘       └───────┘
 
         // Arrange
-        var node1 = CreateNode(WorkflowNodeDataType.ExtractProperty);
-        var node2 = CreateNode(WorkflowNodeDataType.Request);
-        var node3 = CreateNode(WorkflowNodeDataType.ExtractProperty);
+        var node1 = CreateExtractPropertyNode();
+        var node2 = CreateRequestNode();
+        var node3 = CreateExtractPropertyNode();
 
         var node1ToNode2Edge = CreateEdge(node1.Id, node2.Id);
         var node2ToNode3Edge = CreateEdge(node2.Id, node3.Id);
@@ -48,9 +48,9 @@ public class WorkflowTopologySorterTests
         //     └───────────────────────────────┘
 
         // Arrange
-        var node1 = CreateNode(WorkflowNodeDataType.ExtractProperty);
-        var node2 = CreateNode(WorkflowNodeDataType.Request);
-        var node3 = CreateNode(WorkflowNodeDataType.ExtractProperty);
+        var node1 = CreateExtractPropertyNode();
+        var node2 = CreateRequestNode();
+        var node3 = CreateExtractPropertyNode();
 
         var node1ToNode2Edge = CreateEdge(node1.Id, node2.Id);
         var node1ToNode3Edge = CreateEdge(node1.Id, node3.Id);
@@ -89,11 +89,11 @@ public class WorkflowTopologySorterTests
         // └───────┘       └───────┘
 
         // Arrange
-        var node1 = CreateNode(WorkflowNodeDataType.ExtractProperty);
-        var node2 = CreateNode(WorkflowNodeDataType.Request);
-        var node3 = CreateNode(WorkflowNodeDataType.ExtractProperty);
-        var node4 = CreateNode(WorkflowNodeDataType.Request);
-        var node5 = CreateNode(WorkflowNodeDataType.ExtractProperty);
+        var node1 = CreateExtractPropertyNode();
+        var node2 = CreateRequestNode();
+        var node3 = CreateExtractPropertyNode();
+        var node4 = CreateRequestNode();
+        var node5 = CreateExtractPropertyNode();
 
         var node1ToNode2Edge = CreateEdge(node1.Id, node2.Id);
         var node1ToNode3Edge = CreateEdge(node1.Id, node3.Id);
@@ -130,9 +130,9 @@ public class WorkflowTopologySorterTests
         // └───────┘       └───────┘       └───────┘
 
         // Arrange
-        var node1 = CreateNode(WorkflowNodeDataType.ExtractProperty);
-        var node2 = CreateNode(WorkflowNodeDataType.Request);
-        var node3 = CreateNode(WorkflowNodeDataType.ExtractProperty);
+        var node1 = CreateExtractPropertyNode();
+        var node2 = CreateRequestNode();
+        var node3 = CreateExtractPropertyNode();
 
         var data = new WorkflowData
         {
@@ -174,8 +174,8 @@ public class WorkflowTopologySorterTests
     public void CalculateNodeExecution_should_throw_ArgumentException_when_edge_has_invalid_source()
     {
         // Arrange
-        var node1 = CreateNode(WorkflowNodeDataType.Request);
-        var node2 = CreateNode(WorkflowNodeDataType.ExtractProperty);
+        var node1 = CreateRequestNode();
+        var node2 = CreateExtractPropertyNode();
 
         var edge1 = CreateEdge(sourceId: Guid.NewGuid().ToString(), targetId: node2.Id);
 
@@ -220,9 +220,9 @@ public class WorkflowTopologySorterTests
         // └───────┘       └───────┘       └───────┘
 
         // Arrange
-        var node1 = CreateNode(WorkflowNodeDataType.ExtractProperty);
-        var node2 = CreateNode(WorkflowNodeDataType.Request);
-        var node3 = CreateNode(WorkflowNodeDataType.ExtractProperty);
+        var node1 = CreateExtractPropertyNode();
+        var node2 = CreateRequestNode();
+        var node3 = CreateExtractPropertyNode();
 
         var node1ToNode2Edge = CreateEdge(node1.Id, node2.Id);
         var node2ToNode3Edge = CreateEdge(node2.Id, node3.Id);
@@ -242,23 +242,23 @@ public class WorkflowTopologySorterTests
             .Message.ShouldBe("Cycle detected in workflow graph, cannot calculate execution order.");
     }
 
-    private static WorkflowNode CreateNode(WorkflowNodeDataType type)
+    private static WorkflowNode CreateExtractPropertyNode()
     {
-        return type switch
+        return new WorkflowNode
         {
-            WorkflowNodeDataType.ExtractProperty => new WorkflowNode
-            {
-                Id = Guid.NewGuid().ToString(),
-                Position = new Position(0, 0),
-                Data = new ExtractPropertyNodeData {Path = string.Empty, TargetId = string.Empty}
-            },
-            WorkflowNodeDataType.Request => new WorkflowNode
-            {
-              Id = Guid.NewGuid().ToString(),
-              Position = new Position(0, 0),
-              Data = new RequestNodeData { RequestType = "GET", Url = string.Empty }
-            },
-            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            Id = Guid.NewGuid().ToString(),
+            Position = new Position(0, 0),
+            Data = new ExtractPropertyNodeData {Path = string.Empty, TargetId = string.Empty}
+        };
+    }
+
+    private static WorkflowNode CreateRequestNode()
+    {
+        return new WorkflowNode
+        {
+            Id = Guid.NewGuid().ToString(),
+            Position = new Position(0, 0),
+            Data = new RequestNodeData { RequestType = "GET", Url = string.Empty }
         };
     }
 
