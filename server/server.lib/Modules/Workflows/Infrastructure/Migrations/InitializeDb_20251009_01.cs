@@ -17,7 +17,8 @@ public class InitializeDb_20251009_01 : Migration
         Create.Table("WorkflowRuns")
             .WithColumn("Id").AsFixedLengthString(36).PrimaryKey() // uuid
             .WithColumn("Status").AsFixedLengthString(100)
-            .WithColumn("Snapshot").AsString();
+            .WithColumn("Snapshot").AsString()
+            .WithColumn("ProcessingResults").AsString();
     }
 
     public override void Down()
