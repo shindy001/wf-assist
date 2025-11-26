@@ -47,11 +47,20 @@ public sealed class WorkflowProcessingRepository
 
     public async Task<Guid> AddRun(WorkflowRun run)
     {
-        const string sql = "INSERT INTO WorkflowRuns (Id, Status, Snapshot) VALUES (@Id, @Status, @Snapshot)";
+        const string sql =
+            "INSERT INTO WorkflowRuns (Id, Status, Snapshot, ProcessingResults) VALUES (@Id, @Status, @Snapshot, @ProcessingResults)";
 
-        await _dbConnection.ExecuteAsync(sql, new { Id = run.Id, Status = run.Status, Snapshot = run.Snapshot });
+        await _dbConnection.ExecuteAsync(sql,
+            new {Id = run.Id, Status = run.Status, Snapshot = run.Snapshot, ProcessingResults = run.ProcessingResults});
 
         return run.Id;
+    }
+
+    public async Task CompleteRun(Guid runId, WorkflowRunStatus status, List<ProcessingResult> processingResults)
+    {
+        const string sql = "UPDATE WorkflowRuns SET Status = @Status, ProcessingResults = @ProcessingResults WHERE Id = @Id";
+
+        await _dbConnection.ExecuteAsync(sql, new { Id = runId, Status = status, ProcessingResults = processingResults });
     }
 
     public async Task UpdateRunStatus(Guid runId, WorkflowRunStatus status)
