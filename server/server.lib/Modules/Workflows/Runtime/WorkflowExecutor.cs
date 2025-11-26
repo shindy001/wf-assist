@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
@@ -20,10 +21,11 @@ public sealed partial class WorkflowExecutor
     /// Execute specified <see cref="WorkflowSnapshot"/>.
     /// </summary>
     /// <param name="snapshot"><see cref="WorkflowSnapshot"/></param>
-    /// <returns>True is execute was successful</returns>
-    // TODO - replace bool return with OneOf or Result object???
-    public Task<bool> Execute(WorkflowSnapshot snapshot)
+    /// <returns>Bool to specify if run was successful and results of the run.</returns>
+    public async Task<(bool success, ImmutableArray<ProcessingResult> results)> Execute(WorkflowSnapshot snapshot)
     {
+        var processResults = new List<ProcessingResult>();
+
         try
         {
             LogExecutionStart(snapshot.Name);
@@ -40,19 +42,26 @@ public sealed partial class WorkflowExecutor
                 {
                     LogProcessorNotFoundError(dataType.Name);
 
-                    return Task.FromResult(false);
+                    return (false, [..processResults]);
                 }
 
-                processor.Process(node);
+                var result = await processor.Process(node);
+                processResults.Add(result);
             }
 
             LogExecutionCompleted(snapshot.Name);
-            return Task.FromResult(true);
+
+            var successful = processResults.All(x => x.Successful);
+            return (successful, [..processResults]);
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // TODO - return some error data with Result object
-            return Task.FromResult(false);
+            LogUnexpectedErrorDuringRun($"{snapshot.Id}_{snapshot.Name}", e.Message);
+
+            processResults.Add(ProcessingResult.Error(
+                $"Unexpected error during workflow {snapshot.Id}_{snapshot.Name} run: {e.Message}", string.Empty));
+
+            return (false, [..processResults]);
         }
     }
 
@@ -68,6 +77,10 @@ public sealed partial class WorkflowExecutor
                                    """)]
     partial void LogProcessorNotFoundError(string dataTypeName);
 
+    [LoggerMessage(LogLevel.Error, "Unexpected error during workflow {workflow} run: {errorMessage}")]
+    partial void LogUnexpectedErrorDuringRun(string workflow, string errorMessage);
+
     [LoggerMessage(LogLevel.Information, "Workflow '{workflowName}' completed.")]
     partial void LogExecutionCompleted(string workflowName);
+
 }

@@ -47,15 +47,17 @@ public class WorkflowRunnerBackgroundService : BackgroundService
                 await workflowProcessingRepository.UpdateRunStatus(workflowRun.Id, WorkflowRunStatus.Running);
                 _logger.LogInformation("Starting workflow run {runId}.", workflowRun.Id);
 
-                var success = await workflowExecutor.Execute(workflowRun.Snapshot);
+                var (success, results) = await workflowExecutor.Execute(workflowRun.Snapshot);
                 if (success)
                 {
-                    await workflowProcessingRepository.UpdateRunStatus(workflowRun.Id, WorkflowRunStatus.Completed);
+                    await workflowProcessingRepository.CompleteRun(workflowRun.Id, WorkflowRunStatus.Completed,
+                        results.ToList());
                     _logger.LogInformation("Workflow run {runId} completed.", workflowRun.Id);
                 }
                 else
                 {
-                    await workflowProcessingRepository.UpdateRunStatus(workflowRun.Id, WorkflowRunStatus.Failed);
+                    await workflowProcessingRepository.CompleteRun(workflowRun.Id, WorkflowRunStatus.Failed,
+                        results.ToList());
                     _logger.LogInformation("Workflow run {runId} completed with errors.", workflowRun.Id);
                 }
             }
