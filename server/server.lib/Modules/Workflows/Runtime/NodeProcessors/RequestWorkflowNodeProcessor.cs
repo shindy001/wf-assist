@@ -1,3 +1,5 @@
+using System.Net.Mime;
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 
@@ -14,18 +16,71 @@ public sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
         _httpClient = httpClient;
     }
 
-    public Task<ProcessResult> Process(WorkflowNode workflowNode)
+    public async Task<ProcessingResult> Process(WorkflowNode workflowNode)
     {
         if (workflowNode.Data is not RequestNodeData requestNodeData)
         {
             throw new ArgumentException($"Expected node data type {nameof(RequestNodeData)} but got {workflowNode.Data.GetType()}");
         }
 
-        // TODO
-        // 1. Make a request
-        // 2. Convert result to JsonDocument (maybe custom model like ResponseResult with simplified data from response - Status, data, error???)
-        // 3. Return ProcessResult.Success/Error according to response
-        throw new NotImplementedException();
+        var requestMessage = GetRequestMessage(requestNodeData.RequestType, requestNodeData.Url, requestNodeData.RequestBody);
+        var response = await _httpClient.SendAsync(requestMessage);
+
+        if (response.Content.Headers.ContentType?.MediaType != MediaTypeNames.Application.Json)
+        {
+            return ProcessingResult.Error(
+                $"Unsupported Response content MediaType '{response.Content.Headers.ContentType?.MediaType}'. " +
+                $"Only '{MediaTypeNames.Application.Json}' is supported.",
+                workflowNode.Id);
+        }
+
+        var responseBody = await response.Content.ReadAsStringAsync();
+        if (response.IsSuccessStatusCode)
+        {
+            var (resultValueType, resultData) = ParseResponse(responseBody.Trim());
+            return ProcessingResult.Success(workflowNode.Id, resultValueType, resultData);
+        }
+
+        return ProcessingResult.Error($"Status code: {response.StatusCode}, reason: {response.ReasonPhrase}",
+            responseBody);
+    }
+
+    private static (ProcessResultValueType resultValueType, object? resultData) ParseResponse(string responseBody)
+    {
+        if (responseBody == string.Empty)
+        {
+            return (ProcessResultValueType.None, null);
+        }
+
+        return IsValidJsonDocument(responseBody, out var document)
+            ? (ProcessResultValueType.JsonDocument, document)
+            : (ProcessResultValueType.String, responseBody);
+    }
+
+    private static HttpRequestMessage GetRequestMessage(RequestType requestType, string url, string? body)
+    {
+        return requestType switch {
+            RequestType.Get => new HttpRequestMessage(HttpMethod.Get, url),
+            RequestType.Post => new HttpRequestMessage(HttpMethod.Get, url) { Content = new StringContent(body ?? string.Empty) },
+            RequestType.Put => new HttpRequestMessage(HttpMethod.Get, url) { Content = new StringContent(body ?? string.Empty) },
+            RequestType.Patch => new HttpRequestMessage(HttpMethod.Get, url) { Content = new StringContent(body ?? string.Empty) },
+            RequestType.Delete => new HttpRequestMessage(HttpMethod.Get, url) { Content = new StringContent(body ?? string.Empty) },
+            _ => throw new InvalidOperationException($"Unsupported request type {requestType}")
+        };
+    }
+
+    private static bool IsValidJsonDocument(string jsonString, out JsonDocument? document)
+    {
+        try
+        {
+            document = JsonDocument.Parse(jsonString);
+            return true;
+        }
+        catch (JsonException)
+        {
+            document = null;
+            return false;
+        }
     }
 }
 
