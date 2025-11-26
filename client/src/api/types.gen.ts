@@ -26,6 +26,8 @@ export type RenameWorkflowRequest = {
     newName: string;
 };
 
+export type RequestTypeDto = 'Get' | 'Post' | 'Put' | 'Patch' | 'Delete';
+
 export type RunWorkflowResponse = {
     runId: string;
 };
@@ -70,7 +72,7 @@ export type WorkflowNodeDataDtoExtractPropertyNodeDataDto = {
 
 export type WorkflowNodeDataDtoRequestNodeDataDto = {
     type?: 'Request';
-    requestType: string;
+    requestType: RequestTypeDto;
     url: string;
     requestBody?: null | string;
 };
