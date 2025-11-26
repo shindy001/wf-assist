@@ -1,33 +1,36 @@
-namespace WfAssist.AspNetCore.Modules.Workflows.Runtime.NodeProcessors;
+namespace WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 
-public record ProcessResult
+public record ProcessingResult
 {
-    public bool IsSuccessful { get; init; }
+    public string NodeId { get; init; }
+    public bool Successful { get; init; }
     public ProcessResultValueType ValueType { get; init; }
     public object? Data { get; init; }
     public string? ErrorMessage { get; init; }
 
-    private ProcessResult(bool IsSuccessful,
+    private ProcessingResult(
+        bool Successful,
+        string NodeId,
         ProcessResultValueType ValueType,
         object? Data = null,
         string? ErrorMessage = null)
     {
-        this.IsSuccessful = IsSuccessful;
+        this.Successful = Successful;
+        this.NodeId = NodeId;
         this.ValueType = ValueType;
         this.Data = Data;
         this.ErrorMessage = ErrorMessage;
     }
 
-    public static ProcessResult Success(ProcessResultValueType valueType, object? data = null)
+    public static ProcessingResult Success(string nodeId, ProcessResultValueType valueType, object? data = null)
     {
         VerifyValueType(valueType, data);
-        return new ProcessResult(IsSuccessful: true, valueType, data);
+        return new ProcessingResult(Successful: true, nodeId, valueType, data);
     }
 
-    public static ProcessResult Error(string message, ProcessResultValueType valueType, object? data = null)
+    public static ProcessingResult Error(string message, string nodeId, object? data = null)
     {
-        VerifyValueType(valueType, data);
-        return new ProcessResult(IsSuccessful: true, valueType, data);
+        return new ProcessingResult(Successful: false, nodeId, ProcessResultValueType.Error, data, message);
     }
 
     private static void VerifyValueType(ProcessResultValueType valueType, object? data)
