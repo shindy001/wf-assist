@@ -28,9 +28,7 @@ export type SvelteFlowWorkflowNode = WorkflowNode &
 // SvelteFlow edge
 export type SvelteFlowWorkflowEdge = WorkflowEdge;
 
-export type WorkflowNodeData =
-  | ExtractPropertyNodeData
-  | RequestNodeData;
+export type WorkflowNodeData = ExtractPropertyNodeData | RequestNodeData;
 
 export type WorkflowNodeDataBase = {
   type: WorkflowNodeDataType;
@@ -41,9 +39,11 @@ export type ExtractPropertyNodeData = {
   targetId: string;
 } & WorkflowNodeDataBase;
 
+export type RequestType = "Get" | "Post" | "Put" | "Patch" | "Delete";
+
 export type RequestNodeData = {
   url: string;
-  requestType: string;
+  requestType: RequestType;
   requestBody?: string;
 } & WorkflowNodeDataBase;
 
@@ -88,7 +88,7 @@ function createRequestNodeData(
   return {
     type: WorkflowNodeDataType.Request,
     url: "",
-    requestType: "GET",
+    requestType: "Get",
     ...data,
   };
 }
