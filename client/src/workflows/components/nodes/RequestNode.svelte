@@ -1,5 +1,9 @@
 <script lang="ts" module>
-  import { WorkflowNodeDataType, type RequestNodeData } from "$lib/types";
+  import {
+    WorkflowNodeDataType,
+    RequestType,
+    type RequestNodeData,
+  } from "$lib/types";
   import { type Node } from "@xyflow/svelte";
 
   export type RequestNodeType = Node<
@@ -15,33 +19,30 @@
   import OutputHandle from "./OutputHandle.svelte";
 
   const { updateNodeData, updateNode } = useSvelteFlow();
-  const requestTypes = ["GET", "POST", "PUT"];
-  const isGetRequestType = () => data.requestType === "GET";
-  const getNodeWidth = () => (isGetRequestType() ? 200 : 320);
-  const getNodeHeight = () => (isGetRequestType() ? 300 : 450);
+  const requestTypes = [...Object.values(RequestType)];
+  const isRequestTypeWithBody = () =>
+    data.requestType !== RequestType.Get &&
+    data.requestType !== RequestType.Delete;
 
   let { id, data }: NodeProps<RequestNodeType> = $props();
-  let selectedRequestType = $state(data.requestType ?? "GET");
+  let selectedRequestType = $state(data.requestType ?? RequestType.Get);
   let urlInputText = $state(data.url ?? "");
   let requestBodyInputText = $state(data.requestBody ?? "");
-  let initialWidth = $derived(getNodeWidth());
-  let initialHeight = $derived(getNodeHeight());
 
-  $effect(() => {
-    updateNode(id, { width: getNodeWidth(), height: getNodeHeight() });
-  });
+  // Set default node width after data init
+  updateNode(id, { width: 200, height: 300 });
 </script>
 
 <TurboNode
   label="Request"
   resizable
-  minResizableWidth={initialWidth}
-  minResizableHeight={initialHeight}
+  minResizableWidth={200}
+  minResizableHeight={300}
 >
   <InputHandle nodeId={id} />
   <OutputHandle nodeId={id} />
 
-  <div class="flex-col space-y-2 w-full">
+  <div class="flex flex-col space-y-2 h-full max-h-full">
     <fieldset>
       <legend>Url</legend>
       <input
@@ -62,17 +63,17 @@
         }}
       >
         {#each requestTypes as requestType}
-          <option value={requestType}>{requestType}</option>
+          <option class="bg-black" value={requestType}>{requestType}</option>
         {/each}
       </select>
     </fieldset>
 
-    {#if !isGetRequestType()}
-      <fieldset>
-        <legend class="w-full flex justify-between">Body</legend>
+    {#if isRequestTypeWithBody()}
+      <fieldset class="grow">
+        <legend class="justify-between">Body</legend>
         <textarea
-          class="nodrag min-w-72 w-full text-nowrap resize-none"
-          rows="5"
+          name="request-payload"
+          class="nodrag resize-none w-full h-[calc(100%-20px)]"
           placeholder="Contents (JSON, XML, etc.)..."
           bind:value={requestBodyInputText}
           onchange={() =>

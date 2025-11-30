@@ -23,9 +23,9 @@
   ]}
 >
   <div
-    class="relative bg-white dark:bg-black size-full text-xs p-2 border-b border-solid font-mono font-semibold rounded-md family-mono"
+    class="relative flex flex-col bg-white dark:bg-black w-full text-xs p-2 border-b border-solid font-mono font-semibold rounded-md family-mono"
   >
-    {props.label}
+    <div>{props.label}</div>
     <hr class="my-2" />
     {@render props.children?.()}
   </div>
