@@ -21,10 +21,10 @@ internal static class WorkflowsModule
 
         services.AddScoped<WorkflowRepository>();
         services.AddScoped<WorkflowProcessingRepository>();
-
+        services.AddScoped<ProcessingContext>();
         services.RegisterRequestNodeKeyedProcessor();
+        services.AddScoped<WorkflowExecutor>();
 
-        services.AddSingleton<WorkflowExecutor>();
         services.AddHostedService<WorkflowRunnerBackgroundService>();
     }
 
