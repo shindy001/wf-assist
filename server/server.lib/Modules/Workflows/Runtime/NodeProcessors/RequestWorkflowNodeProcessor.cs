@@ -1,22 +1,27 @@
 using System.Net.Mime;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
+using OneOf;
+using OneOf.Types;
 using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Runtime.NodeProcessors;
 
-public sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
+internal sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
 {
     public const string HttpClientKey = "RequestProcessorHttpClient";
 
     private readonly HttpClient _httpClient;
+    private readonly ProcessingContext _processingContext;
 
-    public RequestWorkflowNodeProcessor([FromKeyedServices(HttpClientKey)] HttpClient httpClient)
+    public RequestWorkflowNodeProcessor([FromKeyedServices(HttpClientKey)] HttpClient httpClient,
+        ProcessingContext processingContext)
     {
         _httpClient = httpClient;
+        _processingContext = processingContext;
     }
 
-    public async Task<ProcessingResult> Process(WorkflowNode workflowNode)
+    public async Task<OneOf<Success, Error>> Process(WorkflowNode workflowNode)
     {
         if (workflowNode.Data is not RequestNodeData requestNodeData)
         {
@@ -28,21 +33,26 @@ public sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
 
         if (response.Content.Headers.ContentType?.MediaType != MediaTypeNames.Application.Json)
         {
-            return ProcessingResult.Error(
+            _processingContext.AddResult(workflowNode.Id, ProcessingResult.Error(
                 $"Unsupported Response content MediaType '{response.Content.Headers.ContentType?.MediaType}'. " +
                 $"Only '{MediaTypeNames.Application.Json}' is supported.",
-                workflowNode.Id);
+                workflowNode.Id));
+            return new Error();
         }
 
         var responseBody = await response.Content.ReadAsStringAsync();
-        if (response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
         {
-            var (resultValueType, resultData) = ParseResponse(responseBody.Trim());
-            return ProcessingResult.Success(workflowNode.Id, resultValueType, resultData);
+            _processingContext.AddResult(workflowNode.Id, ProcessingResult.Error(
+                $"Status code: {response.StatusCode}, reason: {response.ReasonPhrase}",
+                responseBody));
+            return new Error();
         }
 
-        return ProcessingResult.Error($"Status code: {response.StatusCode}, reason: {response.ReasonPhrase}",
-            responseBody);
+        var (resultValueType, resultData) = ParseResponse(responseBody.Trim());
+        _processingContext.AddResult(workflowNode.Id,
+            ProcessingResult.Success(workflowNode.Id, resultValueType, resultData));
+        return new Success();
     }
 
     private static (ProcessResultValueType resultValueType, object? resultData) ParseResponse(string responseBody)
@@ -89,6 +99,6 @@ public static class RequestNodeProcessorExtensions
     public static void RegisterRequestNodeKeyedProcessor(this IServiceCollection services)
     {
         services.AddHttpClient(RequestWorkflowNodeProcessor.HttpClientKey).AddAsKeyed(ServiceLifetime.Transient);
-        services.AddKeyedSingleton<IWorkflowNodeProcessor, RequestWorkflowNodeProcessor>(nameof(RequestNodeData));
+        services.AddKeyedScoped<IWorkflowNodeProcessor, RequestWorkflowNodeProcessor>(nameof(RequestNodeData));
     }
 }
