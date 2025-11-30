@@ -34,7 +34,13 @@ export type WorkflowNodeDataBase = {
   type: WorkflowNodeDataType;
 };
 
-export type RequestType = "Get" | "Post" | "Put" | "Patch" | "Delete";
+export enum RequestType {
+  Get = "Get",
+  Post = "Post",
+  Put = "Put",
+  Patch = "Patch",
+  Delete = "Delete",
+}
 
 export type RequestNodeData = {
   url: string;
@@ -71,7 +77,7 @@ function createRequestNodeData(
   return {
     type: WorkflowNodeDataType.Request,
     url: "",
-    requestType: "Get",
+    requestType: RequestType.Get,
     ...data,
   };
 }
