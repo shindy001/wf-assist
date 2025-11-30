@@ -58,17 +58,9 @@ export type WorkFlowIdentityDto = {
     name: string;
 };
 
-export type WorkflowNodeDataDto = ({
-    type?: 'ExtractProperty';
-} & WorkflowNodeDataDtoExtractPropertyNodeDataDto) | ({
+export type WorkflowNodeDataDto = {
     type?: 'Request';
-} & WorkflowNodeDataDtoRequestNodeDataDto);
-
-export type WorkflowNodeDataDtoExtractPropertyNodeDataDto = {
-    type?: 'ExtractProperty';
-    path: string;
-    targetId: string;
-};
+} & WorkflowNodeDataDtoRequestNodeDataDto;
 
 export type WorkflowNodeDataDtoRequestNodeDataDto = {
     type?: 'Request';

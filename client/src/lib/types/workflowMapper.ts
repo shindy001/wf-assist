@@ -3,12 +3,10 @@ import type {
   WorkflowDto,
   WorkflowEdgeDto,
   WorkflowNodeDataDto,
-  WorkflowNodeDataDtoExtractPropertyNodeDataDto,
   WorkflowNodeDataDtoRequestNodeDataDto,
   WorkflowNodeDto,
 } from "$api";
 import {
-  type ExtractPropertyNodeData,
   type RequestNodeData,
   type Workflow,
   type WorkflowData,
@@ -73,8 +71,6 @@ function toWorkflowNodeDto(data: WorkflowNode): WorkflowNodeDto {
 
 function toWorkflowNodeData(dto: WorkflowNodeDto): WorkflowNodeData {
   switch (dto.data.type) {
-    case "ExtractProperty":
-      return dto.data as ExtractPropertyNodeData;
     case "Request":
       return dto.data as RequestNodeData;
     default:
@@ -84,8 +80,6 @@ function toWorkflowNodeData(dto: WorkflowNodeDto): WorkflowNodeData {
 
 function toWorkflowNodeDataDto(node: WorkflowNode): WorkflowNodeDataDto {
   switch (node.data.type) {
-    case "ExtractProperty":
-      return node.data as WorkflowNodeDataDtoExtractPropertyNodeDataDto;
     case "Request":
       return node.data as WorkflowNodeDataDtoRequestNodeDataDto;
     default:
