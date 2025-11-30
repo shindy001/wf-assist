@@ -14,9 +14,9 @@ public class WorkflowTopologySorterTests
         // └───────┘       └───────┘       └───────┘
 
         // Arrange
-        var node1 = CreateExtractPropertyNode();
+        var node1 = CreateRequestNode();
         var node2 = CreateRequestNode();
-        var node3 = CreateExtractPropertyNode();
+        var node3 = CreateRequestNode();
 
         var node1ToNode2Edge = CreateEdge(node1.Id, node2.Id);
         var node2ToNode3Edge = CreateEdge(node2.Id, node3.Id);
@@ -48,9 +48,9 @@ public class WorkflowTopologySorterTests
         //     └───────────────────────────────┘
 
         // Arrange
-        var node1 = CreateExtractPropertyNode();
+        var node1 = CreateRequestNode();
         var node2 = CreateRequestNode();
-        var node3 = CreateExtractPropertyNode();
+        var node3 = CreateRequestNode();
 
         var node1ToNode2Edge = CreateEdge(node1.Id, node2.Id);
         var node1ToNode3Edge = CreateEdge(node1.Id, node3.Id);
@@ -89,11 +89,11 @@ public class WorkflowTopologySorterTests
         // └───────┘       └───────┘
 
         // Arrange
-        var node1 = CreateExtractPropertyNode();
+        var node1 = CreateRequestNode();
         var node2 = CreateRequestNode();
-        var node3 = CreateExtractPropertyNode();
+        var node3 = CreateRequestNode();
         var node4 = CreateRequestNode();
-        var node5 = CreateExtractPropertyNode();
+        var node5 = CreateRequestNode();
 
         var node1ToNode2Edge = CreateEdge(node1.Id, node2.Id);
         var node1ToNode3Edge = CreateEdge(node1.Id, node3.Id);
@@ -130,9 +130,9 @@ public class WorkflowTopologySorterTests
         // └───────┘       └───────┘       └───────┘
 
         // Arrange
-        var node1 = CreateExtractPropertyNode();
+        var node1 = CreateRequestNode();
         var node2 = CreateRequestNode();
-        var node3 = CreateExtractPropertyNode();
+        var node3 = CreateRequestNode();
 
         var data = new WorkflowData
         {
@@ -175,7 +175,7 @@ public class WorkflowTopologySorterTests
     {
         // Arrange
         var node1 = CreateRequestNode();
-        var node2 = CreateExtractPropertyNode();
+        var node2 = CreateRequestNode();
 
         var edge1 = CreateEdge(sourceId: Guid.NewGuid().ToString(), targetId: node2.Id);
 
@@ -220,9 +220,9 @@ public class WorkflowTopologySorterTests
         // └───────┘       └───────┘       └───────┘
 
         // Arrange
-        var node1 = CreateExtractPropertyNode();
+        var node1 = CreateRequestNode();
         var node2 = CreateRequestNode();
-        var node3 = CreateExtractPropertyNode();
+        var node3 = CreateRequestNode();
 
         var node1ToNode2Edge = CreateEdge(node1.Id, node2.Id);
         var node2ToNode3Edge = CreateEdge(node2.Id, node3.Id);
@@ -240,16 +240,6 @@ public class WorkflowTopologySorterTests
         // Assert
         act.ShouldThrow<InvalidOperationException>()
             .Message.ShouldBe("Cycle detected in workflow graph, cannot calculate execution order.");
-    }
-
-    private static WorkflowNode CreateExtractPropertyNode()
-    {
-        return new WorkflowNode
-        {
-            Id = Guid.NewGuid().ToString(),
-            Position = new Position(0, 0),
-            Data = new ExtractPropertyNodeData {Path = string.Empty, TargetId = string.Empty}
-        };
     }
 
     private static WorkflowNode CreateRequestNode()

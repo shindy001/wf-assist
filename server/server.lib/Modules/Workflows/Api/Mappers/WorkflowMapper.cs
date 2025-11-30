@@ -75,11 +75,6 @@ public static class WorkflowMapper
     {
         return workflowNodeData switch
         {
-            ExtractPropertyNodeData data => new ExtractPropertyNodeDataDto
-            {
-                Path = data.Path,
-                TargetId = data.TargetId
-            },
             RequestNodeData data => new RequestNodeDataDto
             {
                 RequestType = data.RequestType.ToDto(),
@@ -94,11 +89,6 @@ public static class WorkflowMapper
     {
         return dto switch
         {
-            ExtractPropertyNodeDataDto data => new ExtractPropertyNodeData
-            {
-                Path = data.Path,
-                TargetId = data.TargetId
-            },
             RequestNodeDataDto data => new RequestNodeData
             {
                 RequestType = data.RequestType.ToDomain(),

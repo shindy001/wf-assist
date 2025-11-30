@@ -31,15 +31,8 @@ public sealed record WorkflowNode
 }
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(ExtractPropertyNodeData), nameof(ExtractPropertyNodeData))]
 [JsonDerivedType(typeof(RequestNodeData), nameof(RequestNodeData))]
 public abstract record WorkflowNodeData;
-
-public sealed record ExtractPropertyNodeData : WorkflowNodeData
-{
-    public required string Path { get; init; }
-    public required string TargetId { get; init; }
-}
 
 public sealed record RequestNodeData : WorkflowNodeData
 {

@@ -387,37 +387,13 @@
         "type": "object",
         "anyOf": [
           {
-            "$ref": "#/components/schemas/WorkflowNodeDataDtoExtractPropertyNodeDataDto"
-          },
-          {
             "$ref": "#/components/schemas/WorkflowNodeDataDtoRequestNodeDataDto"
           }
         ],
         "discriminator": {
           "propertyName": "type",
           "mapping": {
-            "ExtractProperty": "#/components/schemas/WorkflowNodeDataDtoExtractPropertyNodeDataDto",
             "Request": "#/components/schemas/WorkflowNodeDataDtoRequestNodeDataDto"
-          }
-        }
-      },
-      "WorkflowNodeDataDtoExtractPropertyNodeDataDto": {
-        "required": [
-          "path",
-          "targetId"
-        ],
-        "properties": {
-          "type": {
-            "enum": [
-              "ExtractProperty"
-            ],
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
-          },
-          "targetId": {
-            "type": "string"
           }
         }
       },
