@@ -4,7 +4,7 @@ using Dapper;
 using WfAssist.AspNetCore.Core.Serialization;
 using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 
-namespace WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
+namespace WfAssist.AspNetCore.Modules.Workflows.Infrastructure.Serialization;
 
 public sealed class ProcessingResultDictionaryTypeHandler : SqlMapper.TypeHandler<Dictionary<string, ProcessingResult>>
 {

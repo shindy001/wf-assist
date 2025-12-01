@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WfAssist.AspNetCore.Core;
 using WfAssist.AspNetCore.Modules.Workflows.Features;
 using WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
+using WfAssist.AspNetCore.Modules.Workflows.Infrastructure.Serialization;
 using WfAssist.AspNetCore.Modules.Workflows.Runtime;
 using WfAssist.AspNetCore.Modules.Workflows.Runtime.NodeProcessors;
 
