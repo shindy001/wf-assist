@@ -5,7 +5,7 @@ public sealed record WorkflowRun
     public required Guid Id { get; init; }
     public required WorkflowRunStatus Status { get; init; }
     public required WorkflowSnapshot Snapshot { get; init; }
-    public List<ProcessingResult> ProcessingResults { get; init; } = [];
+    public Dictionary<string, ProcessingResult> ProcessingResults { get; init; } = [];
 }
 
 public enum WorkflowRunStatus

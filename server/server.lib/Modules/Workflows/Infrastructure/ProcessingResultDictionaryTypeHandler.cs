@@ -6,20 +6,20 @@ using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
 
-public sealed class ProcessingResultListTypeHandler : SqlMapper.TypeHandler<List<ProcessingResult>>
+public sealed class ProcessingResultDictionaryTypeHandler : SqlMapper.TypeHandler<Dictionary<string, ProcessingResult>>
 {
-    public override void SetValue(IDbDataParameter parameter, List<ProcessingResult>? value)
+    public override void SetValue(IDbDataParameter parameter, Dictionary<string, ProcessingResult>? value)
     {
         parameter.Value = value is null
             ? DBNull.Value
             : JsonSerializer.Serialize(value, DbJsonSerializerOptions.Value);
     }
 
-    public override List<ProcessingResult>? Parse(object value)
+    public override Dictionary<string, ProcessingResult>? Parse(object value)
     {
         if (value is string json)
         {
-            return JsonSerializer.Deserialize<List<ProcessingResult>>(json, DbJsonSerializerOptions.Value);
+            return JsonSerializer.Deserialize<Dictionary<string, ProcessingResult>>(json, DbJsonSerializerOptions.Value);
         }
 
         return null;

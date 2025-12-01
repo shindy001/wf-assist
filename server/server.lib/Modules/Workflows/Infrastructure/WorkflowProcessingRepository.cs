@@ -56,7 +56,7 @@ public sealed class WorkflowProcessingRepository
         return run.Id;
     }
 
-    public async Task CompleteRun(Guid runId, WorkflowRunStatus status, List<ProcessingResult> processingResults)
+    public async Task CompleteRun(Guid runId, WorkflowRunStatus status, Dictionary<string, ProcessingResult> processingResults)
     {
         const string sql = "UPDATE WorkflowRuns SET Status = @Status, ProcessingResults = @ProcessingResults WHERE Id = @Id";
 

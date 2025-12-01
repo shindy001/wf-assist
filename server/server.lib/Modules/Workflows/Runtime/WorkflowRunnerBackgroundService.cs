@@ -54,13 +54,13 @@ internal sealed class WorkflowRunnerBackgroundService : BackgroundService
                 if (processingContext.IsProcessingSuccessful())
                 {
                     await workflowProcessingRepository.CompleteRun(workflowRun.Id, WorkflowRunStatus.Completed,
-                        processingContext.ProcessingResults.Values.ToList());
+                        processingContext.ProcessingResults);
                     _logger.LogInformation("Workflow run {runId} completed.", workflowRun.Id);
                 }
                 else
                 {
                     await workflowProcessingRepository.CompleteRun(workflowRun.Id, WorkflowRunStatus.Failed,
-                        processingContext.ProcessingResults.Values.ToList());
+                        processingContext.ProcessingResults);
                     _logger.LogInformation("Workflow run {runId} completed with errors.", workflowRun.Id);
                 }
             }
@@ -75,7 +75,7 @@ internal sealed class WorkflowRunnerBackgroundService : BackgroundService
                     $"Unexpected error during workflow run: {e.Message}", string.Empty));
 
                 await workflowProcessingRepository.CompleteRun(workflowRun.Id, WorkflowRunStatus.Failed,
-                    processingContext.ProcessingResults.Values.ToList());
+                    processingContext.ProcessingResults);
             }
         }
     }
