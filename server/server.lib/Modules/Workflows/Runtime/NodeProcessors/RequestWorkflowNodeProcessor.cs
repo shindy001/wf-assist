@@ -62,9 +62,8 @@ internal sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
             return (ProcessResultValueType.None, null);
         }
 
-        return IsValidJsonDocument(responseBody, out var document)
-            ? (ProcessResultValueType.JsonDocument, document)
-            : (ProcessResultValueType.String, responseBody);
+        var document = JsonDocument.Parse(responseBody);
+        return (ProcessResultValueType.JsonDocument, document);
     }
 
     private static HttpRequestMessage GetRequestMessage(RequestType requestType, string url, string? body)
@@ -77,20 +76,6 @@ internal sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
             RequestType.Delete => new HttpRequestMessage(HttpMethod.Get, url) { Content = new StringContent(body ?? string.Empty) },
             _ => throw new InvalidOperationException($"Unsupported request type {requestType}")
         };
-    }
-
-    private static bool IsValidJsonDocument(string jsonString, out JsonDocument? document)
-    {
-        try
-        {
-            document = JsonDocument.Parse(jsonString);
-            return true;
-        }
-        catch (JsonException)
-        {
-            document = null;
-            return false;
-        }
     }
 }
 
