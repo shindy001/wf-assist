@@ -22,7 +22,9 @@ internal static class WorkflowsModule
 
         services.AddScoped<WorkflowRepository>();
         services.AddScoped<WorkflowProcessingRepository>();
+
         services.AddScoped<ProcessingContext>();
+        services.AddScoped<WorkflowNodeReferenceResolver>();
         services.RegisterRequestNodeKeyedProcessor();
         services.AddScoped<WorkflowExecutor>();
 
