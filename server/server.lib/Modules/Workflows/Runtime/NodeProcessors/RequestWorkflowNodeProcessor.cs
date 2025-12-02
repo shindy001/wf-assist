@@ -56,7 +56,7 @@ internal sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
 
         var (resultValueType, resultData) = ParseResponse(responseBody.Trim());
         _processingContext.AddResult(workflowNode.Id,
-            ProcessingResult.Success(workflowNode.Id, resultValueType, resultData));
+            ProcessingResult.Success(resultValueType, resultData));
         return new Success();
     }
 

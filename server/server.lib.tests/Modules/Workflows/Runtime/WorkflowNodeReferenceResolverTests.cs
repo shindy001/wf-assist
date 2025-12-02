@@ -14,7 +14,7 @@ public class WorkflowNodeReferenceResolverTests
         // Arrange
         var processingContext = new ProcessingContext();
         processingContext.AddResult("1",
-            ProcessingResult.Success("1", ProcessResultValueType.JsonDocument,
+            ProcessingResult.Success(ProcessResultValueType.JsonDocument,
                 JsonDocument.Parse("""{ "id": "1", "name": "test1" }""")));
 
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
@@ -33,7 +33,7 @@ public class WorkflowNodeReferenceResolverTests
         // Arrange
         var processingContext = new ProcessingContext();
         processingContext.AddResult("1",
-            ProcessingResult.Success("1", ProcessResultValueType.JsonDocument,
+            ProcessingResult.Success(ProcessResultValueType.JsonDocument,
                 JsonDocument.Parse("""{ "id": "1", "name": "test1" }""")));
 
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
@@ -52,7 +52,7 @@ public class WorkflowNodeReferenceResolverTests
         // Arrange
         var processingContext = new ProcessingContext();
         processingContext.AddResult("1",
-            ProcessingResult.Success("1", ProcessResultValueType.JsonDocument,
+            ProcessingResult.Success(ProcessResultValueType.JsonDocument,
                 JsonDocument.Parse("""{ "id": "1", "name": "test1" }""")));
 
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
@@ -71,7 +71,7 @@ public class WorkflowNodeReferenceResolverTests
         // Arrange
         var processingContext = new ProcessingContext();
         processingContext.AddResult("1",
-            ProcessingResult.Success("1", ProcessResultValueType.JsonDocument,
+            ProcessingResult.Success(ProcessResultValueType.JsonDocument,
                 JsonDocument.Parse("""{ "id": "1", "name": "test1" }""")));
 
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
@@ -90,7 +90,7 @@ public class WorkflowNodeReferenceResolverTests
         // Arrange
         var processingContext = new ProcessingContext();
         processingContext.AddResult("1",
-            ProcessingResult.Success("1", ProcessResultValueType.JsonDocument,
+            ProcessingResult.Success(ProcessResultValueType.JsonDocument,
                 JsonDocument.Parse("""{ "data": { "id": "5", "prop1": { "prop2": 5 } } }""")));
 
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
@@ -109,7 +109,7 @@ public class WorkflowNodeReferenceResolverTests
         // Arrange
         var processingContext = new ProcessingContext();
         processingContext.AddResult("1",
-            ProcessingResult.Success("1", ProcessResultValueType.JsonDocument,
+            ProcessingResult.Success(ProcessResultValueType.JsonDocument,
                 JsonDocument.Parse(
                     """{ "data": { "id": "5", "prop1": { "prop2": 5, "data": { "prop3" : "very deep" } } } }""")));
 
@@ -129,7 +129,7 @@ public class WorkflowNodeReferenceResolverTests
         // Arrange
         var processingContext = new ProcessingContext();
         processingContext.AddResult("1",
-            ProcessingResult.Success("1", ProcessResultValueType.JsonDocument,
+            ProcessingResult.Success(ProcessResultValueType.JsonDocument,
                 JsonDocument.Parse(
                     """{ "data": { "id": "5", "prop1": "test1" } }""")));
 
@@ -149,7 +149,7 @@ public class WorkflowNodeReferenceResolverTests
         // Arrange
         var processingContext = new ProcessingContext();
         processingContext.AddResult("1",
-            ProcessingResult.Success("1", ProcessResultValueType.JsonDocument,
+            ProcessingResult.Success(ProcessResultValueType.JsonDocument,
                 JsonDocument.Parse(
                     """{ "data": { "id": "5", "prop1": { "name": "value" } } }""")));
 
@@ -173,11 +173,11 @@ public class WorkflowNodeReferenceResolverTests
         // Arrange
         var processingContext = new ProcessingContext();
         processingContext.AddResult("1",
-            ProcessingResult.Success("1", ProcessResultValueType.JsonDocument,
+            ProcessingResult.Success(ProcessResultValueType.JsonDocument,
                 JsonDocument.Parse(
                     """{ "data": { "id": "5", "prop1": { "name": "node1_Test" } } }""")));
         processingContext.AddResult("2",
-            ProcessingResult.Success("2", ProcessResultValueType.JsonDocument,
+            ProcessingResult.Success(ProcessResultValueType.JsonDocument,
                 JsonDocument.Parse(
                     """{ "items": { "count": 42 } }""")));
 
@@ -211,7 +211,7 @@ public class WorkflowNodeReferenceResolverTests
         // Arrange
         var processingContext = new ProcessingContext();
         processingContext.AddResult("1",
-            ProcessingResult.Success("1", ProcessResultValueType.JsonDocument,
+            ProcessingResult.Success(ProcessResultValueType.JsonDocument,
                 JsonDocument.Parse("""{ "id": "1", "name": "test1" }""")));
 
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
@@ -229,7 +229,7 @@ public class WorkflowNodeReferenceResolverTests
         // Arrange
         var processingContext = new ProcessingContext();
         processingContext.AddResult("1",
-            ProcessingResult.Success("1", ProcessResultValueType.None));
+            ProcessingResult.Success(ProcessResultValueType.None));
 
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
@@ -263,7 +263,7 @@ public class WorkflowNodeReferenceResolverTests
         // Arrange
         var processingContext = new ProcessingContext();
         processingContext.AddResult("1",
-            ProcessingResult.Success("1", ProcessResultValueType.JsonDocument, "test"));
+            ProcessingResult.Success(ProcessResultValueType.JsonDocument, "test"));
 
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 

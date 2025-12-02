@@ -8,13 +8,16 @@ namespace WfAssist.AspNetCore.Modules.Workflows.Runtime.NodeProcessors;
 internal sealed class HeadersWorkflowNodeProcessor : IWorkflowNodeProcessor
 {
     private readonly HttpClient _httpClient;
+    private readonly ProcessingContext _processingContext;
     private readonly WorkflowNodeReferenceResolver _nodeReferenceResolver;
 
     public HeadersWorkflowNodeProcessor(
         [FromKeyedServices(WorkflowConstants.HttpClientServiceKey)] HttpClient httpClient,
+        ProcessingContext processingContext,
         WorkflowNodeReferenceResolver nodeReferenceResolver)
     {
         _httpClient = httpClient;
+        _processingContext = processingContext;
         _nodeReferenceResolver = nodeReferenceResolver;
     }
 
@@ -31,6 +34,9 @@ internal sealed class HeadersWorkflowNodeProcessor : IWorkflowNodeProcessor
             // TryAddWithoutValidation does not throw when invalid header like Content-Type(http response specific) is added to default headers
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation(header.Name, header.Value);
         }
+
+        _processingContext.AddResult(workflowNode.Id,
+            ProcessingResult.Success(ProcessResultValueType.None));
 
         return Task.FromResult<OneOf<Success, Error>>(new Success());
     }
