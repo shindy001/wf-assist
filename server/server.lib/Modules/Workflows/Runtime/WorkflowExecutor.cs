@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OneOf.Types;
@@ -32,13 +31,14 @@ internal sealed partial class WorkflowExecutor
 
         foreach (var node in executionOrder)
         {
-            var dataType = node.Data.GetType();
-            var processor = _serviceProvider.GetKeyedService<IWorkflowNodeProcessor>(nameof(RequestNodeData));
+            var processorServiceKey = GetProcessorServiceKey(node.Data);
+            var processor = _serviceProvider.GetKeyedService<IWorkflowNodeProcessor>(processorServiceKey);
 
             if (processor is null)
             {
                 LogExecutionInterrupted(snapshot.Name,
-                    $"Processor for node data type {dataType.Name} was not found, ensure that processor is registered.");
+                    $"Workflow Processor with service key {processorServiceKey} for node data type {node.Data.GetType().Name} " +
+                    $"was not found, ensure that processor is registered.");
                 return;
             }
 
@@ -52,6 +52,15 @@ internal sealed partial class WorkflowExecutor
         }
 
         LogExecutionCompleted(snapshot.Name);
+    }
+
+    private static string GetProcessorServiceKey(WorkflowNodeData nodeData)
+    {
+        return nodeData switch
+        {
+            RequestNodeData => WorkflowConstants.RequestNodeProcessorKey,
+            _ => throw new InvalidOperationException($"Unknown node data type {nodeData.GetType().Name}")
+        };
     }
 
     [LoggerMessage(LogLevel.Information, "Executing workflow '{workflowName}'.")]
