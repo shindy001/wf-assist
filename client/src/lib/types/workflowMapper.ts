@@ -3,11 +3,13 @@ import type {
   WorkflowDto,
   WorkflowEdgeDto,
   WorkflowNodeDataDto,
+  WorkflowNodeDataDtoHeadersNodeDataDto,
   WorkflowNodeDataDtoRequestNodeDataDto,
   WorkflowNodeDto,
 } from "$api";
 import {
   type RequestNodeData,
+  type HeadersNodeData,
   type Workflow,
   type WorkflowData,
   type WorkflowEdge,
@@ -73,6 +75,8 @@ function toWorkflowNodeData(dto: WorkflowNodeDto): WorkflowNodeData {
   switch (dto.data.type) {
     case "Request":
       return dto.data as RequestNodeData;
+    case "Headers":
+      return dto.data as HeadersNodeData;
     default:
       throw new Error(`Unknown WorkflowNodeDataDto type '${dto.data.type}'`);
   }
@@ -82,6 +86,8 @@ function toWorkflowNodeDataDto(node: WorkflowNode): WorkflowNodeDataDto {
   switch (node.data.type) {
     case "Request":
       return node.data as WorkflowNodeDataDtoRequestNodeDataDto;
+    case "Headers":
+      return node.data as WorkflowNodeDataDtoHeadersNodeDataDto;
     default:
       throw new Error(`Unknown WorkflowNodeData type '${node.data.type}'`);
   }

@@ -17,6 +17,11 @@ export type GetWorkflowByIdResponse = {
     item: WorkflowDto;
 };
 
+export type HttpHeaderDto = {
+    name: string;
+    value: string;
+};
+
 export type PositionDto = {
     x: number;
     y: number;
@@ -58,9 +63,16 @@ export type WorkFlowIdentityDto = {
     name: string;
 };
 
-export type WorkflowNodeDataDto = {
+export type WorkflowNodeDataDto = ({
     type?: 'Request';
-} & WorkflowNodeDataDtoRequestNodeDataDto;
+} & WorkflowNodeDataDtoRequestNodeDataDto) | ({
+    type?: 'Headers';
+} & WorkflowNodeDataDtoHeadersNodeDataDto);
+
+export type WorkflowNodeDataDtoHeadersNodeDataDto = {
+    type?: 'Headers';
+    headers?: Array<HttpHeaderDto>;
+};
 
 export type WorkflowNodeDataDtoRequestNodeDataDto = {
     type?: 'Request';

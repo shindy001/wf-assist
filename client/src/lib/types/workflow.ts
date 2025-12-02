@@ -28,7 +28,7 @@ export type SvelteFlowWorkflowNode = WorkflowNode &
 // SvelteFlow edge
 export type SvelteFlowWorkflowEdge = WorkflowEdge;
 
-export type WorkflowNodeData = RequestNodeData;
+export type WorkflowNodeData = RequestNodeData | HeadersNodeData;
 
 export type WorkflowNodeDataBase = {
   type: WorkflowNodeDataType;
@@ -48,6 +48,15 @@ export type RequestNodeData = {
   requestBody?: string;
 } & WorkflowNodeDataBase;
 
+export type HeadersNodeData = {
+  headers: Array<HttpHeader>;
+} & WorkflowNodeDataBase;
+
+export type HttpHeader = {
+  name: string;
+  value: string;
+};
+
 export type Position = {
   x: number;
   y: number;
@@ -57,12 +66,7 @@ export type Position = {
 export enum WorkflowNodeDataType {
   Default = "Default",
   Request = "Request",
-}
-
-export enum WorkflowDataState {
-  Uninitialized = "Uninitialized",
-  Initialized = "Initialized",
-  ReadyToChange = "ReadyToChange",
+  Headers = "Headers",
 }
 
 export type WorkflowIdentity = {
@@ -82,12 +86,24 @@ function createRequestNodeData(
   };
 }
 
+function createHeadersNodeData(
+  data?: Partial<Omit<HeadersNodeData, "type">>,
+): WorkflowNodeData {
+  return {
+    type: WorkflowNodeDataType.Headers,
+    headers: [],
+    ...data,
+  };
+}
+
 export function createDefaultWorkflowNodeData(
   nodeType: WorkflowNodeDataType,
 ): WorkflowNodeData {
   switch (nodeType) {
     case WorkflowNodeDataType.Request:
       return createRequestNodeData();
+    case WorkflowNodeDataType.Headers:
+      return createHeadersNodeData();
     default:
       throw new Error(`Unsupported WorkflowNode type '${nodeType}'`);
   }
