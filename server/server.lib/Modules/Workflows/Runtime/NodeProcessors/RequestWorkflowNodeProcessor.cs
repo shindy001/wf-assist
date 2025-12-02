@@ -28,7 +28,7 @@ internal sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
     {
         if (workflowNode.Data is not RequestNodeData requestNodeData)
         {
-            throw new ArgumentException($"Expected node data type {nameof(RequestNodeData)} but got {workflowNode.Data.GetType()}");
+            throw new ArgumentException($"Expected node data type {nameof(RequestNodeData)} but got {workflowNode.Data.GetType().Name}");
         }
 
         var data = ResolveNodeReferences(requestNodeData);
