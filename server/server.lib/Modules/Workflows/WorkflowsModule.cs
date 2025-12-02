@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using WfAssist.AspNetCore.Core;
+using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 using WfAssist.AspNetCore.Modules.Workflows.Features;
 using WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
 using WfAssist.AspNetCore.Modules.Workflows.Infrastructure.Serialization;
@@ -25,7 +26,8 @@ internal static class WorkflowsModule
 
         services.AddScoped<ProcessingContext>();
         services.AddScoped<WorkflowNodeReferenceResolver>();
-        services.RegisterRequestNodeKeyedProcessor();
+        services.AddHttpClient(WorkflowConstants.HttpClientServiceKey).AddAsKeyed();
+        services.AddKeyedScoped<IWorkflowNodeProcessor, RequestWorkflowNodeProcessor>(WorkflowConstants.RequestNodeProcessorKey);
         services.AddScoped<WorkflowExecutor>();
 
         services.AddHostedService<WorkflowRunnerBackgroundService>();

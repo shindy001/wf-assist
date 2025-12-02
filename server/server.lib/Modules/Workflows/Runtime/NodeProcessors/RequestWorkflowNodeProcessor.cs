@@ -2,7 +2,6 @@ using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Net.Http.Headers;
 using OneOf;
 using OneOf.Types;
 using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
@@ -11,13 +10,12 @@ namespace WfAssist.AspNetCore.Modules.Workflows.Runtime.NodeProcessors;
 
 internal sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
 {
-    public const string HttpClientKey = "RequestProcessorHttpClient";
-
     private readonly HttpClient _httpClient;
     private readonly ProcessingContext _processingContext;
     private readonly WorkflowNodeReferenceResolver _nodeReferenceResolver;
 
-    public RequestWorkflowNodeProcessor([FromKeyedServices(HttpClientKey)] HttpClient httpClient,
+    public RequestWorkflowNodeProcessor(
+        [FromKeyedServices(WorkflowConstants.HttpClientServiceKey)] HttpClient httpClient,
         ProcessingContext processingContext,
         WorkflowNodeReferenceResolver nodeReferenceResolver)
     {
@@ -93,14 +91,5 @@ internal sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
             RequestType.Delete => new HttpRequestMessage(HttpMethod.Delete, url) { Content = content },
             _ => throw new InvalidOperationException($"Unsupported request type {requestType}")
         };
-    }
-}
-
-public static class RequestNodeProcessorExtensions
-{
-    public static void RegisterRequestNodeKeyedProcessor(this IServiceCollection services)
-    {
-        services.AddHttpClient(RequestWorkflowNodeProcessor.HttpClientKey).AddAsKeyed(ServiceLifetime.Transient);
-        services.AddKeyedScoped<IWorkflowNodeProcessor, RequestWorkflowNodeProcessor>(nameof(RequestNodeData));
     }
 }
