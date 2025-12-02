@@ -81,6 +81,10 @@ public static class WorkflowMapper
                 Url = data.Url,
                 RequestBody = data.RequestBody
             },
+            HeadersNodeData data => new HeadersNodeDataDto
+            {
+                Headers = data.Headers.Select(x => new HttpHeaderDto(x.Name, x.Value)).ToList()
+            },
             _ => throw new InvalidOperationException($"Unknown WorkflowNodeData type {workflowNodeData.GetType().Name}")
         };
     }
@@ -94,6 +98,10 @@ public static class WorkflowMapper
                 RequestType = data.RequestType.ToDomain(),
                 Url = data.Url,
                 RequestBody = data.RequestBody
+            },
+            HeadersNodeDataDto data => new HeadersNodeData
+            {
+                Headers = data.Headers.Select(x => new HttpHeader(x.Name, x.Value)).ToList()
             },
             _ => throw new InvalidOperationException($"Unknown WorkflowNodeDataDto type {dto.GetType().Name}")
         };

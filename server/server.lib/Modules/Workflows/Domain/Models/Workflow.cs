@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text.Json.Serialization;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
@@ -31,6 +32,7 @@ public sealed record WorkflowNode
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
 [JsonDerivedType(typeof(RequestNodeData), nameof(RequestNodeData))]
+[JsonDerivedType(typeof(HeadersNodeData), nameof(HeadersNodeData))]
 public abstract record WorkflowNodeData;
 
 public sealed record RequestNodeData : WorkflowNodeData
@@ -38,4 +40,9 @@ public sealed record RequestNodeData : WorkflowNodeData
     public required RequestType RequestType { get; init; }
     public required string Url { get; init; }
     public string? RequestBody { get; init; }
+}
+
+public sealed record HeadersNodeData : WorkflowNodeData
+{
+    public List<HttpHeader> Headers { get; init; } = [];
 }

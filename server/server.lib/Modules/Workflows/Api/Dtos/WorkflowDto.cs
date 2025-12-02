@@ -31,11 +31,13 @@ public sealed record WorkflowNodeDto
 
 public enum WorkflowNodeDataTypeDto
 {
-    Request
+    Request,
+    Headers
 }
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
 [JsonDerivedType(typeof(RequestNodeDataDto), nameof(WorkflowNodeDataTypeDto.Request))]
+[JsonDerivedType(typeof(HeadersNodeDataDto), nameof(WorkflowNodeDataTypeDto.Headers))]
 public abstract record WorkflowNodeDataDto;
 
 public sealed record RequestNodeDataDto : WorkflowNodeDataDto
@@ -43,4 +45,9 @@ public sealed record RequestNodeDataDto : WorkflowNodeDataDto
     public required RequestTypeDto RequestType { get; init; }
     public required string Url { get; init; }
     public string? RequestBody { get; init; }
+}
+
+public sealed record HeadersNodeDataDto : WorkflowNodeDataDto
+{
+    public List<HttpHeaderDto> Headers { get; init; } = [];
 }
