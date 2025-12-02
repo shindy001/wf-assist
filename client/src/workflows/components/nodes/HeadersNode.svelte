@@ -58,13 +58,13 @@
         <div class="flex gap-1">
           <input
             name="key"
-            class="nodrag w-20 grow"
+            class="nodrag w-20 grow-4"
             placeholder="Name"
             bind:value={header.name}
           />
           <input
             name="value"
-            class="nodrag w-20 grow"
+            class="nodrag w-20 grow-8"
             placeholder="Value"
             bind:value={header.value}
           />
