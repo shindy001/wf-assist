@@ -59,6 +59,7 @@ internal sealed partial class WorkflowExecutor
         return nodeData switch
         {
             RequestNodeData => WorkflowConstants.RequestNodeProcessorKey,
+            HeadersNodeData => WorkflowConstants.HeadersNodeProcessorKey,
             _ => throw new InvalidOperationException($"Unknown node data type {nodeData.GetType().Name}")
         };
     }
