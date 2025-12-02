@@ -28,6 +28,7 @@ internal static class WorkflowsModule
         services.AddScoped<WorkflowNodeReferenceResolver>();
         services.AddHttpClient(WorkflowConstants.HttpClientServiceKey).AddAsKeyed();
         services.AddKeyedScoped<IWorkflowNodeProcessor, RequestWorkflowNodeProcessor>(WorkflowConstants.RequestNodeProcessorKey);
+        services.AddKeyedScoped<IWorkflowNodeProcessor, HeadersWorkflowNodeProcessor>(WorkflowConstants.HeadersNodeProcessorKey);
         services.AddScoped<WorkflowExecutor>();
 
         services.AddHostedService<WorkflowRunnerBackgroundService>();
