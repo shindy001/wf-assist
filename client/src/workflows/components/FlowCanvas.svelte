@@ -8,6 +8,7 @@
   } from "@xyflow/svelte";
   import "@xyflow/svelte/dist/style.css";
   import RequestNode from "./nodes/RequestNode.svelte";
+  import HeadersNode from "./nodes/HeadersNode.svelte";
   import {
     createDefaultWorkflowNodeData,
     type SvelteFlowWorkflowNode,
@@ -19,6 +20,7 @@
   const workflowsAppState = useWorkflowsAppState();
   const additionalNodeTypes = {
     [WorkflowNodeDataType.Request]: RequestNode,
+    [WorkflowNodeDataType.Headers]: HeadersNode,
   };
 
   const { screenToFlowPosition } = $derived(useSvelteFlow());
