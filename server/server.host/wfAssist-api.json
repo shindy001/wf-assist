@@ -248,6 +248,21 @@
           }
         }
       },
+      "HttpHeaderDto": {
+        "required": [
+          "name",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
       "PositionDto": {
         "required": [
           "x",
@@ -388,12 +403,32 @@
         "anyOf": [
           {
             "$ref": "#/components/schemas/WorkflowNodeDataDtoRequestNodeDataDto"
+          },
+          {
+            "$ref": "#/components/schemas/WorkflowNodeDataDtoHeadersNodeDataDto"
           }
         ],
         "discriminator": {
           "propertyName": "type",
           "mapping": {
-            "Request": "#/components/schemas/WorkflowNodeDataDtoRequestNodeDataDto"
+            "Request": "#/components/schemas/WorkflowNodeDataDtoRequestNodeDataDto",
+            "Headers": "#/components/schemas/WorkflowNodeDataDtoHeadersNodeDataDto"
+          }
+        }
+      },
+      "WorkflowNodeDataDtoHeadersNodeDataDto": {
+        "properties": {
+          "type": {
+            "enum": [
+              "Headers"
+            ],
+            "type": "string"
+          },
+          "headers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HttpHeaderDto"
+            }
           }
         }
       },
