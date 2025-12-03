@@ -34,7 +34,7 @@
 </script>
 
 <TurboNode
-  label="Request"
+  label={`Request ${id}`}
   resizable
   minResizableWidth={200}
   minResizableHeight={300}
