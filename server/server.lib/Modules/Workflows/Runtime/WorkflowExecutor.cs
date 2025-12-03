@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using OneOf.Types;
 using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 using WfAssist.AspNetCore.Modules.Workflows.Runtime.NodeProcessors;
 
@@ -9,12 +8,15 @@ namespace WfAssist.AspNetCore.Modules.Workflows.Runtime;
 internal sealed partial class WorkflowExecutor
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly ProcessingContext _processingContext;
     private readonly ILogger<WorkflowExecutor> _logger;
 
     public WorkflowExecutor(IServiceProvider serviceProvider,
+        ProcessingContext processingContext,
         ILogger<WorkflowExecutor> logger)
     {
         _serviceProvider = serviceProvider;
+        _processingContext = processingContext;
         _logger = logger;
     }
 
@@ -43,8 +45,9 @@ internal sealed partial class WorkflowExecutor
             }
 
             var result = await processor.Process(node);
+            _processingContext.AddResult(node.Id, result);
 
-            if (result.Value is Error)
+            if (!result.IsSuccessful)
             {
                 LogExecutionInterrupted(snapshot.Name, $"Error during processing of node {node.Id}.");
                 return;

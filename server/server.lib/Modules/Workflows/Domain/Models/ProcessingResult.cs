@@ -2,18 +2,18 @@ namespace WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 
 public record ProcessingResult
 {
-    public bool Successful { get; init; }
+    public bool IsSuccessful { get; init; }
     public ProcessResultValueType ValueType { get; init; }
     public object? Data { get; init; }
     public string? ErrorMessage { get; init; }
 
     private ProcessingResult(
-        bool Successful,
+        bool IsSuccessful,
         ProcessResultValueType ValueType,
         object? Data = null,
         string? ErrorMessage = null)
     {
-        this.Successful = Successful;
+        this.IsSuccessful = IsSuccessful;
         this.ValueType = ValueType;
         this.Data = Data;
         this.ErrorMessage = ErrorMessage;
@@ -22,12 +22,12 @@ public record ProcessingResult
     public static ProcessingResult Success(ProcessResultValueType valueType, object? data = null)
     {
         VerifyValueType(valueType, data);
-        return new ProcessingResult(Successful: true, valueType, data);
+        return new ProcessingResult(IsSuccessful: true, valueType, data);
     }
 
     public static ProcessingResult Error(string message, object? data = null)
     {
-        return new ProcessingResult(Successful: false, ProcessResultValueType.Error, data, message);
+        return new ProcessingResult(IsSuccessful: false, ProcessResultValueType.Error, data, message);
     }
 
     private static void VerifyValueType(ProcessResultValueType valueType, object? data)

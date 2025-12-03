@@ -1,6 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using OneOf;
-using OneOf.Types;
 using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Runtime.NodeProcessors;
@@ -8,20 +6,17 @@ namespace WfAssist.AspNetCore.Modules.Workflows.Runtime.NodeProcessors;
 internal sealed class HeadersWorkflowNodeProcessor : IWorkflowNodeProcessor
 {
     private readonly HttpClient _httpClient;
-    private readonly ProcessingContext _processingContext;
     private readonly WorkflowNodeReferenceResolver _nodeReferenceResolver;
 
     public HeadersWorkflowNodeProcessor(
         [FromKeyedServices(WorkflowConstants.HttpClientServiceKey)] HttpClient httpClient,
-        ProcessingContext processingContext,
         WorkflowNodeReferenceResolver nodeReferenceResolver)
     {
         _httpClient = httpClient;
-        _processingContext = processingContext;
         _nodeReferenceResolver = nodeReferenceResolver;
     }
 
-    public Task<OneOf<Success, Error>> Process(WorkflowNode workflowNode)
+    public Task<ProcessingResult> Process(WorkflowNode workflowNode)
     {
         if (workflowNode.Data is not HeadersNodeData headersNodeData)
         {
@@ -35,10 +30,7 @@ internal sealed class HeadersWorkflowNodeProcessor : IWorkflowNodeProcessor
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation(header.Name, header.Value);
         }
 
-        _processingContext.AddResult(workflowNode.Id,
-            ProcessingResult.Success(ProcessResultValueType.None));
-
-        return Task.FromResult<OneOf<Success, Error>>(new Success());
+        return Task.FromResult(ProcessingResult.Success(ProcessResultValueType.None));
     }
 
     private HeadersNodeData ResolveNodeReferences(HeadersNodeData headersNodeData)

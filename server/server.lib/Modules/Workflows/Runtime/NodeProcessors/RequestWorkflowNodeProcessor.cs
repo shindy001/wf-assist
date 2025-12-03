@@ -2,8 +2,6 @@ using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
-using OneOf;
-using OneOf.Types;
 using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Runtime.NodeProcessors;
@@ -11,20 +9,17 @@ namespace WfAssist.AspNetCore.Modules.Workflows.Runtime.NodeProcessors;
 internal sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
 {
     private readonly HttpClient _httpClient;
-    private readonly ProcessingContext _processingContext;
     private readonly WorkflowNodeReferenceResolver _nodeReferenceResolver;
 
     public RequestWorkflowNodeProcessor(
         [FromKeyedServices(WorkflowConstants.HttpClientServiceKey)] HttpClient httpClient,
-        ProcessingContext processingContext,
         WorkflowNodeReferenceResolver nodeReferenceResolver)
     {
         _httpClient = httpClient;
-        _processingContext = processingContext;
         _nodeReferenceResolver = nodeReferenceResolver;
     }
 
-    public async Task<OneOf<Success, Error>> Process(WorkflowNode workflowNode)
+    public async Task<ProcessingResult> Process(WorkflowNode workflowNode)
     {
         if (workflowNode.Data is not RequestNodeData requestNodeData)
         {
@@ -39,25 +34,22 @@ internal sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
 
         if (!response.IsSuccessStatusCode)
         {
-            _processingContext.AddResult(workflowNode.Id, ProcessingResult.Error(
+            return ProcessingResult.Error(
                 $"Status code: {response.StatusCode}, reason: {response.ReasonPhrase}",
-                responseBody));
-            return new Error();
+                responseBody);
         }
 
         if (response.Content.Headers.ContentType?.MediaType != MediaTypeNames.Application.Json)
         {
-            _processingContext.AddResult(workflowNode.Id, ProcessingResult.Error(
+            return ProcessingResult.Error(
                 $"Unsupported Response content MediaType '{response.Content.Headers.ContentType?.MediaType}'. " +
                 $"Only '{MediaTypeNames.Application.Json}' is supported.",
-                workflowNode.Id));
-            return new Error();
+                workflowNode.Id);
         }
 
         var (resultValueType, resultData) = ParseResponse(responseBody.Trim());
-        _processingContext.AddResult(workflowNode.Id,
-            ProcessingResult.Success(resultValueType, resultData));
-        return new Success();
+
+        return ProcessingResult.Success(resultValueType, resultData);
     }
 
     private RequestNodeData ResolveNodeReferences(RequestNodeData requestNodeData)

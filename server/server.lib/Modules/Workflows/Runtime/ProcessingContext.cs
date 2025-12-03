@@ -16,5 +16,5 @@ internal sealed class ProcessingContext
         ProcessingResults.Add(nodeId, result);
     }
 
-    public bool IsProcessingSuccessful() => ProcessingResults.Values.All(x => x.Successful);
+    public bool IsProcessingSuccessful() => ProcessingResults.Values.All(x => x.IsSuccessful);
 }
