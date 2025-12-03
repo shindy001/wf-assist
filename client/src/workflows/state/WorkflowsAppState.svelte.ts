@@ -8,6 +8,7 @@ import {
 import { createGetWorkflowIdentitiesQuery } from "../actions/getWorkflowIdentitiesQuery";
 import { createGetWorkflowQuery } from "../actions/getWorkflowQuery";
 import { createSaveWorkflowCommand } from "../actions/saveWorkflowCommand";
+import { getNextId } from "./idGenerator";
 
 class WorkflowsAppState {
   #workflowIdentities = $state<WorkflowIdentity[] | undefined>();
@@ -40,7 +41,8 @@ class WorkflowsAppState {
   }
 
   addFlowCanvasNode(node: SvelteFlowWorkflowNode) {
-    this.flowCanvasNodes = [...this.flowCanvasNodes, node];
+    const nextId = getNextId(this.flowCanvasNodes.at(-1)?.id ?? "000");
+    this.flowCanvasNodes = [...this.flowCanvasNodes, { ...node, id: nextId }];
   }
 
   addFlowCanvasEdge(edge: SvelteFlowWorkflowEdge) {

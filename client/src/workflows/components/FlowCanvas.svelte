@@ -50,7 +50,7 @@
     );
 
     const newNode: SvelteFlowWorkflowNode = {
-      id: `${Date.now()}`,
+      id: "",
       position,
       type: data.type,
       data: data,
