@@ -104,6 +104,26 @@ public class WorkflowNodeReferenceResolverTests
     }
 
     [Fact]
+    public void Resolve_should_succeed_for_deep_selectors_with_arrays()
+    {
+        // Arrange
+        var processingContext = new ProcessingContext();
+        processingContext.AddResult("1",
+            ProcessingResult.Success(ProcessResultValueType.JsonDocument,
+                JsonDocument.Parse(
+                    """{ "data": { "id": "5", "items": [{ "id": "1", "name": "item1"}, { "id": "2", "name": "item2"}] } }""")));
+
+        var resolver = new WorkflowNodeReferenceResolver(processingContext);
+
+        // Act
+        var result = resolver.Resolve("Test resolve #{node:1.data.items[0].name} #{node:1.data.items[1].name}");
+
+        // Assert
+        result.ShouldNotBeNullOrWhiteSpace();
+        result.ShouldBe("Test resolve item1 item2");
+    }
+
+    [Fact]
     public void Resolve_should_succeed_for_multiple_selectors()
     {
         // Arrange
@@ -141,6 +161,26 @@ public class WorkflowNodeReferenceResolverTests
         // Assert
         result.ShouldNotBeNullOrWhiteSpace();
         JsonShouldMatch(expected: """{ "id": "1", "data": { "id": "5", "prop1": "test1" } }""", actual: result);
+    }
+
+    [Fact]
+    public void Resolve_should_succeed_for_array_selectors()
+    {
+        // Arrange
+        var processingContext = new ProcessingContext();
+        processingContext.AddResult("1",
+            ProcessingResult.Success(ProcessResultValueType.JsonDocument,
+                JsonDocument.Parse(
+                    """{ "data": [{"id": "1", "prop1": "test1" }, {"id": "2", "prop1": "test2" }] }""")));
+
+        var resolver = new WorkflowNodeReferenceResolver(processingContext);
+
+        // Act
+        var result = resolver.Resolve("""{"id": "1", "data": #{node:1.data} }""");
+
+        // Assert
+        result.ShouldNotBeNullOrWhiteSpace();
+        JsonShouldMatch(expected: """{ "id": "1", "data": [{"id": "1", "prop1": "test1" }, { "id": "2", "prop1": "test2" }]}""", actual: result);
     }
 
     [Fact]
