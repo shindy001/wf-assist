@@ -34,7 +34,8 @@
 </script>
 
 <TurboNode
-  label={`Request ${id}`}
+  label="Request"
+  {id}
   resizable
   minResizableWidth={200}
   minResizableHeight={300}
@@ -73,7 +74,7 @@
         <legend class="justify-between">Body</legend>
         <textarea
           name="request-payload"
-          class="nodrag resize-none w-full h-[calc(100%-20px)]"
+          class="nodrag resize-none size-full"
           placeholder="Contents (JSON, XML, etc.)..."
           bind:value={requestBodyInputText}
           onchange={() =>
