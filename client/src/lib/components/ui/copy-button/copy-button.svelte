@@ -11,6 +11,7 @@
     text: string;
     tooltip?: string;
     icon?: Snippet<[]>;
+    iconPosittion?: "left" | "right";
     animationDuration?: number;
   };
 </script>
@@ -22,6 +23,7 @@
     ref = $bindable(null),
     text,
     icon,
+    iconPosittion = "right",
     animationDuration = 500,
     tooltip = "",
     variant = "ghost",
@@ -61,6 +63,9 @@
   title={tooltip}
   onclick={async () => await copy(text)}
 >
+  {#if iconPosittion === "right"}
+    {@render children?.()}
+  {/if}
   {#if status === "success"}
     <div in:scale={{ duration: animationDuration, start: 0.85 }}>
       <CheckIcon tabindex={-1} class="text-green-700" />
@@ -81,5 +86,7 @@
       <span class="sr-only">Copy</span>
     </div>
   {/if}
-  {@render children?.()}
+  {#if iconPosittion === "left"}
+    {@render children?.()}
+  {/if}
 </Button>
