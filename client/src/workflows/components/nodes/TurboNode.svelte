@@ -3,9 +3,12 @@
   import type { Snippet } from "svelte";
   import type { ClassValue } from "svelte/elements";
   import { Icon } from "$lib/components/ui/icons";
+  import { CopyButton } from "$lib/components/ui/copy-button";
+  import * as Tooltip from "$lib/components/ui/tooltip";
 
   const props: {
     label: string;
+    id?: string;
     resizable?: boolean;
     isActive?: boolean;
     minResizableHeight?: number;
@@ -25,9 +28,36 @@
   <div
     class="relative flex flex-col bg-white dark:bg-black w-full text-xs p-2 border-b border-solid font-mono font-semibold rounded-md family-mono"
   >
-    <div>{props.label}</div>
+    <div class="flex justify-between items-center">
+      <div>{props.label}</div>
+    </div>
     <hr class="my-2" />
     {@render props.children?.()}
+
+    {#if props.id}
+      <hr class="my-2" />
+      <div class="flex gap-1 text-gray-500">
+        <Tooltip.Provider>
+          <Tooltip.Root>
+            <Tooltip.Trigger>
+              <CopyButton
+                text={`#{node:${props.id}}`}
+                class="nodrag p-1 size-fit"
+                variant="outline">{`$ref: ${props.id}`}</CopyButton
+              >
+            </Tooltip.Trigger>
+            <Tooltip.Content>
+              <p>
+                copy node reference
+                <span class="p-1 bg-amber-800/40 rounded-md">
+                  {`#{node:${props.id}}`}
+                </span>
+              </p>
+            </Tooltip.Content>
+          </Tooltip.Root>
+        </Tooltip.Provider>
+      </div>
+    {/if}
   </div>
 
   {#if props.resizable}
