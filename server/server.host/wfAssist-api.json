@@ -172,6 +172,25 @@
         }
       }
     },
+    "/wfAssist/workflows/events": {
+      "get": {
+        "tags": [
+          "WfAssist_Workflows"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/SseItemOfNotification"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/wfAssist/workflows/{id}/queueRun": {
       "post": {
         "tags": [
@@ -223,6 +242,12 @@
           }
         }
       },
+      "ExecutionStatus": {
+        "enum": [
+          "Completed",
+          "Failed"
+        ]
+      },
       "GetIdentitiesResponse": {
         "required": [
           "identities"
@@ -260,6 +285,75 @@
           },
           "value": {
             "type": "string"
+          }
+        }
+      },
+      "Notification": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/NotificationExecutionStarted"
+          },
+          {
+            "$ref": "#/components/schemas/NotificationExecutionEnded"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "ExecutionStarted": "#/components/schemas/NotificationExecutionStarted",
+            "ExecutionEnded": "#/components/schemas/NotificationExecutionEnded"
+          }
+        }
+      },
+      "NotificationExecutionEnded": {
+        "required": [
+          "executionId",
+          "workflowId",
+          "status"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "ExecutionEnded"
+            ],
+            "type": "string"
+          },
+          "executionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "workflowId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ExecutionStatus"
+          }
+        }
+      },
+      "NotificationExecutionStarted": {
+        "required": [
+          "executionId",
+          "workflowId"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "ExecutionStarted"
+            ],
+            "type": "string"
+          },
+          "executionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "workflowId": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
@@ -309,6 +403,33 @@
           "runId": {
             "type": "string",
             "format": "uuid"
+          }
+        }
+      },
+      "SseItemOfNotification": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Notification"
+          },
+          "eventType": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "eventId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "reconnectionInterval": {
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
