@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
+using WfAssist.AspNetCore.Modules.Workflows.Domain.Models.Notifications;
 using WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Runtime;
@@ -39,6 +40,7 @@ internal sealed class WorkflowRunnerBackgroundService : BackgroundService
         var workflowProcessingRepository = scope.ServiceProvider.GetRequiredService<WorkflowProcessingRepository>();
         var workflowExecutor = scope.ServiceProvider.GetRequiredService<WorkflowExecutor>();
         var processingContext = scope.ServiceProvider.GetRequiredService<ProcessingContext>();
+        var notificationDispatcher = scope.ServiceProvider.GetRequiredService<NotificationDispatcher>();
         WorkflowRun? workflowRun = null;
 
         try
@@ -48,20 +50,35 @@ internal sealed class WorkflowRunnerBackgroundService : BackgroundService
             if (workflowRun is not null)
             {
                 await workflowProcessingRepository.UpdateRunStatus(workflowRun.Id, WorkflowRunStatus.Running);
+
                 _logger.LogInformation("Starting workflow run {runId}.", workflowRun.Id);
+                await notificationDispatcher.Dispatch(new ExecutionStarted
+                    {ExecutionId = workflowRun.Id, WorkflowId = workflowRun.Snapshot.Id});
 
                 await workflowExecutor.Execute(workflowRun.Snapshot);
                 if (processingContext.IsProcessingSuccessful())
                 {
                     await workflowProcessingRepository.CompleteRun(workflowRun.Id, WorkflowRunStatus.Completed,
                         processingContext.ProcessingResults);
+
                     _logger.LogInformation("Workflow run {runId} completed.", workflowRun.Id);
+                    await notificationDispatcher.Dispatch(new ExecutionEnded
+                    {
+                        ExecutionId = workflowRun.Id, WorkflowId = workflowRun.Snapshot.Id,
+                        Status = ExecutionStatus.Completed
+                    });
                 }
                 else
                 {
                     await workflowProcessingRepository.CompleteRun(workflowRun.Id, WorkflowRunStatus.Failed,
                         processingContext.ProcessingResults);
+
                     _logger.LogInformation("Workflow run {runId} completed with errors.", workflowRun.Id);
+                    await notificationDispatcher.Dispatch(new ExecutionEnded
+                    {
+                        ExecutionId = workflowRun.Id, WorkflowId = workflowRun.Snapshot.Id,
+                        Status = ExecutionStatus.Failed
+                    });
                 }
             }
         }
@@ -76,6 +93,12 @@ internal sealed class WorkflowRunnerBackgroundService : BackgroundService
 
                 await workflowProcessingRepository.CompleteRun(workflowRun.Id, WorkflowRunStatus.Failed,
                     processingContext.ProcessingResults);
+
+                await notificationDispatcher.Dispatch(new ExecutionEnded
+                {
+                    ExecutionId = workflowRun.Id, WorkflowId = workflowRun.Snapshot.Id,
+                    Status = ExecutionStatus.Failed
+                });
             }
         }
     }
