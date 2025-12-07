@@ -31,6 +31,7 @@ internal static class WorkflowsModule
         services.AddKeyedScoped<IWorkflowNodeProcessor, HeadersWorkflowNodeProcessor>(WorkflowConstants.HeadersNodeProcessorKey);
         services.AddScoped<WorkflowExecutor>();
 
+        services.AddSingleton<NotificationDispatcher>();
         services.AddHostedService<WorkflowRunnerBackgroundService>();
     }
 
