@@ -1,0 +1,43 @@
+using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using WfAssist.AspNetCore.Modules.Workflows.Domain.Models.Notifications;
+using WfAssist.AspNetCore.Modules.Workflows.Infrastructure;
+
+namespace WfAssist.AspNetCore.Modules.Workflows.Features;
+
+public static class Subscribe
+{
+    [ProducesResponseType(typeof(IAsyncEnumerable<ExecutionStarted>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IAsyncEnumerable<ExecutionEnded>), StatusCodes.Status200OK)]
+    public static void MapSubscribeEndpoint(this IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapGet("/events",
+            (NotificationDispatcher notificationDispatcher, CancellationToken cancellationToken) =>
+                TypedResults.ServerSentEvents(GetNotifications(notificationDispatcher, cancellationToken)));
+    }
+
+    private static async IAsyncEnumerable<Notification> GetNotifications(NotificationDispatcher notificationDispatcher,
+        [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        var clientId = Guid.NewGuid();
+        var reader = notificationDispatcher.Register(clientId);
+
+        try
+        {
+            while (await reader.WaitToReadAsync(cancellationToken))
+            {
+                while (reader.TryRead(out var notification))
+                {
+                    yield return notification;
+                }
+            }
+        }
+        finally
+        {
+            notificationDispatcher.Unregister(clientId);
+        }
+    }
+}

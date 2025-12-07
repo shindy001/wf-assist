@@ -55,6 +55,7 @@ internal static class WorkflowsModule
         workflowsGroup.MapUpdateDataEndpoint();
         workflowsGroup.MapDeleteEndpoint();
 
+        workflowsGroup.MapSubscribeEndpoint();
         workflowsGroup.MapQueueRunEndpoint();
     }
 }
