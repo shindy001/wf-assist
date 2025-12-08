@@ -9,6 +9,8 @@ export type CreateWorkflowRequest = {
     data: WorkflowDataDto;
 };
 
+export type ExecutionStatus = 'Completed' | 'Failed';
+
 export type GetIdentitiesResponse = {
     identities: Array<WorkFlowIdentityDto>;
 };
@@ -20,6 +22,25 @@ export type GetWorkflowByIdResponse = {
 export type HttpHeaderDto = {
     name: string;
     value: string;
+};
+
+export type Notification = ({
+    type?: 'ExecutionStarted';
+} & NotificationExecutionStarted) | ({
+    type?: 'ExecutionEnded';
+} & NotificationExecutionEnded);
+
+export type NotificationExecutionEnded = {
+    type?: 'ExecutionEnded';
+    executionId: string;
+    workflowId: string;
+    status: ExecutionStatus;
+};
+
+export type NotificationExecutionStarted = {
+    type?: 'ExecutionStarted';
+    executionId: string;
+    workflowId: string;
 };
 
 export type PositionDto = {
@@ -35,6 +56,13 @@ export type RequestTypeDto = 'Get' | 'Post' | 'Put' | 'Patch' | 'Delete';
 
 export type RunWorkflowResponse = {
     runId: string;
+};
+
+export type SseItemOfNotification = {
+    data?: Notification;
+    eventType?: null | string;
+    eventId?: null | string;
+    reconnectionInterval?: null | string;
 };
 
 export type UpdateWorkflowDataRequest = {
@@ -211,6 +239,22 @@ export type PostWfAssistWorkflowsByIdUpdateDataResponses = {
 };
 
 export type PostWfAssistWorkflowsByIdUpdateDataResponse = PostWfAssistWorkflowsByIdUpdateDataResponses[keyof PostWfAssistWorkflowsByIdUpdateDataResponses];
+
+export type GetWfAssistWorkflowsEventsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/wfAssist/workflows/events';
+};
+
+export type GetWfAssistWorkflowsEventsResponses = {
+    /**
+     * OK
+     */
+    200: SseItemOfNotification;
+};
+
+export type GetWfAssistWorkflowsEventsResponse = GetWfAssistWorkflowsEventsResponses[keyof GetWfAssistWorkflowsEventsResponses];
 
 export type PostWfAssistWorkflowsByIdQueueRunData = {
     body?: never;

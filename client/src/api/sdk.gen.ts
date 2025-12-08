@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { DeleteWfAssistWorkflowsByIdData, DeleteWfAssistWorkflowsByIdResponses, GetWfAssistWorkflowsByIdData, GetWfAssistWorkflowsByIdErrors, GetWfAssistWorkflowsByIdResponses, GetWfAssistWorkflowsIdentitiesData, GetWfAssistWorkflowsIdentitiesResponses, PostWfAssistWorkflowsByIdQueueRunData, PostWfAssistWorkflowsByIdQueueRunErrors, PostWfAssistWorkflowsByIdQueueRunResponses, PostWfAssistWorkflowsByIdRenameData, PostWfAssistWorkflowsByIdRenameErrors, PostWfAssistWorkflowsByIdRenameResponses, PostWfAssistWorkflowsByIdUpdateDataData, PostWfAssistWorkflowsByIdUpdateDataErrors, PostWfAssistWorkflowsByIdUpdateDataResponses, PostWfAssistWorkflowsData, PostWfAssistWorkflowsResponses } from './types.gen';
+import type { DeleteWfAssistWorkflowsByIdData, DeleteWfAssistWorkflowsByIdResponses, GetWfAssistWorkflowsByIdData, GetWfAssistWorkflowsByIdErrors, GetWfAssistWorkflowsByIdResponses, GetWfAssistWorkflowsEventsData, GetWfAssistWorkflowsEventsResponses, GetWfAssistWorkflowsIdentitiesData, GetWfAssistWorkflowsIdentitiesResponses, PostWfAssistWorkflowsByIdQueueRunData, PostWfAssistWorkflowsByIdQueueRunErrors, PostWfAssistWorkflowsByIdQueueRunResponses, PostWfAssistWorkflowsByIdRenameData, PostWfAssistWorkflowsByIdRenameErrors, PostWfAssistWorkflowsByIdRenameResponses, PostWfAssistWorkflowsByIdUpdateDataData, PostWfAssistWorkflowsByIdUpdateDataErrors, PostWfAssistWorkflowsByIdUpdateDataResponses, PostWfAssistWorkflowsData, PostWfAssistWorkflowsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -69,6 +69,13 @@ export const postWfAssistWorkflowsByIdUpdateData = <ThrowOnError extends boolean
             'Content-Type': 'application/json',
             ...options.headers
         }
+    });
+};
+
+export const getWfAssistWorkflowsEvents = <ThrowOnError extends boolean = false>(options?: Options<GetWfAssistWorkflowsEventsData, ThrowOnError>) => {
+    return (options?.client ?? client).sse.get<GetWfAssistWorkflowsEventsResponses, unknown, ThrowOnError>({
+        url: '/wfAssist/workflows/events',
+        ...options
     });
 };
 
