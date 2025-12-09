@@ -4,7 +4,7 @@
   import { Icons } from "$lib/components/ui/icons";
   import { ModeWatcher } from "mode-watcher";
   import { TurboEdgeGradient } from "$lib/css";
-  import { Toaster } from "svelte-sonner";
+  import { Toaster } from "$lib/components/ui/toaster";
 </script>
 
 <div class="size-full">
@@ -12,5 +12,5 @@
   <Icons />
   <TurboEdgeGradient />
   <Workflows />
-  <Toaster theme="dark" position="top-right" duration={5000} expand={true} />
+  <Toaster />
 </div>
