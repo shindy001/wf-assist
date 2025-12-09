@@ -14,12 +14,10 @@
     type SvelteFlowWorkflowNode,
     WorkflowNodeDataType,
   } from "$lib/types";
-  import { useWorkflowEvents, useWorkflowsAppState } from "../state/";
+  import { useWorkflowsAppState } from "../state/";
   import TurboEdge from "./nodes/TurboEdge.svelte";
-  import { toast } from "svelte-sonner";
 
   const workflowsAppState = useWorkflowsAppState();
-  const { lastEvent } = $derived(useWorkflowEvents());
   const additionalNodeTypes = {
     [WorkflowNodeDataType.Request]: RequestNode,
     [WorkflowNodeDataType.Headers]: HeadersNode,
@@ -29,7 +27,6 @@
 
   $effect(() => {
     workflowsAppState.saveWorkflowData();
-    toast.info(`${lastEvent?.type} - Workflow ID: ${lastEvent?.workflowId}`);
   });
 
   const onDragOver = (event: DragEvent) => {
