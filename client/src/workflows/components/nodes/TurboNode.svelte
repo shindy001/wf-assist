@@ -47,12 +47,7 @@
               >
             </Tooltip.Trigger>
             <Tooltip.Content>
-              <p>
-                copy node reference
-                <span class="p-1 bg-amber-800/40 rounded-md">
-                  {`#{node:${props.id}}`}
-                </span>
-              </p>
+              <p>copy node reference</p>
             </Tooltip.Content>
           </Tooltip.Root>
         </Tooltip.Provider>
