@@ -14,7 +14,7 @@ public class InitializeDb_20251009_01 : Migration
             .WithColumn("Name").AsFixedLengthString(100)
             .WithColumn("Data").AsString();
 
-        Create.Table("WorkflowRuns")
+        Create.Table("Executions")
             .WithColumn("Id").AsFixedLengthString(36).PrimaryKey() // uuid
             .WithColumn("Status").AsFixedLengthString(100)
             .WithColumn("Snapshot").AsString()
@@ -24,6 +24,6 @@ public class InitializeDb_20251009_01 : Migration
     public override void Down()
     {
         Delete.Table("Workflows");
-        Delete.Table("WorkflowRuns");
+        Delete.Table("Executions");
     }
 }

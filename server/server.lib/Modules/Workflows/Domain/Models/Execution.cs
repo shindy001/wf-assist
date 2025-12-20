@@ -1,14 +1,14 @@
 namespace WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 
-public sealed record WorkflowRun
+public sealed record Execution
 {
     public required Guid Id { get; init; }
-    public required WorkflowRunStatus Status { get; init; }
+    public required ExecutionStatus Status { get; init; }
     public required WorkflowSnapshot Snapshot { get; init; }
     public Dictionary<string, ProcessingResult> ProcessingResults { get; init; } = [];
 }
 
-public enum WorkflowRunStatus
+public enum ExecutionStatus
 {
     Queued,
     Running,
@@ -16,14 +16,14 @@ public enum WorkflowRunStatus
     Failed
 }
 
-public static class WorkflowRunFactory
+public static class ExecutionFactory
 {
-    public static WorkflowRun CreateQueued(Workflow workflow)
+    public static Execution CreateQueued(Workflow workflow)
     {
-        return new WorkflowRun
+        return new Execution
         {
             Id = Guid.NewGuid(),
-            Status = WorkflowRunStatus.Queued,
+            Status = ExecutionStatus.Queued,
             Snapshot = new WorkflowSnapshot
             {
                 Id = workflow.Id,

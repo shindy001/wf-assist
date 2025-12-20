@@ -22,7 +22,7 @@ internal static class WorkflowsModule
         SqlMapper.AddTypeHandler(new ProcessingResultDictionaryTypeHandler());
 
         services.AddScoped<WorkflowRepository>();
-        services.AddScoped<WorkflowProcessingRepository>();
+        services.AddScoped<ExecutionRepository>();
 
         services.AddScoped<ProcessingContext>();
         services.AddScoped<WorkflowNodeReferenceResolver>();
@@ -32,7 +32,7 @@ internal static class WorkflowsModule
         services.AddScoped<WorkflowExecutor>();
 
         services.AddSingleton<NotificationDispatcher>();
-        services.AddHostedService<WorkflowRunnerBackgroundService>();
+        services.AddHostedService<ExecutionBackgroundService>();
     }
 
     public static Task InitializeWorkflowsModule(this IServiceProvider serviceProvider)

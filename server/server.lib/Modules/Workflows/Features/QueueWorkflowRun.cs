@@ -14,7 +14,7 @@ public static class QueueWorkflowRun
         endpoints.MapPost("/{id:guid}/queueRun", async Task<Results<Ok<RunWorkflowResponse>, NotFound<string>>> (
                 Guid id,
                 WorkflowRepository workflowRepository,
-                WorkflowProcessingRepository workflowProcessingRepository) =>
+                ExecutionRepository executionRepository) =>
             {
                 var workflow = await workflowRepository.GetById(id);
                 if (workflow is null)
@@ -22,8 +22,8 @@ public static class QueueWorkflowRun
                     return TypedResults.NotFound($"Workflow with ID '{id}' was not found.");
                 }
 
-                var queuedRun = WorkflowRunFactory.CreateQueued(workflow);
-                var runId = await workflowProcessingRepository.AddRun(queuedRun);
+                var queuedRun = ExecutionFactory.CreateQueued(workflow);
+                var runId = await executionRepository.AddRun(queuedRun);
 
                 return TypedResults.Ok(new RunWorkflowResponse(runId));
             })
