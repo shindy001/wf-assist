@@ -17,7 +17,7 @@ internal static class WorkflowsModule
 {
     public static void AddWorkflowsModuleServices(this IServiceCollection services)
     {
-        SqlMapper.AddTypeHandler(new WorkflowSnapshotTypeHandler());
+        SqlMapper.AddTypeHandler(new WorkflowJsonTypeHandler());
         SqlMapper.AddTypeHandler(new WorkflowDataTypeHandler());
         SqlMapper.AddTypeHandler(new ProcessingResultDictionaryTypeHandler());
 

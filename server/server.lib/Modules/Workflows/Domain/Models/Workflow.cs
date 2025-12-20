@@ -1,9 +1,8 @@
-using System.Net;
 using System.Text.Json.Serialization;
 
 namespace WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 
-public sealed class Workflow
+public sealed record Workflow
 {
     public required Guid Id { get; init; }
     public required string Name { get; init; }
