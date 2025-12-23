@@ -21,14 +21,14 @@ internal sealed partial class WorkflowExecutor
     }
 
     /// <summary>
-    /// Execute specified <see cref="Workflow"/>.
+    /// Execute specified <see cref="WorkflowSnapshot"/>.
     /// </summary>
-    /// <param name="workflow"><see cref="Workflow"/></param>
-    public async Task Execute(Workflow workflow)
+    /// <param name="snapshot"><see cref="WorkflowSnapshot"/></param>
+    public async Task Execute(WorkflowSnapshot snapshot)
     {
-        LogExecutionStart(workflow.Name);
+        LogExecutionStart(snapshot.Name);
 
-        var executionOrder = WorkflowTopologySorter.CalculateNodeExecution(workflow.Data);
+        var executionOrder = WorkflowTopologySorter.CalculateNodeExecution(snapshot.Data);
         LogExecutionOrder(executionOrder.Select(x => x.Id));
 
         foreach (var node in executionOrder)
@@ -38,7 +38,7 @@ internal sealed partial class WorkflowExecutor
 
             if (processor is null)
             {
-                LogExecutionInterrupted(workflow.Name,
+                LogExecutionInterrupted(snapshot.Name,
                     $"Workflow Processor with service key {processorServiceKey} for node data type {node.Data.GetType().Name} " +
                     $"was not found, ensure that processor is registered.");
                 return;
@@ -49,12 +49,12 @@ internal sealed partial class WorkflowExecutor
 
             if (!result.IsSuccessful)
             {
-                LogExecutionInterrupted(workflow.Name, $"Error during processing of node {node.Id}.");
+                LogExecutionInterrupted(snapshot.Name, $"Error during processing of node {node.Id}.");
                 return;
             }
         }
 
-        LogExecutionCompleted(workflow.Name);
+        LogExecutionCompleted(snapshot.Name);
     }
 
     private static string GetProcessorServiceKey(WorkflowNodeData nodeData)

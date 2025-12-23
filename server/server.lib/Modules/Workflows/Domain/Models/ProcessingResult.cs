@@ -1,6 +1,6 @@
 namespace WfAssist.AspNetCore.Modules.Workflows.Domain.Models;
 
-public sealed record ProcessingResult
+public record ProcessingResult
 {
     public bool IsSuccessful { get; init; }
     public ProcessResultValueType ValueType { get; init; }

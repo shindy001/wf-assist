@@ -4,7 +4,7 @@ public sealed record Execution
 {
     public required Guid Id { get; init; }
     public required ExecutionStatus Status { get; init; }
-    public required Workflow Snapshot { get; init; }
+    public required WorkflowSnapshot Snapshot { get; init; }
     public Dictionary<string, ProcessingResult> ProcessingResults { get; init; } = [];
 }
 
@@ -24,7 +24,12 @@ public static class ExecutionFactory
         {
             Id = Guid.NewGuid(),
             Status = ExecutionStatus.Queued,
-            Snapshot = workflow
+            Snapshot = new WorkflowSnapshot
+            {
+                Id = workflow.Id,
+                Name = workflow.Name,
+                Data = workflow.Data
+            }
         };
     }
 }
