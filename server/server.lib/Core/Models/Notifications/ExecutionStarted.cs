@@ -1,0 +1,7 @@
+namespace WfAssist.AspNetCore.Core.Models.Notifications;
+
+internal sealed record ExecutionStarted : Notification
+{
+    public required Guid ExecutionId { get; set; }
+    public required Guid WorkflowId { get; set; }
+}
