@@ -18,7 +18,8 @@ internal static class Constants
 
     private static string GetSqliteConnectionString()
     {
-        var dbPath = Path.Combine(AppContext.BaseDirectory, "data", "wf-assist.db");
+        var folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        var dbPath = Path.Combine(folderPath, "WfAssist", "wf-assist.db");
 
         if (!Directory.Exists(dbPath))
         {
