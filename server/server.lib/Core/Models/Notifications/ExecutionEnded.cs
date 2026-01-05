@@ -1,13 +1,4 @@
-using System.Text.Json.Serialization;
-
 namespace WfAssist.AspNetCore.Core.Models.Notifications;
-
-[JsonConverter(typeof(JsonStringEnumConverter<ExecutionStatus>))]
-internal enum ExecutionStatus
-{
-    Completed,
-    Failed
-}
 
 internal sealed record ExecutionEnded : Notification
 {

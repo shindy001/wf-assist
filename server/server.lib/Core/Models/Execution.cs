@@ -8,14 +8,6 @@ public sealed record Execution
     public Dictionary<string, ProcessingResult> ProcessingResults { get; init; } = [];
 }
 
-public enum ExecutionStatus
-{
-    Queued,
-    Running,
-    Completed,
-    Failed
-}
-
 public static class ExecutionFactory
 {
     public static Execution CreateQueued(Workflow workflow)

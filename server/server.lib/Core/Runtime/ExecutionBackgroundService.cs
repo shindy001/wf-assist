@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using WfAssist.AspNetCore.Core.Models;
 using WfAssist.AspNetCore.Core.Models.Notifications;
 using WfAssist.AspNetCore.Infrastructure;
-using ExecutionStatus = WfAssist.AspNetCore.Core.Models.ExecutionStatus;
 
 namespace WfAssist.AspNetCore.Core.Runtime;
 
@@ -67,7 +66,7 @@ internal sealed class ExecutionBackgroundService : BackgroundService
                     await notificationDispatcher.Dispatch(new ExecutionEnded
                     {
                         ExecutionId = execution.Id, WorkflowId = execution.Snapshot.Id,
-                        Status = Models.Notifications.ExecutionStatus.Completed
+                        Status = ExecutionStatus.Completed
                     });
                 }
                 else
@@ -79,7 +78,7 @@ internal sealed class ExecutionBackgroundService : BackgroundService
                     await notificationDispatcher.Dispatch(new ExecutionEnded
                     {
                         ExecutionId = execution.Id, WorkflowId = execution.Snapshot.Id,
-                        Status = Models.Notifications.ExecutionStatus.Failed
+                        Status = ExecutionStatus.Failed
                     });
                 }
             }
@@ -99,7 +98,7 @@ internal sealed class ExecutionBackgroundService : BackgroundService
                 await notificationDispatcher.Dispatch(new ExecutionEnded
                 {
                     ExecutionId = execution.Id, WorkflowId = execution.Snapshot.Id,
-                    Status = Models.Notifications.ExecutionStatus.Failed
+                    Status = ExecutionStatus.Failed
                 });
             }
         }

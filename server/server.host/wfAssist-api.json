@@ -244,6 +244,8 @@
       },
       "ExecutionStatus": {
         "enum": [
+          "Queued",
+          "Running",
           "Completed",
           "Failed"
         ]
