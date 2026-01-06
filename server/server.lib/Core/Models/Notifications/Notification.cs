@@ -3,6 +3,6 @@ using System.Text.Json.Serialization;
 namespace WfAssist.AspNetCore.Core.Models.Notifications;
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(ExecutionStarted), nameof(ExecutionStarted))]
-[JsonDerivedType(typeof(ExecutionEnded), nameof(ExecutionEnded))]
+[JsonDerivedType(typeof(WorkflowExecutionStarted), nameof(WorkflowExecutionStarted))]
+[JsonDerivedType(typeof(WorkflowExecutionEnded), nameof(WorkflowExecutionEnded))]
 public abstract record Notification;

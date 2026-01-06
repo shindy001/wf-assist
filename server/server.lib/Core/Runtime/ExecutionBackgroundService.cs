@@ -53,8 +53,12 @@ internal sealed class ExecutionBackgroundService : BackgroundService
                 await workflowProcessingRepository.UpdateRunStatus(execution.Id, ExecutionStatus.Running);
 
                 _logger.LogInformation("Execution {runId} started.", execution.Id);
-                await notificationDispatcher.Dispatch(new ExecutionStarted
-                    {ExecutionId = execution.Id, WorkflowId = execution.Snapshot.Id});
+                await notificationDispatcher.Dispatch(new WorkflowExecutionStarted
+                {
+                    ExecutionId = execution.Id,
+                    WorkflowId = execution.Snapshot.Id,
+                    WorkflowName = execution.Snapshot.Name
+                });
 
                 await workflowExecutor.Execute(execution.Snapshot);
                 if (processingContext.IsProcessingSuccessful())
@@ -63,9 +67,11 @@ internal sealed class ExecutionBackgroundService : BackgroundService
                         processingContext.ProcessingResults);
 
                     _logger.LogInformation("Execution {runId} completed.", execution.Id);
-                    await notificationDispatcher.Dispatch(new ExecutionEnded
+                    await notificationDispatcher.Dispatch(new WorkflowExecutionEnded
                     {
-                        ExecutionId = execution.Id, WorkflowId = execution.Snapshot.Id,
+                        ExecutionId = execution.Id,
+                        WorkflowId = execution.Snapshot.Id,
+                        WorkflowName = execution.Snapshot.Name,
                         Status = ExecutionStatus.Completed
                     });
                 }
@@ -75,9 +81,11 @@ internal sealed class ExecutionBackgroundService : BackgroundService
                         processingContext.ProcessingResults);
 
                     _logger.LogInformation("Execution {runId} completed with errors.", execution.Id);
-                    await notificationDispatcher.Dispatch(new ExecutionEnded
+                    await notificationDispatcher.Dispatch(new WorkflowExecutionEnded
                     {
-                        ExecutionId = execution.Id, WorkflowId = execution.Snapshot.Id,
+                        ExecutionId = execution.Id,
+                        WorkflowId = execution.Snapshot.Id,
+                        WorkflowName = execution.Snapshot.Name,
                         Status = ExecutionStatus.Failed
                     });
                 }
@@ -95,9 +103,11 @@ internal sealed class ExecutionBackgroundService : BackgroundService
                 await workflowProcessingRepository.CompleteRun(execution.Id, ExecutionStatus.Failed,
                     processingContext.ProcessingResults);
 
-                await notificationDispatcher.Dispatch(new ExecutionEnded
+                await notificationDispatcher.Dispatch(new WorkflowExecutionEnded
                 {
-                    ExecutionId = execution.Id, WorkflowId = execution.Snapshot.Id,
+                    ExecutionId = execution.Id,
+                    WorkflowId = execution.Snapshot.Id,
+                    WorkflowName = execution.Snapshot.Name,
                     Status = ExecutionStatus.Failed
                 });
             }

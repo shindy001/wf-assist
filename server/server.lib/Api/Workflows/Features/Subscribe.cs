@@ -10,8 +10,8 @@ namespace WfAssist.AspNetCore.Api.Workflows.Features;
 
 public static class Subscribe
 {
-    [ProducesResponseType(typeof(IAsyncEnumerable<ExecutionStarted>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(IAsyncEnumerable<ExecutionEnded>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IAsyncEnumerable<WorkflowExecutionStarted>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IAsyncEnumerable<WorkflowExecutionEnded>), StatusCodes.Status200OK)]
     public static void MapSubscribeEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/events",
