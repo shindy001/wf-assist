@@ -297,30 +297,31 @@
         "type": "object",
         "anyOf": [
           {
-            "$ref": "#/components/schemas/NotificationExecutionStarted"
+            "$ref": "#/components/schemas/NotificationWorkflowExecutionStarted"
           },
           {
-            "$ref": "#/components/schemas/NotificationExecutionEnded"
+            "$ref": "#/components/schemas/NotificationWorkflowExecutionEnded"
           }
         ],
         "discriminator": {
           "propertyName": "type",
           "mapping": {
-            "ExecutionStarted": "#/components/schemas/NotificationExecutionStarted",
-            "ExecutionEnded": "#/components/schemas/NotificationExecutionEnded"
+            "WorkflowExecutionStarted": "#/components/schemas/NotificationWorkflowExecutionStarted",
+            "WorkflowExecutionEnded": "#/components/schemas/NotificationWorkflowExecutionEnded"
           }
         }
       },
-      "NotificationExecutionEnded": {
+      "NotificationWorkflowExecutionEnded": {
         "required": [
           "executionId",
           "workflowId",
+          "workflowName",
           "status"
         ],
         "properties": {
           "type": {
             "enum": [
-              "ExecutionEnded"
+              "WorkflowExecutionEnded"
             ],
             "type": "string"
           },
@@ -331,21 +332,25 @@
           "workflowId": {
             "type": "string",
             "format": "uuid"
+          },
+          "workflowName": {
+            "type": "string"
           },
           "status": {
             "$ref": "#/components/schemas/ExecutionStatus"
           }
         }
       },
-      "NotificationExecutionStarted": {
+      "NotificationWorkflowExecutionStarted": {
         "required": [
           "executionId",
-          "workflowId"
+          "workflowId",
+          "workflowName"
         ],
         "properties": {
           "type": {
             "enum": [
-              "ExecutionStarted"
+              "WorkflowExecutionStarted"
             ],
             "type": "string"
           },
@@ -356,6 +361,9 @@
           "workflowId": {
             "type": "string",
             "format": "uuid"
+          },
+          "workflowName": {
+            "type": "string"
           }
         }
       },
