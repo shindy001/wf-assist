@@ -9,7 +9,7 @@ export type CreateWorkflowRequest = {
     data: WorkflowDataDto;
 };
 
-export type ExecutionStatus = 'Completed' | 'Failed';
+export type ExecutionStatus = 'Queued' | 'Running' | 'Completed' | 'Failed';
 
 export type GetIdentitiesResponse = {
     identities: Array<WorkFlowIdentityDto>;
@@ -25,22 +25,24 @@ export type HttpHeaderDto = {
 };
 
 export type Notification = ({
-    type?: 'ExecutionStarted';
-} & NotificationExecutionStarted) | ({
-    type?: 'ExecutionEnded';
-} & NotificationExecutionEnded);
+    type?: 'WorkflowExecutionStarted';
+} & NotificationWorkflowExecutionStarted) | ({
+    type?: 'WorkflowExecutionEnded';
+} & NotificationWorkflowExecutionEnded);
 
-export type NotificationExecutionEnded = {
-    type?: 'ExecutionEnded';
+export type NotificationWorkflowExecutionEnded = {
+    type?: 'WorkflowExecutionEnded';
     executionId: string;
     workflowId: string;
+    workflowName: string;
     status: ExecutionStatus;
 };
 
-export type NotificationExecutionStarted = {
-    type?: 'ExecutionStarted';
+export type NotificationWorkflowExecutionStarted = {
+    type?: 'WorkflowExecutionStarted';
     executionId: string;
     workflowId: string;
+    workflowName: string;
 };
 
 export type PositionDto = {
