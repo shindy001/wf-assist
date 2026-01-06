@@ -5,6 +5,8 @@
   const { lastEvent } = $derived(useWorkflowEvents());
 
   $effect(() => {
-    toast.info(`${lastEvent?.type} - Workflow ID: ${lastEvent?.workflowId}`);
+    toast.info(`${lastEvent?.type}`, {
+      description: `Name: ${lastEvent?.workflowName}`,
+    });
   });
 </script>
