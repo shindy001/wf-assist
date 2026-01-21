@@ -47,6 +47,7 @@ public static class WfAssistApp
         services.AddKeyedScoped<IWorkflowNodeProcessor, RequestWorkflowNodeProcessor>(WorkflowConstants.RequestNodeProcessorKey);
         services.AddKeyedScoped<IWorkflowNodeProcessor, HeadersWorkflowNodeProcessor>(WorkflowConstants.HeadersNodeProcessorKey);
         services.AddScoped<WorkflowExecutor>();
+        services.AddScoped<ExecutionManager>();
 
         services.AddSingleton<NotificationDispatcher>();
         services.AddHostedService<ExecutionBackgroundService>();
