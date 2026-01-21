@@ -13,7 +13,7 @@ public sealed class ExecutionRepository
         _dbConnection = dbConnectionProvider.DbConnection;
     }
 
-    public async Task<IEnumerable<ExecutionIdentity>> GetAllRuns()
+    public async Task<IEnumerable<ExecutionIdentity>> GetAll()
     {
         const string sql = "SELECT id, status FROM Executions";
 
@@ -37,14 +37,14 @@ public sealed class ExecutionRepository
         }
     }
 
-    public async Task<Execution?> GetQueuedRun()
+    public async Task<Execution?> GetQueued()
     {
         const string sql = "SELECT * FROM Executions WHERE Status = @Status";
 
         return await _dbConnection.QueryFirstOrDefaultAsync<Execution>(sql, new { Status = ExecutionStatus.Queued });
     }
 
-    public async Task<Guid> AddRun(Execution run)
+    public async Task<Guid> Add(Execution run)
     {
         const string sql =
             "INSERT INTO Executions (Id, Status, Snapshot, ProcessingResults) VALUES (@Id, @Status, @Snapshot, @ProcessingResults)";
@@ -55,14 +55,14 @@ public sealed class ExecutionRepository
         return run.Id;
     }
 
-    public async Task CompleteRun(Guid runId, ExecutionStatus status, Dictionary<string, ProcessingResult> processingResults)
+    public async Task Complete(Guid runId, ExecutionStatus status, Dictionary<string, ProcessingResult> processingResults)
     {
         const string sql = "UPDATE Executions SET Status = @Status, ProcessingResults = @ProcessingResults WHERE Id = @Id";
 
         await _dbConnection.ExecuteAsync(sql, new { Id = runId, Status = status, ProcessingResults = processingResults });
     }
 
-    public async Task UpdateRunStatus(Guid runId, ExecutionStatus status)
+    public async Task UpdateStatus(Guid runId, ExecutionStatus status)
     {
         const string sql = "UPDATE Executions SET Status = @Status WHERE Id = @Id";
 
