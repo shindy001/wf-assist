@@ -1,13 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using WfAssist.AspNetCore.Core.Models;
-using WfAssist.AspNetCore.Core.Models.Notifications;
-using WfAssist.AspNetCore.Infrastructure;
 
 namespace WfAssist.AspNetCore.Core.Runtime;
 
-internal sealed class ExecutionBackgroundService : BackgroundService
+internal sealed partial class ExecutionBackgroundService : BackgroundService
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly ILogger<ExecutionBackgroundService> _logger;
@@ -22,95 +19,29 @@ internal sealed class ExecutionBackgroundService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("{service} is starting.", nameof(ExecutionBackgroundService));
+        LogServiceIsStarting(nameof(ExecutionBackgroundService));
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            await ExecuteQueuedWorkflow();
+            await ExecuteNext();
 
             await Task.Delay(_checkInterval, stoppingToken);
         }
 
-        _logger.LogInformation("{service} is stopping.", nameof(ExecutionBackgroundService));
+        LogServiceIsStopping(nameof(ExecutionBackgroundService));
     }
 
-    // TODO - move logic to some kind of trigger or service class and make contract in core like IExecutionTrigger, register the class and get it from DI => simplifies bg svc
-    private async Task ExecuteQueuedWorkflow()
+    private async Task ExecuteNext()
     {
         await using var scope = _serviceScopeFactory.CreateAsyncScope();
-        var workflowProcessingRepository = scope.ServiceProvider.GetRequiredService<ExecutionRepository>();
-        var workflowExecutor = scope.ServiceProvider.GetRequiredService<WorkflowExecutor>();
-        var processingContext = scope.ServiceProvider.GetRequiredService<ProcessingContext>();
-        var notificationDispatcher = scope.ServiceProvider.GetRequiredService<NotificationDispatcher>();
-        Execution? execution = null;
+        var executionManager = scope.ServiceProvider.GetRequiredService<ExecutionManager>();
 
-        try
-        {
-            execution = await workflowProcessingRepository.GetQueuedRun();
-
-            if (execution is not null)
-            {
-                await workflowProcessingRepository.UpdateRunStatus(execution.Id, ExecutionStatus.Running);
-
-                _logger.LogInformation("Execution {runId} started.", execution.Id);
-                await notificationDispatcher.Dispatch(new WorkflowExecutionStarted
-                {
-                    ExecutionId = execution.Id,
-                    WorkflowId = execution.Snapshot.Id,
-                    WorkflowName = execution.Snapshot.Name
-                });
-
-                await workflowExecutor.Execute(execution.Snapshot);
-                if (processingContext.IsProcessingSuccessful())
-                {
-                    await workflowProcessingRepository.CompleteRun(execution.Id, ExecutionStatus.Completed,
-                        processingContext.ProcessingResults);
-
-                    _logger.LogInformation("Execution {runId} completed.", execution.Id);
-                    await notificationDispatcher.Dispatch(new WorkflowExecutionEnded
-                    {
-                        ExecutionId = execution.Id,
-                        WorkflowId = execution.Snapshot.Id,
-                        WorkflowName = execution.Snapshot.Name,
-                        Status = ExecutionStatus.Completed
-                    });
-                }
-                else
-                {
-                    await workflowProcessingRepository.CompleteRun(execution.Id, ExecutionStatus.Failed,
-                        processingContext.ProcessingResults);
-
-                    _logger.LogInformation("Execution {runId} completed with errors.", execution.Id);
-                    await notificationDispatcher.Dispatch(new WorkflowExecutionEnded
-                    {
-                        ExecutionId = execution.Id,
-                        WorkflowId = execution.Snapshot.Id,
-                        WorkflowName = execution.Snapshot.Name,
-                        Status = ExecutionStatus.Failed
-                    });
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Unexpected error while during execution.");
-
-            if (execution is not null)
-            {
-                processingContext.AddResult("ProcessingError", ProcessingResult.Error(
-                    $"Unexpected error during execution: {e.Message}", string.Empty));
-
-                await workflowProcessingRepository.CompleteRun(execution.Id, ExecutionStatus.Failed,
-                    processingContext.ProcessingResults);
-
-                await notificationDispatcher.Dispatch(new WorkflowExecutionEnded
-                {
-                    ExecutionId = execution.Id,
-                    WorkflowId = execution.Snapshot.Id,
-                    WorkflowName = execution.Snapshot.Name,
-                    Status = ExecutionStatus.Failed
-                });
-            }
-        }
+        await executionManager.ExecuteNextInQueue();
     }
+
+    [LoggerMessage(LogLevel.Information, "{service} is starting.")]
+    partial void LogServiceIsStarting(string service);
+
+    [LoggerMessage(LogLevel.Information, "{service} is stopping.")]
+    partial void LogServiceIsStopping(string service);
 }
