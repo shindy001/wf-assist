@@ -22,10 +22,10 @@ public static class QueueWorkflowRun
                     return TypedResults.NotFound($"Workflow with ID '{id}' was not found.");
                 }
 
-                var queuedRun = ExecutionFactory.CreateQueued(workflow);
-                var runId = await executionRepository.AddRun(queuedRun);
+                var execution = ExecutionFactory.CreateQueued(workflow);
+                var executionId = await executionRepository.Add(execution);
 
-                return TypedResults.Ok(new RunWorkflowResponse(runId));
+                return TypedResults.Ok(new RunWorkflowResponse(executionId));
             })
             .Produces<RunWorkflowResponse>()
             .Produces(StatusCodes.Status404NotFound);
