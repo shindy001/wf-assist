@@ -51,9 +51,9 @@
     </div>
     <aside class={["flex flex-col"]} in:fade>
       <WorkflowList class="p-4" />
-      <hr class="h-[1px] w-full" />
+      <hr class="h-px w-full" />
       <DraggableNodeList class="p-4" />
-      <hr class="h-[1px] w-full" />
+      <hr class="h-px w-full" />
     </aside>
     <div class="p-2 flex justify-end">
       <Button
