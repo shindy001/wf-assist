@@ -8,7 +8,7 @@
 </script>
 
 <div class="size-full">
-  <ModeWatcher />
+  <ModeWatcher track={false} defaultMode={"dark"} />
   <Icons />
   <TurboEdgeGradient />
   <Workflows />
