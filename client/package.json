@@ -34,7 +34,6 @@
   "dependencies": {
     "@xyflow/svelte": "1.4.1",
     "lodash": "4.17.21",
-    "mode-watcher": "1.1.0",
     "svelte-sonner": "1.0.7"
   }
 }
