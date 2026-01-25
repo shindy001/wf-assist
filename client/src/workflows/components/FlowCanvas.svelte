@@ -64,7 +64,7 @@
 
 <div class="relative w-full">
   <SvelteFlow
-    colorMode="system"
+    colorMode="dark"
     bind:nodes={workflowsAppState.flowCanvasNodes}
     bind:edges={workflowsAppState.flowCanvasEdges}
     nodeTypes={additionalNodeTypes}
