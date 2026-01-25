@@ -77,5 +77,12 @@ Used icon packs:
         d="M9.575 12L5 7.4L6.4 6l6 6l-6 6L5 16.6zm6.6 0L11.6 7.4L13 6l6 6l-6 6l-1.4-1.4z"
       />
     </symbol>
+
+    <symbol id="material-symbols--electric-bolt-outline" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="m7 22l4-7.5l-8-1L15 2h2l-4 7.5l8 1L9 22zm5.55-6.175l4.025-3.85l-6.725-.85L11.425 8.2l-4 3.85l6.7.825zM12 12"
+      />
+    </symbol>
   </svg>
 </div>
