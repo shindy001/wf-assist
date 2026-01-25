@@ -16,6 +16,8 @@
   } from "$lib/types";
   import { useWorkflowsAppState } from "../state/";
   import TurboEdge from "./nodes/TurboEdge.svelte";
+  import { Button } from "$lib/components/ui/button";
+  import { Icon } from "$lib/components/ui/icons";
 
   const workflowsAppState = useWorkflowsAppState();
   const additionalNodeTypes = {
@@ -60,7 +62,7 @@
   };
 </script>
 
-<div class="w-full">
+<div class="relative w-full">
   <SvelteFlow
     colorMode="system"
     bind:nodes={workflowsAppState.flowCanvasNodes}
@@ -74,6 +76,12 @@
   >
     <Controls showLock={false} />
     <Background />
-    <MiniMap />
+    <div class="absolute bottom-18 z-10 w-full content-center text-center">
+      <Button variant="default" size="xl">
+        <Icon name="material-symbols--electric-bolt-outline" />
+        <span>Execute workflow</span>
+        <!-- TODO - add onclick event to call execute workflow action -->
+      </Button>
+    </div>
   </SvelteFlow>
 </div>
