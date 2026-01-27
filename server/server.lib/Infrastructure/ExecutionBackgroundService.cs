@@ -1,8 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using WfAssist.AspNetCore.Core.Runtime;
 
-namespace WfAssist.AspNetCore.Core.Runtime;
+namespace WfAssist.AspNetCore.Infrastructure;
 
 internal sealed partial class ExecutionBackgroundService : BackgroundService
 {
