@@ -24,9 +24,19 @@ internal sealed partial class ExecutionBackgroundService : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            await ExecuteNext();
-
-            await Task.Delay(_checkInterval, stoppingToken);
+            try
+            {
+                await ExecuteNext();
+                await Task.Delay(_checkInterval, stoppingToken);
+            }
+            catch (OperationCanceledException)
+            {
+                LogServiceShutdownRequested(nameof(ExecutionBackgroundService));
+            }
+            catch (Exception e)
+            {
+                _logger.LogCritical(e, "Error during execution.");
+            }
         }
 
         LogServiceIsStopping(nameof(ExecutionBackgroundService));
@@ -45,4 +55,7 @@ internal sealed partial class ExecutionBackgroundService : BackgroundService
 
     [LoggerMessage(LogLevel.Information, "{service} is stopping.")]
     partial void LogServiceIsStopping(string service);
+
+    [LoggerMessage(LogLevel.Information, "{service} shutdown requested.")]
+    partial void LogServiceShutdownRequested(string service);
 }
