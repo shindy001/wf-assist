@@ -1,8 +1,6 @@
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
-using Microsoft.Extensions.DependencyInjection;
-using WfAssist.AspNetCore.Api.Workflows;
 using WfAssist.AspNetCore.Core.Models;
 
 namespace WfAssist.AspNetCore.Core.Runtime.NodeProcessors;
@@ -13,7 +11,7 @@ internal sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
     private readonly WorkflowNodeReferenceResolver _nodeReferenceResolver;
 
     public RequestWorkflowNodeProcessor(
-        [FromKeyedServices(WorkflowConstants.HttpClientServiceKey)] HttpClient httpClient,
+        HttpClient httpClient,
         WorkflowNodeReferenceResolver nodeReferenceResolver)
     {
         _httpClient = httpClient;

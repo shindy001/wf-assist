@@ -43,9 +43,9 @@ public static class WfAssistApp
 
         services.AddScoped<ProcessingContext>();
         services.AddScoped<WorkflowNodeReferenceResolver>();
-        services.AddHttpClient(WorkflowConstants.HttpClientServiceKey).AddAsKeyed();
-        services.AddKeyedScoped<IWorkflowNodeProcessor, RequestWorkflowNodeProcessor>(WorkflowConstants.RequestNodeProcessorKey);
-        services.AddKeyedScoped<IWorkflowNodeProcessor, HeadersWorkflowNodeProcessor>(WorkflowConstants.HeadersNodeProcessorKey);
+        services.AddHttpClient();
+        services.AddKeyedScoped<IWorkflowNodeProcessor, RequestWorkflowNodeProcessor>(ProcessorConstants.RequestNodeProcessorKey);
+        services.AddKeyedScoped<IWorkflowNodeProcessor, HeadersWorkflowNodeProcessor>(ProcessorConstants.HeadersNodeProcessorKey);
         services.AddScoped<WorkflowExecutor>();
         services.AddScoped<ExecutionManager>();
 

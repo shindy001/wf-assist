@@ -1,5 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-using WfAssist.AspNetCore.Api.Workflows;
 using WfAssist.AspNetCore.Core.Models;
 
 namespace WfAssist.AspNetCore.Core.Runtime.NodeProcessors;
@@ -10,7 +8,7 @@ internal sealed class HeadersWorkflowNodeProcessor : IWorkflowNodeProcessor
     private readonly WorkflowNodeReferenceResolver _nodeReferenceResolver;
 
     public HeadersWorkflowNodeProcessor(
-        [FromKeyedServices(WorkflowConstants.HttpClientServiceKey)] HttpClient httpClient,
+        HttpClient httpClient,
         WorkflowNodeReferenceResolver nodeReferenceResolver)
     {
         _httpClient = httpClient;

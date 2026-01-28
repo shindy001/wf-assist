@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using WfAssist.AspNetCore.Api.Workflows;
 using WfAssist.AspNetCore.Core.Models;
 using WfAssist.AspNetCore.Core.Runtime.NodeProcessors;
 
@@ -62,8 +61,8 @@ internal sealed partial class WorkflowExecutor
     {
         return nodeData switch
         {
-            RequestNodeData => WorkflowConstants.RequestNodeProcessorKey,
-            HeadersNodeData => WorkflowConstants.HeadersNodeProcessorKey,
+            RequestNodeData => ProcessorConstants.RequestNodeProcessorKey,
+            HeadersNodeData => ProcessorConstants.HeadersNodeProcessorKey,
             _ => throw new InvalidOperationException($"Unknown node data type {nodeData.GetType().Name}")
         };
     }
