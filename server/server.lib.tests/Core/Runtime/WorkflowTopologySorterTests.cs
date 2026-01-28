@@ -2,7 +2,7 @@
 using WfAssist.AspNetCore.Core.Models;
 using WfAssist.AspNetCore.Core.Runtime;
 
-namespace server.lib.tests.Core.Runtime;
+namespace WfAssist.AspNetCore.Tests.Core.Runtime;
 
 public class WorkflowTopologySorterTests
 {
