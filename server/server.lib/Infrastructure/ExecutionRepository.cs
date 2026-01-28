@@ -1,10 +1,11 @@
 using System.Data;
 using Dapper;
 using WfAssist.AspNetCore.Core.Models;
+using WfAssist.AspNetCore.Core.Services;
 
 namespace WfAssist.AspNetCore.Infrastructure;
 
-public sealed class ExecutionRepository
+public sealed class ExecutionRepository : IExecutionRepository
 {
     private readonly IDbConnection _dbConnection;
 
@@ -25,16 +26,6 @@ public sealed class ExecutionRepository
         const string sql = "SELECT * FROM Executions WHERE Id = @Id";
 
         return await _dbConnection.QuerySingleOrDefaultAsync<Execution>(sql, new { Id = runId });
-    }
-
-    public async Task Delete(Guid runId)
-    {
-        const string sql = "DELETE FROM Executions WHERE Id = @Id";
-
-        if (await Exists(runId))
-        {
-            await _dbConnection.ExecuteAsync(sql, new {Id = runId});
-        }
     }
 
     public async Task<Execution?> GetQueued()
@@ -67,6 +58,16 @@ public sealed class ExecutionRepository
         const string sql = "UPDATE Executions SET Status = @Status WHERE Id = @Id";
 
         await _dbConnection.ExecuteAsync(sql, new { Id = runId, Status = status });
+    }
+
+    public async Task Delete(Guid runId)
+    {
+        const string sql = "DELETE FROM Executions WHERE Id = @Id";
+
+        if (await Exists(runId))
+        {
+            await _dbConnection.ExecuteAsync(sql, new {Id = runId});
+        }
     }
 
     private async Task<bool> Exists(Guid runId)

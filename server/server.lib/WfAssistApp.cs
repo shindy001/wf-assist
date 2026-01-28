@@ -8,6 +8,7 @@ using WfAssist.AspNetCore.Api;
 using WfAssist.AspNetCore.Api.Workflows;
 using WfAssist.AspNetCore.Core.Runtime;
 using WfAssist.AspNetCore.Core.Runtime.NodeProcessors;
+using WfAssist.AspNetCore.Core.Services;
 using WfAssist.AspNetCore.Infrastructure;
 using WfAssist.AspNetCore.Infrastructure.Middleware;
 using WfAssist.AspNetCore.Infrastructure.Serialization;
@@ -39,7 +40,7 @@ public static class WfAssistApp
         // Services
         services.AddScoped<IDbConnectionProvider, SqliteDbConnectionProvider>();
         services.AddScoped<WorkflowRepository>();
-        services.AddScoped<ExecutionRepository>();
+        services.AddScoped<IExecutionRepository, ExecutionRepository>();
 
         services.AddScoped<ProcessingContext>();
         services.AddScoped<WorkflowNodeReferenceResolver>();
@@ -49,7 +50,7 @@ public static class WfAssistApp
         services.AddScoped<WorkflowExecutor>();
         services.AddScoped<ExecutionManager>();
 
-        services.AddSingleton<NotificationDispatcher>();
+        services.AddSingleton<INotificationDispatcher, NotificationDispatcher>();
         services.AddHostedService<ExecutionBackgroundService>();
     }
 

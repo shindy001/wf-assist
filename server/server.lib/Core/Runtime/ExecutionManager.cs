@@ -1,29 +1,29 @@
 using Microsoft.Extensions.Logging;
 using WfAssist.AspNetCore.Core.Models;
 using WfAssist.AspNetCore.Core.Models.Notifications;
-using WfAssist.AspNetCore.Infrastructure;
+using WfAssist.AspNetCore.Core.Services;
 
 namespace WfAssist.AspNetCore.Core.Runtime;
 
 internal sealed partial class ExecutionManager
 {
-    private readonly ExecutionRepository _executionRepository;
+    private readonly IExecutionRepository _executionRepository;
+    private readonly INotificationDispatcher _notificationDispatcher;
     private readonly WorkflowExecutor _workflowExecutor;
     private readonly ProcessingContext _processingContext;
-    private readonly NotificationDispatcher _notificationDispatcher;
     private readonly ILogger<ExecutionManager> _logger;
 
     public ExecutionManager(
-        ExecutionRepository executionRepository,
+        IExecutionRepository executionRepository,
+        INotificationDispatcher notificationDispatcher,
         WorkflowExecutor workflowExecutor,
         ProcessingContext processingContext,
-        NotificationDispatcher notificationDispatcher,
         ILogger<ExecutionManager> logger)
     {
         _executionRepository = executionRepository;
+        _notificationDispatcher = notificationDispatcher;
         _workflowExecutor = workflowExecutor;
         _processingContext = processingContext;
-        _notificationDispatcher = notificationDispatcher;
         _logger = logger;
     }
 

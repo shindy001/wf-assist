@@ -3,10 +3,11 @@ using System.Threading.Channels;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WfAssist.AspNetCore.Core.Models.Notifications;
+using WfAssist.AspNetCore.Core.Services;
 
 namespace WfAssist.AspNetCore.Infrastructure;
 
-internal sealed class NotificationDispatcher
+internal sealed class NotificationDispatcher : INotificationDispatcher
 {
     private readonly ConcurrentDictionary<Guid, Channel<Notification>> _channels = new();
 
