@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using WfAssist.AspNetCore.Core.Models.Notifications;
-using WfAssist.AspNetCore.Infrastructure;
+using WfAssist.AspNetCore.Core.Services;
 
 namespace WfAssist.AspNetCore.Api.Workflows.Features;
 
@@ -15,11 +15,11 @@ public static class Subscribe
     public static void MapSubscribeEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/events",
-            (NotificationDispatcher notificationDispatcher, CancellationToken cancellationToken) =>
+            (INotificationDispatcher notificationDispatcher, CancellationToken cancellationToken) =>
                 TypedResults.ServerSentEvents(GetNotifications(notificationDispatcher, cancellationToken)));
     }
 
-    private static async IAsyncEnumerable<Notification> GetNotifications(NotificationDispatcher notificationDispatcher,
+    private static async IAsyncEnumerable<Notification> GetNotifications(INotificationDispatcher notificationDispatcher,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         var clientId = Guid.NewGuid();

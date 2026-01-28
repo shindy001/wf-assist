@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using WfAssist.AspNetCore.Infrastructure;
+using WfAssist.AspNetCore.Core.Services;
 
 namespace WfAssist.AspNetCore.Api.Workflows.Features;
 
@@ -9,7 +9,7 @@ public static class Delete
 {
     public static void MapDeleteEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/{id:guid}", async (Guid id, WorkflowRepository workflowRepository) =>
+        endpoints.MapDelete("/{id:guid}", async (Guid id, IWorkflowRepository workflowRepository) =>
             {
                 await workflowRepository.Delete(id);
 

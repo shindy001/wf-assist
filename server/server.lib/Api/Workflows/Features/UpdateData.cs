@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using WfAssist.AspNetCore.Api.Workflows.Dtos;
 using WfAssist.AspNetCore.Api.Workflows.Mappers;
-using WfAssist.AspNetCore.Infrastructure;
+using WfAssist.AspNetCore.Core.Services;
 
 namespace WfAssist.AspNetCore.Api.Workflows.Features;
 
@@ -11,7 +11,7 @@ public static class UpdateData
 {
     public static void MapUpdateDataEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/{id:guid}/updateData", async (Guid id, UpdateWorkflowDataRequest request, WorkflowRepository workflowRepository) =>
+        endpoints.MapPost("/{id:guid}/updateData", async (Guid id, UpdateWorkflowDataRequest request, IWorkflowRepository workflowRepository) =>
             {
                 if (!await workflowRepository.Exists(id))
                 {

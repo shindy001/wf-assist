@@ -1,10 +1,11 @@
 using System.Data;
 using Dapper;
 using WfAssist.AspNetCore.Core.Models;
+using WfAssist.AspNetCore.Core.Services;
 
 namespace WfAssist.AspNetCore.Infrastructure;
 
-public sealed class WorkflowRepository
+public sealed class WorkflowRepository : IWorkflowRepository
 {
     private readonly IDbConnection _dbConnection;
 

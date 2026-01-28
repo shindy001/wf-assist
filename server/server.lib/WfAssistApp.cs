@@ -39,12 +39,12 @@ public static class WfAssistApp
 
         // Services
         services.AddScoped<IDbConnectionProvider, SqliteDbConnectionProvider>();
-        services.AddScoped<WorkflowRepository>();
+        services.AddScoped<IWorkflowRepository, WorkflowRepository>();
         services.AddScoped<IExecutionRepository, ExecutionRepository>();
 
+        services.AddHttpClient();
         services.AddScoped<ProcessingContext>();
         services.AddScoped<WorkflowNodeReferenceResolver>();
-        services.AddHttpClient();
         services.AddKeyedScoped<IWorkflowNodeProcessor, RequestWorkflowNodeProcessor>(ProcessorConstants.RequestNodeProcessorKey);
         services.AddKeyedScoped<IWorkflowNodeProcessor, HeadersWorkflowNodeProcessor>(ProcessorConstants.HeadersNodeProcessorKey);
         services.AddScoped<WorkflowExecutor>();

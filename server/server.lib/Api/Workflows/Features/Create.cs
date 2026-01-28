@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using WfAssist.AspNetCore.Api.Workflows.Dtos;
 using WfAssist.AspNetCore.Api.Workflows.Mappers;
 using WfAssist.AspNetCore.Core.Models;
-using WfAssist.AspNetCore.Infrastructure;
+using WfAssist.AspNetCore.Core.Services;
 
 namespace WfAssist.AspNetCore.Api.Workflows.Features;
 
@@ -12,7 +12,7 @@ public static class Create
 {
     public static void MapCreateEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/", async (CreateWorkflowRequest request, WorkflowRepository workflowRepository) =>
+        endpoints.MapPost("/", async (CreateWorkflowRequest request, IWorkflowRepository workflowRepository) =>
             {
                 var newWorkflow = new Workflow
                 {
