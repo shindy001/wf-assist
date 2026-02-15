@@ -117,168 +117,168 @@ export type WorkflowNodeDto = {
     data: WorkflowNodeDataDto;
 };
 
-export type GetWfAssistWorkflowsIdentitiesData = {
+export type GetApiWorkflowsIdentitiesData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/wfAssist/workflows/identities';
+    url: '/api/workflows/identities';
 };
 
-export type GetWfAssistWorkflowsIdentitiesResponses = {
+export type GetApiWorkflowsIdentitiesResponses = {
     /**
      * OK
      */
     200: GetIdentitiesResponse;
 };
 
-export type GetWfAssistWorkflowsIdentitiesResponse = GetWfAssistWorkflowsIdentitiesResponses[keyof GetWfAssistWorkflowsIdentitiesResponses];
+export type GetApiWorkflowsIdentitiesResponse = GetApiWorkflowsIdentitiesResponses[keyof GetApiWorkflowsIdentitiesResponses];
 
-export type DeleteWfAssistWorkflowsByIdData = {
+export type DeleteApiWorkflowsByIdData = {
     body?: never;
     path: {
         id: string;
     };
     query?: never;
-    url: '/wfAssist/workflows/{id}';
+    url: '/api/workflows/{id}';
 };
 
-export type DeleteWfAssistWorkflowsByIdResponses = {
+export type DeleteApiWorkflowsByIdResponses = {
     /**
      * No Content
      */
     204: void;
 };
 
-export type DeleteWfAssistWorkflowsByIdResponse = DeleteWfAssistWorkflowsByIdResponses[keyof DeleteWfAssistWorkflowsByIdResponses];
+export type DeleteApiWorkflowsByIdResponse = DeleteApiWorkflowsByIdResponses[keyof DeleteApiWorkflowsByIdResponses];
 
-export type GetWfAssistWorkflowsByIdData = {
+export type GetApiWorkflowsByIdData = {
     body?: never;
     path: {
         id: string;
     };
     query?: never;
-    url: '/wfAssist/workflows/{id}';
+    url: '/api/workflows/{id}';
 };
 
-export type GetWfAssistWorkflowsByIdErrors = {
+export type GetApiWorkflowsByIdErrors = {
     /**
      * Not Found
      */
     404: unknown;
 };
 
-export type GetWfAssistWorkflowsByIdResponses = {
+export type GetApiWorkflowsByIdResponses = {
     /**
      * OK
      */
     200: GetWorkflowByIdResponse;
 };
 
-export type GetWfAssistWorkflowsByIdResponse = GetWfAssistWorkflowsByIdResponses[keyof GetWfAssistWorkflowsByIdResponses];
+export type GetApiWorkflowsByIdResponse = GetApiWorkflowsByIdResponses[keyof GetApiWorkflowsByIdResponses];
 
-export type PostWfAssistWorkflowsData = {
+export type PostApiWorkflowsData = {
     body: CreateWorkflowRequest;
     path?: never;
     query?: never;
-    url: '/wfAssist/workflows';
+    url: '/api/workflows';
 };
 
-export type PostWfAssistWorkflowsResponses = {
+export type PostApiWorkflowsResponses = {
     /**
      * No Content
      */
     204: void;
 };
 
-export type PostWfAssistWorkflowsResponse = PostWfAssistWorkflowsResponses[keyof PostWfAssistWorkflowsResponses];
+export type PostApiWorkflowsResponse = PostApiWorkflowsResponses[keyof PostApiWorkflowsResponses];
 
-export type PostWfAssistWorkflowsByIdRenameData = {
+export type PostApiWorkflowsByIdRenameData = {
     body: RenameWorkflowRequest;
     path: {
         id: string;
     };
     query?: never;
-    url: '/wfAssist/workflows/{id}/rename';
+    url: '/api/workflows/{id}/rename';
 };
 
-export type PostWfAssistWorkflowsByIdRenameErrors = {
+export type PostApiWorkflowsByIdRenameErrors = {
     /**
      * Not Found
      */
     404: unknown;
 };
 
-export type PostWfAssistWorkflowsByIdRenameResponses = {
+export type PostApiWorkflowsByIdRenameResponses = {
     /**
      * No Content
      */
     204: void;
 };
 
-export type PostWfAssistWorkflowsByIdRenameResponse = PostWfAssistWorkflowsByIdRenameResponses[keyof PostWfAssistWorkflowsByIdRenameResponses];
+export type PostApiWorkflowsByIdRenameResponse = PostApiWorkflowsByIdRenameResponses[keyof PostApiWorkflowsByIdRenameResponses];
 
-export type PostWfAssistWorkflowsByIdUpdateDataData = {
+export type PostApiWorkflowsByIdUpdateDataData = {
     body: UpdateWorkflowDataRequest;
     path: {
         id: string;
     };
     query?: never;
-    url: '/wfAssist/workflows/{id}/updateData';
+    url: '/api/workflows/{id}/updateData';
 };
 
-export type PostWfAssistWorkflowsByIdUpdateDataErrors = {
+export type PostApiWorkflowsByIdUpdateDataErrors = {
     /**
      * Not Found
      */
     404: unknown;
 };
 
-export type PostWfAssistWorkflowsByIdUpdateDataResponses = {
+export type PostApiWorkflowsByIdUpdateDataResponses = {
     /**
      * No Content
      */
     204: void;
 };
 
-export type PostWfAssistWorkflowsByIdUpdateDataResponse = PostWfAssistWorkflowsByIdUpdateDataResponses[keyof PostWfAssistWorkflowsByIdUpdateDataResponses];
+export type PostApiWorkflowsByIdUpdateDataResponse = PostApiWorkflowsByIdUpdateDataResponses[keyof PostApiWorkflowsByIdUpdateDataResponses];
 
-export type GetWfAssistWorkflowsEventsData = {
+export type GetApiWorkflowsEventsData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/wfAssist/workflows/events';
+    url: '/api/workflows/events';
 };
 
-export type GetWfAssistWorkflowsEventsResponses = {
+export type GetApiWorkflowsEventsResponses = {
     /**
      * OK
      */
     200: SseItemOfNotification;
 };
 
-export type GetWfAssistWorkflowsEventsResponse = GetWfAssistWorkflowsEventsResponses[keyof GetWfAssistWorkflowsEventsResponses];
+export type GetApiWorkflowsEventsResponse = GetApiWorkflowsEventsResponses[keyof GetApiWorkflowsEventsResponses];
 
-export type PostWfAssistWorkflowsByIdQueueRunData = {
+export type PostApiWorkflowsByIdQueueRunData = {
     body?: never;
     path: {
         id: string;
     };
     query?: never;
-    url: '/wfAssist/workflows/{id}/queueRun';
+    url: '/api/workflows/{id}/queueRun';
 };
 
-export type PostWfAssistWorkflowsByIdQueueRunErrors = {
+export type PostApiWorkflowsByIdQueueRunErrors = {
     /**
      * Not Found
      */
     404: unknown;
 };
 
-export type PostWfAssistWorkflowsByIdQueueRunResponses = {
+export type PostApiWorkflowsByIdQueueRunResponses = {
     /**
      * OK
      */
     200: RunWorkflowResponse;
 };
 
-export type PostWfAssistWorkflowsByIdQueueRunResponse = PostWfAssistWorkflowsByIdQueueRunResponses[keyof PostWfAssistWorkflowsByIdQueueRunResponses];
+export type PostApiWorkflowsByIdQueueRunResponse = PostApiWorkflowsByIdQueueRunResponses[keyof PostApiWorkflowsByIdQueueRunResponses];

@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { DeleteWfAssistWorkflowsByIdData, DeleteWfAssistWorkflowsByIdResponses, GetWfAssistWorkflowsByIdData, GetWfAssistWorkflowsByIdErrors, GetWfAssistWorkflowsByIdResponses, GetWfAssistWorkflowsEventsData, GetWfAssistWorkflowsEventsResponses, GetWfAssistWorkflowsIdentitiesData, GetWfAssistWorkflowsIdentitiesResponses, PostWfAssistWorkflowsByIdQueueRunData, PostWfAssistWorkflowsByIdQueueRunErrors, PostWfAssistWorkflowsByIdQueueRunResponses, PostWfAssistWorkflowsByIdRenameData, PostWfAssistWorkflowsByIdRenameErrors, PostWfAssistWorkflowsByIdRenameResponses, PostWfAssistWorkflowsByIdUpdateDataData, PostWfAssistWorkflowsByIdUpdateDataErrors, PostWfAssistWorkflowsByIdUpdateDataResponses, PostWfAssistWorkflowsData, PostWfAssistWorkflowsResponses } from './types.gen';
+import type { DeleteApiWorkflowsByIdData, DeleteApiWorkflowsByIdResponses, GetApiWorkflowsByIdData, GetApiWorkflowsByIdErrors, GetApiWorkflowsByIdResponses, GetApiWorkflowsEventsData, GetApiWorkflowsEventsResponses, GetApiWorkflowsIdentitiesData, GetApiWorkflowsIdentitiesResponses, PostApiWorkflowsByIdQueueRunData, PostApiWorkflowsByIdQueueRunErrors, PostApiWorkflowsByIdQueueRunResponses, PostApiWorkflowsByIdRenameData, PostApiWorkflowsByIdRenameErrors, PostApiWorkflowsByIdRenameResponses, PostApiWorkflowsByIdUpdateDataData, PostApiWorkflowsByIdUpdateDataErrors, PostApiWorkflowsByIdUpdateDataResponses, PostApiWorkflowsData, PostApiWorkflowsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -18,70 +18,39 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const getWfAssistWorkflowsIdentities = <ThrowOnError extends boolean = false>(options?: Options<GetWfAssistWorkflowsIdentitiesData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetWfAssistWorkflowsIdentitiesResponses, unknown, ThrowOnError>({
-        url: '/wfAssist/workflows/identities',
-        ...options
-    });
-};
+export const getApiWorkflowsIdentities = <ThrowOnError extends boolean = false>(options?: Options<GetApiWorkflowsIdentitiesData, ThrowOnError>) => (options?.client ?? client).get<GetApiWorkflowsIdentitiesResponses, unknown, ThrowOnError>({ url: '/api/workflows/identities', ...options });
 
-export const deleteWfAssistWorkflowsById = <ThrowOnError extends boolean = false>(options: Options<DeleteWfAssistWorkflowsByIdData, ThrowOnError>) => {
-    return (options.client ?? client).delete<DeleteWfAssistWorkflowsByIdResponses, unknown, ThrowOnError>({
-        url: '/wfAssist/workflows/{id}',
-        ...options
-    });
-};
+export const deleteApiWorkflowsById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiWorkflowsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiWorkflowsByIdResponses, unknown, ThrowOnError>({ url: '/api/workflows/{id}', ...options });
 
-export const getWfAssistWorkflowsById = <ThrowOnError extends boolean = false>(options: Options<GetWfAssistWorkflowsByIdData, ThrowOnError>) => {
-    return (options.client ?? client).get<GetWfAssistWorkflowsByIdResponses, GetWfAssistWorkflowsByIdErrors, ThrowOnError>({
-        url: '/wfAssist/workflows/{id}',
-        ...options
-    });
-};
+export const getApiWorkflowsById = <ThrowOnError extends boolean = false>(options: Options<GetApiWorkflowsByIdData, ThrowOnError>) => (options.client ?? client).get<GetApiWorkflowsByIdResponses, GetApiWorkflowsByIdErrors, ThrowOnError>({ url: '/api/workflows/{id}', ...options });
 
-export const postWfAssistWorkflows = <ThrowOnError extends boolean = false>(options: Options<PostWfAssistWorkflowsData, ThrowOnError>) => {
-    return (options.client ?? client).post<PostWfAssistWorkflowsResponses, unknown, ThrowOnError>({
-        url: '/wfAssist/workflows',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const postApiWorkflows = <ThrowOnError extends boolean = false>(options: Options<PostApiWorkflowsData, ThrowOnError>) => (options.client ?? client).post<PostApiWorkflowsResponses, unknown, ThrowOnError>({
+    url: '/api/workflows',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
-export const postWfAssistWorkflowsByIdRename = <ThrowOnError extends boolean = false>(options: Options<PostWfAssistWorkflowsByIdRenameData, ThrowOnError>) => {
-    return (options.client ?? client).post<PostWfAssistWorkflowsByIdRenameResponses, PostWfAssistWorkflowsByIdRenameErrors, ThrowOnError>({
-        url: '/wfAssist/workflows/{id}/rename',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const postApiWorkflowsByIdRename = <ThrowOnError extends boolean = false>(options: Options<PostApiWorkflowsByIdRenameData, ThrowOnError>) => (options.client ?? client).post<PostApiWorkflowsByIdRenameResponses, PostApiWorkflowsByIdRenameErrors, ThrowOnError>({
+    url: '/api/workflows/{id}/rename',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
-export const postWfAssistWorkflowsByIdUpdateData = <ThrowOnError extends boolean = false>(options: Options<PostWfAssistWorkflowsByIdUpdateDataData, ThrowOnError>) => {
-    return (options.client ?? client).post<PostWfAssistWorkflowsByIdUpdateDataResponses, PostWfAssistWorkflowsByIdUpdateDataErrors, ThrowOnError>({
-        url: '/wfAssist/workflows/{id}/updateData',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const postApiWorkflowsByIdUpdateData = <ThrowOnError extends boolean = false>(options: Options<PostApiWorkflowsByIdUpdateDataData, ThrowOnError>) => (options.client ?? client).post<PostApiWorkflowsByIdUpdateDataResponses, PostApiWorkflowsByIdUpdateDataErrors, ThrowOnError>({
+    url: '/api/workflows/{id}/updateData',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
-export const getWfAssistWorkflowsEvents = <ThrowOnError extends boolean = false>(options?: Options<GetWfAssistWorkflowsEventsData, ThrowOnError>) => {
-    return (options?.client ?? client).sse.get<GetWfAssistWorkflowsEventsResponses, unknown, ThrowOnError>({
-        url: '/wfAssist/workflows/events',
-        ...options
-    });
-};
+export const getApiWorkflowsEvents = <ThrowOnError extends boolean = false>(options?: Options<GetApiWorkflowsEventsData, ThrowOnError>) => (options?.client ?? client).sse.get<GetApiWorkflowsEventsResponses, unknown, ThrowOnError>({ url: '/api/workflows/events', ...options });
 
-export const postWfAssistWorkflowsByIdQueueRun = <ThrowOnError extends boolean = false>(options: Options<PostWfAssistWorkflowsByIdQueueRunData, ThrowOnError>) => {
-    return (options.client ?? client).post<PostWfAssistWorkflowsByIdQueueRunResponses, PostWfAssistWorkflowsByIdQueueRunErrors, ThrowOnError>({
-        url: '/wfAssist/workflows/{id}/queueRun',
-        ...options
-    });
-};
+export const postApiWorkflowsByIdQueueRun = <ThrowOnError extends boolean = false>(options: Options<PostApiWorkflowsByIdQueueRunData, ThrowOnError>) => (options.client ?? client).post<PostApiWorkflowsByIdQueueRunResponses, PostApiWorkflowsByIdQueueRunErrors, ThrowOnError>({ url: '/api/workflows/{id}/queueRun', ...options });
