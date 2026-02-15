@@ -1,10 +1,10 @@
-import { getWfAssistWorkflowsIdentities } from "$api";
+import { getApiWorkflowsIdentities } from "$api";
 import { failed, successful, type WorkflowIdentity } from "$lib/types";
 
 export function createGetWorkflowIdentitiesQuery() {
   return async () => {
     {
-      const result = await getWfAssistWorkflowsIdentities();
+      const result = await getApiWorkflowsIdentities();
 
       return result.error
         ? failed(result.error.toString())

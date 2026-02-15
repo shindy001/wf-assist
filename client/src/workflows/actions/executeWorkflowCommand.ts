@@ -1,10 +1,10 @@
-import { postWfAssistWorkflowsByIdQueueRun } from "$api";
+import { postApiWorkflowsByIdQueueRun } from "$api";
 import { failed, successful } from "$lib/types";
 
 export function createExecuteWorkflowCommand() {
   return async (workflowId: string) => {
     {
-      const result = await postWfAssistWorkflowsByIdQueueRun({
+      const result = await postApiWorkflowsByIdQueueRun({
         path: { id: workflowId },
       });
 

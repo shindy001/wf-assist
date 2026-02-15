@@ -1,4 +1,4 @@
-import { postWfAssistWorkflows, type CreateWorkflowRequest } from "$api";
+import { postApiWorkflows, type CreateWorkflowRequest } from "$api";
 import { failed, successful, type WorkflowData } from "$lib/types";
 import { toWorkflowDataDto } from "$lib/types/workflowMapper";
 
@@ -10,7 +10,7 @@ export function createAddWorkflowCommand() {
         data: workflowData ? toWorkflowDataDto(workflowData) : {},
       };
 
-      const result = await postWfAssistWorkflows({ body: requestData });
+      const result = await postApiWorkflows({ body: requestData });
 
       return result.error ? failed(result.error.toString()) : successful();
     }

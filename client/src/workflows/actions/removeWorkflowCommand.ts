@@ -1,9 +1,9 @@
-import { deleteWfAssistWorkflowsById } from "$api";
+import { deleteApiWorkflowsById } from "$api";
 import { failed, successful } from "$lib/types";
 
 export function createRemoveWorkflowCommand() {
   return async (workflowId: string) => {
-    const result = await deleteWfAssistWorkflowsById({
+    const result = await deleteApiWorkflowsById({
       path: { id: workflowId },
     });
 
