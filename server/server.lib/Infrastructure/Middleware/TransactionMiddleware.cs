@@ -12,7 +12,7 @@ public sealed class TransactionMiddleware
 
     public async Task Invoke(HttpContext httpContext, IDbConnectionProvider dbConnectionProvider)
     {
-        if (!IsAppRoute(httpContext.Request.Path)
+        if (!IsApiRoute(httpContext.Request.Path)
             || !IsSideEffect(httpContext.Request.Method))
         {
             await _next(httpContext);
@@ -47,9 +47,9 @@ public sealed class TransactionMiddleware
                || HttpMethods.IsDelete(httpMethod);
     }
 
-    private static bool IsAppRoute(PathString requestPath)
+    private static bool IsApiRoute(PathString requestPath)
     {
-        return requestPath.StartsWithSegments(Constants.AppRouteSegment);
+        return requestPath.StartsWithSegments(Constants.ApiRouteSegment);
     }
 }
 

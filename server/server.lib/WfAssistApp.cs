@@ -140,13 +140,13 @@ public static class WfAssistApp
         var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger($"{nameof(RegisterWfAssistApp)}-Client_and_UI_registration");
 
-        var wfAssistDefaultRouteGroup = app
+        var wfAssistClientDefaultRouteGroup = app
             .MapGroup(Constants.AppRoute)
             .WithTags(Constants.AppName)
             // TODO - remove when auth is supported
             .AllowAnonymous();
 
-        wfAssistDefaultRouteGroup.MapWfAssistClientEndpoints(logger);
+        wfAssistClientDefaultRouteGroup.MapWfAssistClientEndpoints(logger);
     }
 
     private static void UseWfAssistAppServer(this WebApplication app)
@@ -158,14 +158,14 @@ public static class WfAssistApp
         var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger($"{nameof(RegisterWfAssistApp)}-API_and_UI_registration");
 
-        var wfAssistDefaultRouteGroup = app
-            .MapGroup(Constants.AppRoute)
-            .WithTags(Constants.AppName)
+        var wfAssistApiDefaultRouteGroup = app
+            .MapGroup(Constants.ApiRoute)
+            .WithTags(Constants.ApiRoute)
             // TODO - remove when auth is supported
             .AllowAnonymous();
 
         // Api endpoints
-        wfAssistDefaultRouteGroup.MapWorkflowEndpoints();
+        wfAssistApiDefaultRouteGroup.MapWorkflowEndpoints();
     }
 
     private static void UpdateDatabase(IApplicationBuilder app)

@@ -6,7 +6,8 @@ internal static class Constants
 {
     public const string AppName = "WfAssist";
     public const string AppRoute = "wfAssist";
-    public static readonly PathString AppRouteSegment = new($"/{AppRoute}");
+    public const string ApiRoute = "api";
+    public static readonly PathString ApiRouteSegment = new($"/{ApiRoute}");
 
     public const string WwwRootDirectory = "wwwroot";
     public const string IndexHtmlFile = "index.html";
