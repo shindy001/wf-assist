@@ -15,19 +15,24 @@
   import OutputHandle from "./OutputHandle.svelte";
   import { Button } from "$lib/components/ui/button";
   import { Icon } from "$lib/components/ui/icons";
+  import { untrack } from "svelte";
 
   const { updateNodeData, updateNode } = useSvelteFlow();
 
-  let { id, data }: NodeProps<HeadersNodeType> = $props();
+  let props: NodeProps<HeadersNodeType> = $props();
+  let nodeId = $state(untrack(() => props.id));
+  let initialData = $state(untrack(() => props.data));
   let headers = $state(
-    data.headers.length <= 0 ? [{ name: "", value: "" }] : data.headers,
+    initialData.headers.length <= 0
+      ? [{ name: "", value: "" }]
+      : initialData.headers,
   );
 
   // Set default node width after data init
-  updateNode(id, { width: 320, height: 200 });
+  updateNode(nodeId, { width: 320, height: 200 });
 
   $effect(() => {
-    updateNodeData(id, { headers: headers });
+    updateNodeData(nodeId, { headers: headers });
   });
 </script>
 
@@ -37,8 +42,8 @@
   minResizableWidth={320}
   minResizableHeight={200}
 >
-  <InputHandle nodeId={id} />
-  <OutputHandle nodeId={id} />
+  <InputHandle {nodeId} />
+  <OutputHandle {nodeId} />
 
   <div
     class="flex flex-col space-y-2 h-full max-h-full max-w-full overflow-auto"
@@ -55,7 +60,7 @@
         </Button>
       </div>
       {#each headers as header, i}
-        <div class="flex gap-1">
+        <div class="flex gap-1 px-1">
           <input
             name="key"
             class="nodrag w-20 grow-4"

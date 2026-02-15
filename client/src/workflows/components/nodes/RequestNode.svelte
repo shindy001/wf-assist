@@ -17,31 +17,34 @@
   import TurboNode from "./TurboNode.svelte";
   import InputHandle from "./InputHandle.svelte";
   import OutputHandle from "./OutputHandle.svelte";
+  import { untrack } from "svelte";
 
   const { updateNodeData, updateNode } = useSvelteFlow();
   const requestTypes = [...Object.values(RequestType)];
   const isRequestTypeWithBody = () =>
-    data.requestType !== RequestType.Get &&
-    data.requestType !== RequestType.Delete;
+    props.data.requestType !== RequestType.Get &&
+    props.data.requestType !== RequestType.Delete;
 
-  let { id, data }: NodeProps<RequestNodeType> = $props();
-  let selectedRequestType = $state(data.requestType ?? RequestType.Get);
-  let urlInputText = $state(data.url ?? "");
-  let requestBodyInputText = $state(data.requestBody ?? "");
+  let props: NodeProps<RequestNodeType> = $props();
+  let nodeId = $state(untrack(() => props.id));
+  let initialData = $state(untrack(() => props.data));
+  let selectedRequestType = $state(initialData.requestType ?? RequestType.Get);
+  let urlInputText = $state(initialData.url ?? "");
+  let requestBodyInputText = $state(initialData.requestBody ?? "");
 
   // Set default node width after data init
-  updateNode(id, { width: 200, height: 300 });
+  updateNode(nodeId, { width: 200, height: 300 });
 </script>
 
 <TurboNode
   label="Request"
-  {id}
+  id={nodeId}
   resizable
   minResizableWidth={200}
   minResizableHeight={300}
 >
-  <InputHandle nodeId={id} />
-  <OutputHandle nodeId={id} />
+  <InputHandle {nodeId} />
+  <OutputHandle {nodeId} />
 
   <div class="flex flex-col space-y-2 h-full max-h-full">
     <fieldset>
@@ -50,7 +53,7 @@
         class="nodrag w-full"
         placeholder="Enter a url..."
         bind:value={urlInputText}
-        onchange={() => updateNodeData(id, { url: urlInputText })}
+        onchange={() => updateNodeData(nodeId, { url: urlInputText })}
       />
     </fieldset>
 
@@ -60,7 +63,7 @@
         class="nodrag w-full"
         bind:value={selectedRequestType}
         onchange={() => {
-          updateNodeData(id, { requestType: selectedRequestType });
+          updateNodeData(nodeId, { requestType: selectedRequestType });
         }}
       >
         {#each requestTypes as requestType}
@@ -78,7 +81,7 @@
           placeholder="Contents (JSON, XML, etc.)..."
           bind:value={requestBodyInputText}
           onchange={() =>
-            updateNodeData(id, { requestBody: requestBodyInputText })}
+            updateNodeData(nodeId, { requestBody: requestBodyInputText })}
         >
         </textarea>
       </fieldset>
