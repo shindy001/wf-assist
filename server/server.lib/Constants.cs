@@ -15,6 +15,7 @@ internal static class Constants
     public const string FaviconFile = "favicon.ico";
     public const string AppSettings = "appSettings.json";
 
+    public static readonly string ClientRootDirectoryPath = Path.Combine(AppContext.BaseDirectory, WwwRootDirectory, AppRoute);
     public static readonly string SqliteDbConnectionString = GetSqliteConnectionString();
 
     private static string GetSqliteConnectionString()

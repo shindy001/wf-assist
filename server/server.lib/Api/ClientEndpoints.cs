@@ -14,7 +14,8 @@ internal static class ClientEndpoints
     /// 2. WfAssist client app and this lib project is bundled to a nuget in nuget project (on project build) in solution.
     /// Nuget package output dir is [solutionDir/nuget/packages]<br/>
     /// 3. If you are not using the nuget, you need to copy dist binaries to [your server host outputDir]/wwwroot/wfAssist<br/>
-    /// Example path - "myServerDirectory/bin/debug/net10.0/wwwroot/wfAssist"
+    /// Example path - "_server.host.openapi/bin/debug/net10.0/wwwroot/wfAssist"<br/>
+    /// or run wfAssist client app directly - viz. package.json in client project
     /// </summary>
     /// <param name="endpoints"></param>
     /// <param name="logger"></param>
@@ -39,14 +40,13 @@ internal static class ClientEndpoints
     /// <returns></returns>
     private static void MapWfAssistClientResources(IEndpointRouteBuilder routeGroup, ILogger logger)
     {
-        var rootDirectoryPath = Path.Combine(AppContext.BaseDirectory, Constants.WwwRootDirectory, Constants.AppRoute);
-        var rootDirectoryInfo = new DirectoryInfo(rootDirectoryPath);
+        var rootDirectoryInfo = new DirectoryInfo(Constants.ClientRootDirectoryPath);
         if (!rootDirectoryInfo.Exists)
         {
             var errorMessage =
                 $"""
                   *****
-                  Failed to register WFAssist UI, web application binaries not found in directory: '{rootDirectoryPath}'.
+                  Failed to register WFAssist UI, web application binaries not found in directory: '{Constants.ClientRootDirectoryPath}'.
                   If your are developing or debugging WFAssist server and need the client UI, copy built client UI binaries to the specified directory.
                   Otherwise only server API will be available.
                   (You can ignore this message if you are only using the API or running WFAssist UI as separate process.)
@@ -73,7 +73,7 @@ internal static class ClientEndpoints
             var errorMessage =
                 $"""
                   *****
-                  Failed to register WFAssist UI, some files are missing in app root directory '{rootDirectoryPath}':
+                  Failed to register WFAssist UI, some files are missing in app root directory '{Constants.ClientRootDirectoryPath}':
                   {Constants.IndexHtmlFile}: {(indexHtmlFileInfo is null ? "missing": "found")}
                   {Constants.AppSettings}: {(appSettingsFileInfo is null ? "missing": "found")}
                   {Constants.IndexCssFile}: {(indexCssFileInfo is null ? "missing": "found")}

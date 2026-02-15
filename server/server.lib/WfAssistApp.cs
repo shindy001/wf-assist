@@ -24,12 +24,14 @@ namespace WfAssist.AspNetCore;
 public static class WfAssistApp
 {
     private const string CorsAllowAllPolicy = "AllowAllCorsPolicy";
+    private static int _appHttpPort = 7130;
 
     /// <summary>
     /// Registers WfAssist app as separate process.
     /// </summary>
-    public static void RegisterWfAssistApp(this WebApplication hostApp)
+    public static void RegisterWfAssistApp(this WebApplication hostApp, int httpPort = 7130)
     {
+        _appHttpPort = httpPort;
         var builder = WebApplication.CreateBuilder();
         builder.ConfigureWfAssistAppBuilder();
 
@@ -38,8 +40,9 @@ public static class WfAssistApp
 
         hostApp.Lifetime.ApplicationStarted.Register(() =>
             {
-                Log.Logger.Information("Starting WfAssist app.");
-                _ = wfAssistApp.RunAsync("http://localhost:7130");
+                var url = $"http://localhost:{_appHttpPort}";
+                Log.Logger.Information("Starting WfAssist api server - {Url}/scalar.", url);
+                _ = wfAssistApp.RunAsync(url);
             }
         );
 
