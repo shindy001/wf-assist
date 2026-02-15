@@ -35,10 +35,6 @@
         <!-- Transitive build targets like copying nuget contents to project output directory on build, etc. -->
         <None Include="buildTransitive\WfAssist.targets" Pack="true" PackagePath="buildTransitive\WfAssist.targets" />
 
-        <ProjectReference Include="..\server\server.lib\server.lib.csproj">
-          <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-          <IncludeAssets>server.lib.dll</IncludeAssets>
-      </ProjectReference>
+        <ProjectReference Include="..\server\server.lib\server.lib.csproj" IncludeAssets="all" />
     </ItemGroup>
-
 </Project>
