@@ -1,7 +1,7 @@
 import { defineConfig } from "@hey-api/openapi-ts";
 
 export default defineConfig({
-  input: "./../server/server.host/wfAssist-api.json",
+  input: "./../server/_server.host.openapi/wfAssist-api.json",
   output: {
     path: "src/api",
     lint: null,
