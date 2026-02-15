@@ -5,7 +5,7 @@
     "description": "API for WFAssist client."
   },
   "paths": {
-    "/wfAssist/workflows/identities": {
+    "/api/workflows/identities": {
       "get": {
         "tags": [
           "WfAssist_Workflows"
@@ -24,7 +24,7 @@
         }
       }
     },
-    "/wfAssist/workflows/{id}": {
+    "/api/workflows/{id}": {
       "get": {
         "tags": [
           "WfAssist_Workflows"
@@ -78,7 +78,7 @@
         }
       }
     },
-    "/wfAssist/workflows": {
+    "/api/workflows": {
       "post": {
         "tags": [
           "WfAssist_Workflows"
@@ -100,7 +100,7 @@
         }
       }
     },
-    "/wfAssist/workflows/{id}/rename": {
+    "/api/workflows/{id}/rename": {
       "post": {
         "tags": [
           "WfAssist_Workflows"
@@ -136,7 +136,7 @@
         }
       }
     },
-    "/wfAssist/workflows/{id}/updateData": {
+    "/api/workflows/{id}/updateData": {
       "post": {
         "tags": [
           "WfAssist_Workflows"
@@ -172,7 +172,7 @@
         }
       }
     },
-    "/wfAssist/workflows/events": {
+    "/api/workflows/events": {
       "get": {
         "tags": [
           "WfAssist_Workflows"
@@ -191,7 +191,7 @@
         }
       }
     },
-    "/wfAssist/workflows/{id}/queueRun": {
+    "/api/workflows/{id}/queueRun": {
       "post": {
         "tags": [
           "WfAssist_Workflows"
