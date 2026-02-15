@@ -8,6 +8,7 @@ export default defineConfig({
   base: "./",
   build: {
     target: "esnext",
+    sourcemap: 'inline',
     rollupOptions: {
       output: {
         entryFileNames: "[name].js",
