@@ -1,9 +1,14 @@
+using System.Text.Json.Serialization;
 using Dapper;
 using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi;
+using Scalar.AspNetCore;
+using Serilog;
 using WfAssist.AspNetCore.Api;
 using WfAssist.AspNetCore.Api.Workflows;
 using WfAssist.AspNetCore.Core.Runtime;
@@ -15,16 +20,71 @@ using WfAssist.AspNetCore.Infrastructure.Serialization;
 
 namespace WfAssist.AspNetCore;
 
+
 public static class WfAssistApp
 {
+    private const string CorsAllowAllPolicy = "AllowAllCorsPolicy";
+
     /// <summary>
-    /// Adds services required by WfAssist app.
+    /// Registers WfAssist app as separate process.
     /// </summary>
-    public static void AddWfAssistServices(this IServiceCollection services)
+    public static void RegisterWfAssistApp(this WebApplication hostApp)
     {
+        var builder = WebApplication.CreateBuilder();
+        builder.ConfigureWfAssistAppBuilder();
+
+        var wfAssistApp = builder.Build();
+        wfAssistApp.ConfigureWfAssistApp();
+
+        hostApp.Lifetime.ApplicationStarted.Register(() =>
+            {
+                Log.Logger.Information("Starting WfAssist app.");
+                _ = wfAssistApp.RunAsync("http://localhost:7130");
+            }
+        );
+
+        hostApp.Lifetime.ApplicationStopping.Register(() =>
+            {
+                Log.Logger.Information("Stopping WfAssist app.");
+                wfAssistApp.StopAsync().GetAwaiter().GetResult();
+            }
+        );
+    }
+
+    internal static void ConfigureWfAssistAppBuilder(this WebApplicationBuilder builder)
+    {
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger();
+
+        builder.Services.AddSerilog();
+        builder.Services.ConfigureHttpJsonOptions(options =>
+        {
+            // Force openapi to use strict number handling instead of default AllowReadingFromString
+            options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict;
+        });
+
+        builder.Services.AddOpenApi(opt =>
+        {
+            opt.AddDocumentTransformer((document, _, _) =>
+            {
+                document.Info = new OpenApiInfo
+                {
+                    Title = "WFAssist API Reference",
+                    Description = "API for WFAssist client."
+                };
+                return Task.CompletedTask;
+            });
+        });
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(CorsAllowAllPolicy, policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+        });
+
         var wfAssistAssembly = typeof(WfAssistApp).Assembly;
 
-        services.AddFluentMigratorCore()
+        builder.Services.AddFluentMigratorCore()
             .ConfigureRunner(cfg => cfg
                 .AddSQLite()
                 .WithGlobalConnectionString(Constants.SqliteDbConnectionString)
@@ -37,38 +97,45 @@ public static class WfAssistApp
         SqlMapper.AddTypeHandler(new WorkflowDataTypeHandler());
         SqlMapper.AddTypeHandler(new ProcessingResultDictionaryTypeHandler());
 
-        // Services
-        services.AddScoped<IDbConnectionProvider, SqliteDbConnectionProvider>();
-        services.AddScoped<IWorkflowRepository, WorkflowRepository>();
-        services.AddScoped<IExecutionRepository, ExecutionRepository>();
+        builder.Services.AddScoped<IDbConnectionProvider, SqliteDbConnectionProvider>();
+        builder.Services.AddScoped<IWorkflowRepository, WorkflowRepository>();
+        builder.Services.AddScoped<IExecutionRepository, ExecutionRepository>();
 
-        services.AddHttpClient();
-        services.AddScoped<ProcessingContext>();
-        services.AddScoped<WorkflowNodeReferenceResolver>();
-        services.AddKeyedScoped<IWorkflowNodeProcessor, RequestWorkflowNodeProcessor>(ProcessorConstants.RequestNodeProcessorKey);
-        services.AddKeyedScoped<IWorkflowNodeProcessor, HeadersWorkflowNodeProcessor>(ProcessorConstants.HeadersNodeProcessorKey);
-        services.AddScoped<WorkflowExecutor>();
-        services.AddScoped<ExecutionManager>();
+        builder.Services.AddHttpClient();
+        builder.Services.AddScoped<ProcessingContext>();
+        builder.Services.AddScoped<WorkflowNodeReferenceResolver>();
+        builder.Services.AddKeyedScoped<IWorkflowNodeProcessor, RequestWorkflowNodeProcessor>(ProcessorConstants.RequestNodeProcessorKey);
+        builder.Services.AddKeyedScoped<IWorkflowNodeProcessor, HeadersWorkflowNodeProcessor>(ProcessorConstants.HeadersNodeProcessorKey);
+        builder.Services.AddScoped<WorkflowExecutor>();
+        builder.Services.AddScoped<ExecutionManager>();
 
-        services.AddSingleton<INotificationDispatcher, NotificationDispatcher>();
-        services.AddHostedService<ExecutionBackgroundService>();
+        builder.Services.AddSingleton<INotificationDispatcher, NotificationDispatcher>();
+        builder.Services.AddHostedService<ExecutionBackgroundService>();
     }
 
-    /// <summary>
-    /// Sets up WfAssist resources and api. Api and resources use AllowAnonymous by default (auth is unsupported)<br/><br/>
-    /// <b>Client endpoints:</b><br/>
-    /// <inheritdoc cref="ClientEndpoints.MapWfAssistClientEndpoints"/><br/><br/>
-    /// </summary>
-    /// <param name="app">Web application that want to use WfAssist.</param>
-    /// <param name="excludeFromOpenApi">Default is true, excludes WfAssist endpoints from OpenApi definitions</param>
-    public static Task UseWfAssistApp(this WebApplication app, bool excludeFromOpenApi = true)
+    internal static void ConfigureWfAssistApp(this WebApplication app)
     {
-        UpdateDatabase(app);
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseCors(CorsAllowAllPolicy);
+            app.MapOpenApi();
+            app.MapScalarApiReference(options =>
+            {
+                options.WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Axios);
+                options.EnabledClients = [ScalarClient.Curl, ScalarClient.Axios];
+                options.EnabledTargets = [ScalarTarget.Shell, ScalarTarget.JavaScript];
 
-        app.UseTransactionMiddleware();
+            });
+        }
 
+        app.UseWfAssistAppClient();
+        app.UseWfAssistAppServer();
+    }
+
+    private static void UseWfAssistAppClient(this WebApplication app)
+    {
         var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
-        var logger = loggerFactory.CreateLogger($"{nameof(UseWfAssistApp)}-API_and_UI_registration");
+        var logger = loggerFactory.CreateLogger($"{nameof(RegisterWfAssistApp)}-Client_and_UI_registration");
 
         var wfAssistDefaultRouteGroup = app
             .MapGroup(Constants.AppRoute)
@@ -76,17 +143,26 @@ public static class WfAssistApp
             // TODO - remove when auth is supported
             .AllowAnonymous();
 
-        if (excludeFromOpenApi)
-        {
-            wfAssistDefaultRouteGroup.ExcludeFromDescription();
-        }
-
         wfAssistDefaultRouteGroup.MapWfAssistClientEndpoints(logger);
+    }
 
-        // Modules endpoints
+    private static void UseWfAssistAppServer(this WebApplication app)
+    {
+        UpdateDatabase(app);
+
+        app.UseTransactionMiddleware();
+
+        var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger($"{nameof(RegisterWfAssistApp)}-API_and_UI_registration");
+
+        var wfAssistDefaultRouteGroup = app
+            .MapGroup(Constants.AppRoute)
+            .WithTags(Constants.AppName)
+            // TODO - remove when auth is supported
+            .AllowAnonymous();
+
+        // Api endpoints
         wfAssistDefaultRouteGroup.MapWorkflowEndpoints();
-
-        return Task.CompletedTask;
     }
 
     private static void UpdateDatabase(IApplicationBuilder app)
