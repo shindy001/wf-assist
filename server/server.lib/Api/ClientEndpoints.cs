@@ -62,14 +62,20 @@ internal static class ClientEndpoints
         var indexCssFileInfo = rootDirectoryInfo.GetFiles(Constants.IndexCssFile).SingleOrDefault();
         var indexJsFileInfo = rootDirectoryInfo.GetFiles(Constants.IndexJsFile).SingleOrDefault();
         var faviconFileInfo = rootDirectoryInfo.GetFiles(Constants.FaviconFile).SingleOrDefault();
+        var appSettingsFileInfo = rootDirectoryInfo.GetFiles(Constants.AppSettings).SingleOrDefault();
 
-        if (indexHtmlFileInfo is null || indexCssFileInfo is null || indexJsFileInfo is null || faviconFileInfo is null)
+        if (indexHtmlFileInfo is null
+            || appSettingsFileInfo is null
+            || indexCssFileInfo is null
+            || indexJsFileInfo is null
+            || faviconFileInfo is null)
         {
             var errorMessage =
                 $"""
                   *****
                   Failed to register WFAssist UI, some files are missing in app root directory '{rootDirectoryPath}':
                   {Constants.IndexHtmlFile}: {(indexHtmlFileInfo is null ? "missing": "found")}
+                  {Constants.AppSettings}: {(appSettingsFileInfo is null ? "missing": "found")}
                   {Constants.IndexCssFile}: {(indexCssFileInfo is null ? "missing": "found")}
                   {Constants.IndexJsFile}: {(indexJsFileInfo is null ? "missing": "found")}
                   {Constants.FaviconFile}: {(faviconFileInfo is null ? "missing": "found")}
@@ -86,6 +92,7 @@ internal static class ClientEndpoints
         }
 
         routeGroup.MapDocumentEndpoint(indexHtmlFileInfo);
+        routeGroup.MapStaticAsset(appSettingsFileInfo, MediaTypeNames.Text.JavaScript);
         routeGroup.MapStaticAsset(indexCssFileInfo, MediaTypeNames.Text.Css);
         routeGroup.MapStaticAsset(indexJsFileInfo, MediaTypeNames.Text.JavaScript);
         routeGroup.MapStaticAsset(faviconFileInfo, MediaTypeNames.Image.Icon);

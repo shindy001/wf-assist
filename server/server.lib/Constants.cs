@@ -13,6 +13,7 @@ internal static class Constants
     public const string IndexCssFile = "index.css";
     public const string IndexJsFile = "index.js";
     public const string FaviconFile = "favicon.ico";
+    public const string AppSettings = "appSettings.json";
 
     public static readonly string SqliteDbConnectionString = GetSqliteConnectionString();
 
