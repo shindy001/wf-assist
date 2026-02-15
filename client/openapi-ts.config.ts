@@ -4,7 +4,7 @@ export default defineConfig({
   input: "./../server/_server.host.openapi/wfAssist-api.json",
   output: {
     path: "src/api",
-    lint: null,
+    postProcess: [],
   },
   plugins: [
     {
