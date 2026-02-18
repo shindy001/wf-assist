@@ -24,31 +24,32 @@ namespace WfAssist.AspNetCore;
 public static class WfAssistApp
 {
     private const string CorsAllowAllPolicy = "AllowAllCorsPolicy";
-    private static int _appHttpPort = 7130;
 
     /// <summary>
     /// Registers WfAssist app as separate process.
     /// </summary>
     public static void RegisterWfAssistApp(this WebApplication hostApp, int httpPort = 7130)
     {
-        _appHttpPort = httpPort;
         var builder = WebApplication.CreateBuilder();
         builder.ConfigureWfAssistAppBuilder();
 
         var wfAssistApp = builder.Build();
         wfAssistApp.ConfigureWfAssistApp();
 
+        // Careful - Debug mode in IDEs does not trigger these callbacks, but this host is still killed as child process
+        // If this become a problem, wrap the wfAssist builder to IHostedService as Dashboard app in Aspire (DashboardServiceHost.cs) do it.
         hostApp.Lifetime.ApplicationStarted.Register(() =>
             {
-                var url = $"http://localhost:{_appHttpPort}";
+                var url = $"http://localhost:{httpPort}";
                 Log.Logger.Information("Starting WfAssist api server - {Url}/scalar.", url);
-                _ = wfAssistApp.RunAsync(url);
+                Log.Logger.Information("Starting WfAssist app - {Url}/wfAssist.", url);
+                wfAssistApp.Run(url);
             }
         );
 
         hostApp.Lifetime.ApplicationStopping.Register(() =>
             {
-                Log.Logger.Information("Stopping WfAssist app.");
+                Log.Logger.Information("Stopping WfAssist api and client app.");
                 wfAssistApp.StopAsync().GetAwaiter().GetResult();
             }
         );
