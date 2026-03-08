@@ -108,8 +108,11 @@ public static class WfAssistApp
         builder.Services.AddHttpClient();
         builder.Services.AddScoped<ProcessingContext>();
         builder.Services.AddScoped<WorkflowNodeReferenceResolver>();
-        builder.Services.AddKeyedScoped<IWorkflowNodeProcessor, RequestWorkflowNodeProcessor>(ProcessorConstants.RequestNodeProcessorKey);
-        builder.Services.AddKeyedScoped<IWorkflowNodeProcessor, HeadersWorkflowNodeProcessor>(ProcessorConstants.HeadersNodeProcessorKey);
+
+        builder.Services.AddScoped<IWorkflowNodeProcessor, RequestWorkflowNodeProcessor>();
+        builder.Services.AddScoped<IWorkflowNodeProcessor, HeadersWorkflowNodeProcessor>();
+        builder.Services.AddScoped<WorkflowNodeProcessorProvider>();
+
         builder.Services.AddScoped<WorkflowExecutor>();
         builder.Services.AddScoped<ExecutionManager>();
 

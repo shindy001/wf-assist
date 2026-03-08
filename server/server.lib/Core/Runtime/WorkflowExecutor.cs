@@ -1,4 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WfAssist.AspNetCore.Core.Models;
 using WfAssist.AspNetCore.Core.Runtime.NodeProcessors;
@@ -7,15 +6,15 @@ namespace WfAssist.AspNetCore.Core.Runtime;
 
 internal sealed partial class WorkflowExecutor
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly WorkflowNodeProcessorProvider _processorProvider;
     private readonly ProcessingContext _processingContext;
     private readonly ILogger<WorkflowExecutor> _logger;
 
-    public WorkflowExecutor(IServiceProvider serviceProvider,
+    public WorkflowExecutor(WorkflowNodeProcessorProvider processorProvider,
         ProcessingContext processingContext,
         ILogger<WorkflowExecutor> logger)
     {
-        _serviceProvider = serviceProvider;
+        _processorProvider = processorProvider;
         _processingContext = processingContext;
         _logger = logger;
     }
@@ -33,18 +32,9 @@ internal sealed partial class WorkflowExecutor
 
         foreach (var node in executionOrder)
         {
-            var processorServiceKey = GetProcessorServiceKey(node.Data);
-            var processor = _serviceProvider.GetKeyedService<IWorkflowNodeProcessor>(processorServiceKey);
-
-            if (processor is null)
-            {
-                LogExecutionInterrupted(snapshot.Name,
-                    $"Workflow Processor with service key {processorServiceKey} for node data type {node.Data.GetType().Name} " +
-                    $"was not found, ensure that processor is registered.");
-                return;
-            }
-
+            var processor = _processorProvider.GetProcessor(node.Data);
             var result = await processor.Process(node);
+
             _processingContext.AddResult(node.Id, result);
 
             if (!result.IsSuccessful)
@@ -55,16 +45,6 @@ internal sealed partial class WorkflowExecutor
         }
 
         LogExecutionCompleted(snapshot.Name);
-    }
-
-    private static string GetProcessorServiceKey(WorkflowNodeData nodeData)
-    {
-        return nodeData switch
-        {
-            RequestNodeData => ProcessorConstants.RequestNodeProcessorKey,
-            HeadersNodeData => ProcessorConstants.HeadersNodeProcessorKey,
-            _ => throw new InvalidOperationException($"Unknown node data type {nodeData.GetType().Name}")
-        };
     }
 
     [LoggerMessage(LogLevel.Information, "Executing workflow '{workflowName}'.")]
@@ -78,5 +58,4 @@ internal sealed partial class WorkflowExecutor
 
     [LoggerMessage(LogLevel.Error, "Workflow '{workflowName}' execution was interrupted. Reason: {reason}.")]
     partial void LogExecutionInterrupted(string workflowName, string reason);
-
 }
