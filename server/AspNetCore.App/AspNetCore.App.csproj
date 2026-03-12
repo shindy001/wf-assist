@@ -14,7 +14,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <InternalsVisibleTo Include="_server.host.openapi" />
+        <InternalsVisibleTo Include="_AspNetCore.Host" />
     </ItemGroup>
     
     <ItemGroup>

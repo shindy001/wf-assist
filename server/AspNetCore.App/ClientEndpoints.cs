@@ -14,7 +14,7 @@ internal static class ClientEndpoints
     /// 2. WfAssist client app and this lib project is bundled to a nuget in nuget project (on project build) in solution.
     /// Nuget package output dir is [solutionDir/nuget/packages]<br/>
     /// 3. If you are not using the nuget, you need to copy dist binaries to [your server host outputDir]/wwwroot/wfAssist<br/>
-    /// Example path - "_server.host.openapi/bin/debug/net10.0/wwwroot/wfAssist"<br/>
+    /// Example path - "_AspNetCore.Host/bin/debug/net10.0/wwwroot/wfAssist"<br/>
     /// or run wfAssist client app directly - viz. package.json in client project
     /// </summary>
     /// <param name="endpoints"></param>

@@ -4,7 +4,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <RootNamespace>_server.host.openapi</RootNamespace>
+        <RootNamespace>_AspNetCore.Host</RootNamespace>
         <OpenApiDocumentsDirectory>.</OpenApiDocumentsDirectory>
         <OpenApiGenerateDocumentsOptions>--file-name wfAssist-api</OpenApiGenerateDocumentsOptions>
     </PropertyGroup>
