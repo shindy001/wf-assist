@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>WfAssist.AspNetCore</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.10.3" />
+        <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <InternalsVisibleTo Include="_server.host.openapi" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\Workflows\Workflows.csproj" />
+    </ItemGroup>
+
+</Project>

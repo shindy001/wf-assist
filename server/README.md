@@ -1,8 +1,8 @@
 # WF Assist server
 
-## server.lib
-* Contains endpoints and WebApplication extension to be able to register these in a ```host application (like aspcore webapi)```
+## AspNetCore.App
+* Contains WF Assist api and js client endpoint and service registrations that can be used in actual hosting app like ```_server.host.openapi (aspnetcore webapi)```
 * Will be published as part of the WF Assist nuget, these endpoints will be used by WF Assists client app for processing on backend.
 
-## server.host project (for debugging only)
-Empty host app that just maps WF Assist endpoints.
+## _server.host.openapi project (for debugging and auto generating openapi specifications only)
+Empty host app that just maps WF Assist endpoints and uses openapi middleware.

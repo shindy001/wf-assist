@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>WfAssist.Workflows</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Dapper" Version="2.1.66" />
+        <PackageReference Include="FluentMigrator" Version="7.1.0" />
+        <PackageReference Include="FluentMigrator.Runner" Version="7.1.0" />
+        <PackageReference Include="FluentMigrator.Runner.SQLite" Version="7.1.0" />
+        <PackageReference Include="JsonPath.Net" Version="2.1.1" />
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="Workflows.Tests" />
+    </ItemGroup>
+
+</Project>
