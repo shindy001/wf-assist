@@ -104,9 +104,6 @@ public static class WfAssistApp
 
         // Api modules
         app.MapWorkflows();
-
-        // Custom middleware
-        app.UseTransactionMiddleware();
     }
 
     private static void MapWfAssistAppClient(this WebApplication app)
