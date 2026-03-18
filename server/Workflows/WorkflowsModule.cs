@@ -55,8 +55,6 @@ public static class WorkflowsModule
     {
         UpdateDatabase(app);
 
-        app.UseTransactionMiddleware();
-
         var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger($"{nameof(WorkflowsModule)}-API_and_UI_registration");
 

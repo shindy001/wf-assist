@@ -1,18 +1,18 @@
-using System.Data;
+using System.Data.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Shared;
 
-namespace WfAssist.Workflows.Infrastructure.Middleware;
+namespace WfAssist.AspNetCore;
 
-public sealed class TransactionMiddleware
+internal sealed class TransactionMiddleware
 {
     private static readonly PathString ApiRouteSegment = new($"/{Constants.ApiRoute}");
     private readonly RequestDelegate _next;
 
     public TransactionMiddleware(RequestDelegate next) => _next = next;
 
-    public async Task Invoke(HttpContext httpContext, IDbConnectionProvider dbConnectionProvider)
+    public async Task Invoke(HttpContext httpContext, IDbConnectionProvider dbConnection)
     {
         if (!IsApiRoute(httpContext.Request.Path)
             || !IsSideEffect(httpContext.Request.Method))
@@ -21,23 +21,29 @@ public sealed class TransactionMiddleware
             return;
         }
 
-        IDbTransaction? transaction = null;
+        DbTransaction? transaction = null;
         try
         {
-            transaction = dbConnectionProvider.DbConnection.BeginTransaction();
+            transaction = await dbConnection.DbConnection.BeginTransactionAsync();
 
             await _next(httpContext);
 
-            transaction.Commit();
+            await transaction.CommitAsync();
         }
         catch
         {
-            transaction?.Rollback();
+            if (transaction != null)
+            {
+                await transaction.RollbackAsync();
+            }
             throw;
         }
         finally
         {
-            transaction?.Dispose();
+            if (transaction != null)
+            {
+                await transaction.DisposeAsync();
+            }
         }
     }
 
