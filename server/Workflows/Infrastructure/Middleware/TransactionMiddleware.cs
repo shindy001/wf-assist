@@ -1,11 +1,13 @@
 using System.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Shared;
 
 namespace WfAssist.Workflows.Infrastructure.Middleware;
 
 public sealed class TransactionMiddleware
 {
+    private static readonly PathString ApiRouteSegment = new($"/{Constants.ApiRoute}");
     private readonly RequestDelegate _next;
 
     public TransactionMiddleware(RequestDelegate next) => _next = next;
@@ -49,7 +51,7 @@ public sealed class TransactionMiddleware
 
     private static bool IsApiRoute(PathString requestPath)
     {
-        return requestPath.StartsWithSegments(Constants.ApiRouteSegment);
+        return requestPath.StartsWithSegments(ApiRouteSegment);
     }
 }
 

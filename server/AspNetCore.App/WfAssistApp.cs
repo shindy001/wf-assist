@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
+using Shared;
 using WfAssist.Workflows;
 
 namespace WfAssist.AspNetCore;

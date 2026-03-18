@@ -24,4 +24,8 @@
         <InternalsVisibleTo Include="Workflows.Tests" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Shared\Shared.csproj" />
+    </ItemGroup>
+
 </Project>
