@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/client/">
+    <Project Path="client/client.esproj">
+      <BuildType Project="Debug" />
+      <Build />
+    </Project>
+  </Folder>
+  <Folder Name="/nuget/">
+    <Project Path="nuget/nuget.csproj" />
+  </Folder>
+  <Folder Name="/server/">
+    <File Path="server/README.md" />
+    <Project Path="server/AspNetCore.App/AspNetCore.App.csproj" />
+    <Project Path="server/Shared/Shared.csproj" />
+    <Project Path="server/Workflows.Tests/Workflows.Tests.csproj" />
+    <Project Path="server/Workflows/Workflows.csproj" />
+    <Project Path="server/_AspNetCore.Host/_AspNetCore.Host.csproj" />
+  </Folder>
+</Solution>
