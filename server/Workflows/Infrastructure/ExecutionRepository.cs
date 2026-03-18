@@ -1,80 +1,77 @@
-using System.Data;
-using Dapper;
-using Shared;
+using Microsoft.EntityFrameworkCore;
 using WfAssist.Workflows.Core.Models;
 using WfAssist.Workflows.Core.Services;
 
 namespace WfAssist.Workflows.Infrastructure;
 
-public sealed class ExecutionRepository : IExecutionRepository
+internal sealed class ExecutionRepository(WorkflowsDbContext dbContext) : IExecutionRepository
 {
-    private readonly IDbConnection _dbConnection;
-
-    public ExecutionRepository(IDbConnectionProvider dbConnectionProvider)
-    {
-        _dbConnection = dbConnectionProvider.DbConnection;
-    }
-
     public async Task<IEnumerable<ExecutionIdentity>> GetAll()
     {
-        const string sql = "SELECT id, status FROM Executions";
-
-        return await _dbConnection.QueryAsync<ExecutionIdentity>(sql);
+        return await dbContext.Executions.Select(x => new ExecutionIdentity {Id = x.Id, Status = x.Status})
+            .ToListAsync();
     }
 
     public async Task<Execution?> GetById(Guid runId)
     {
-        const string sql = "SELECT * FROM Executions WHERE Id = @Id";
-
-        return await _dbConnection.QuerySingleOrDefaultAsync<Execution>(sql, new { Id = runId });
+        return await dbContext.Executions.FindAsync(runId);
     }
 
     public async Task<Execution?> GetQueued()
     {
-        const string sql = "SELECT * FROM Executions WHERE Status = @Status";
-
-        return await _dbConnection.QueryFirstOrDefaultAsync<Execution>(sql, new { Status = ExecutionStatus.Queued });
+        return await dbContext.Executions.FirstOrDefaultAsync(x => x.Status == ExecutionStatus.Queued);
     }
 
     public async Task<Guid> Add(Execution run)
     {
-        const string sql =
-            "INSERT INTO Executions (Id, Status, Snapshot, ProcessingResults) VALUES (@Id, @Status, @Snapshot, @ProcessingResults)";
-
-        await _dbConnection.ExecuteAsync(sql,
-            new {Id = run.Id, Status = run.Status, Snapshot = run.Snapshot, ProcessingResults = run.ProcessingResults});
+        await dbContext.Executions.AddAsync(run);
+        await dbContext.SaveChangesAsync();
 
         return run.Id;
     }
 
     public async Task Complete(Guid runId, ExecutionStatus status, Dictionary<string, ProcessingResult> processingResults)
     {
-        const string sql = "UPDATE Executions SET Status = @Status, ProcessingResults = @ProcessingResults WHERE Id = @Id";
+        var item = await dbContext.Executions.FindAsync(runId);
+        if (item is null)
+        {
+            // TODO - custom exception that will be translated to 400 in aspnetcore global exception handler?
+            throw new InvalidOperationException($"Execution with ID '{runId}' does not exist");
+        }
 
-        await _dbConnection.ExecuteAsync(sql, new { Id = runId, Status = status, ProcessingResults = processingResults });
+        dbContext.Entry(item).CurrentValues.SetValues(new Dictionary<string, object>
+        {
+            { nameof(Execution.Status), status },
+            { nameof(Execution.ProcessingResults), processingResults }
+        });
+
+        await dbContext.SaveChangesAsync();
     }
 
     public async Task UpdateStatus(Guid runId, ExecutionStatus status)
     {
-        const string sql = "UPDATE Executions SET Status = @Status WHERE Id = @Id";
+        var item = await dbContext.Executions.FindAsync(runId);
+        if (item is null)
+        {
+            // TODO - custom exception that will be translated to 400 in aspnetcore global exception handler?
+            throw new InvalidOperationException($"Execution with ID '{runId}' does not exist");
+        }
 
-        await _dbConnection.ExecuteAsync(sql, new { Id = runId, Status = status });
+        dbContext.Entry(item).CurrentValues.SetValues(new Dictionary<string, object>
+        {
+            { nameof(Execution.Status), status }
+        });
+
+        await dbContext.SaveChangesAsync();
     }
 
     public async Task Delete(Guid runId)
     {
-        const string sql = "DELETE FROM Executions WHERE Id = @Id";
-
-        if (await Exists(runId))
+        var item = await dbContext.Executions.FindAsync(runId);
+        if (item is not null)
         {
-            await _dbConnection.ExecuteAsync(sql, new {Id = runId});
+            dbContext.Executions.Remove(item);
+            await dbContext.SaveChangesAsync();
         }
-    }
-
-    private async Task<bool> Exists(Guid runId)
-    {
-        const string sql = "SELECT COUNT(1) FROM Executions WHERE Id = @Id";
-
-        return await _dbConnection.ExecuteScalarAsync<bool>(sql, new { Id = runId });
     }
 }

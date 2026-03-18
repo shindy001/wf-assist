@@ -11,11 +11,6 @@ public static class Rename
     {
         endpoints.MapPost("/{id:guid}/rename", async (Guid id, RenameWorkflowRequest request, IWorkflowRepository workflowRepository) =>
             {
-                if (!await workflowRepository.Exists(id))
-                {
-                    return Results.NotFound($"Workflow with id '{id}' not found");
-                }
-
                 await workflowRepository.Rename(id, request.NewName);
 
                 return TypedResults.NoContent();

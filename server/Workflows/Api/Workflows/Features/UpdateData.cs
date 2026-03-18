@@ -13,11 +13,6 @@ public static class UpdateData
     {
         endpoints.MapPost("/{id:guid}/updateData", async (Guid id, UpdateWorkflowDataRequest request, IWorkflowRepository workflowRepository) =>
             {
-                if (!await workflowRepository.Exists(id))
-                {
-                    return Results.NotFound($"Workflow with id '{id}' not found");
-                }
-
                 await workflowRepository.UpdateData(id, request.Data.ToDomain());
 
                 return TypedResults.NoContent();
