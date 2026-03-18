@@ -1,5 +1,6 @@
 using System.Data;
 using Dapper;
+using Shared;
 using WfAssist.Workflows.Core.Models;
 using WfAssist.Workflows.Core.Services;
 

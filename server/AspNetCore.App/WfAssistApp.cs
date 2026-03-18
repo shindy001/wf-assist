@@ -78,6 +78,8 @@ public static class WfAssistApp
             options.AddPolicy(CorsAllowAllPolicy, policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
         });
 
+        builder.Services.AddScoped<IDbConnectionProvider, SqliteDbConnectionProvider>();
+
         // Api modules
         builder.Services.AddWorkflows();
     }

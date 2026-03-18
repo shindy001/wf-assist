@@ -10,7 +10,6 @@ using WfAssist.Workflows.Core.Runtime;
 using WfAssist.Workflows.Core.Runtime.NodeProcessors;
 using WfAssist.Workflows.Core.Services;
 using WfAssist.Workflows.Infrastructure;
-using WfAssist.Workflows.Infrastructure.Middleware;
 using WfAssist.Workflows.Infrastructure.Serialization;
 
 namespace WfAssist.Workflows;
@@ -34,7 +33,6 @@ public static class WorkflowsModule
         SqlMapper.AddTypeHandler(new WorkflowDataTypeHandler());
         SqlMapper.AddTypeHandler(new ProcessingResultDictionaryTypeHandler());
 
-        services.AddScoped<IDbConnectionProvider, SqliteDbConnectionProvider>();
         services.AddScoped<IWorkflowRepository, WorkflowRepository>();
         services.AddScoped<IExecutionRepository, ExecutionRepository>();
 

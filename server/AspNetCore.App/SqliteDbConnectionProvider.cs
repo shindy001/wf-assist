@@ -1,12 +1,12 @@
-using System.Data;
+using System.Data.Common;
 using Microsoft.Data.Sqlite;
 using Shared;
 
-namespace WfAssist.Workflows.Infrastructure;
+namespace WfAssist.AspNetCore;
 
 public sealed class SqliteDbConnectionProvider : IDbConnectionProvider
 {
-    public IDbConnection DbConnection { get; }
+    public DbConnection DbConnection { get; }
 
     public SqliteDbConnectionProvider()
     {
