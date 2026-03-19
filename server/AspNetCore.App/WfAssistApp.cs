@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
+using Serilog.Events;
 using Shared;
 using WfAssist.Workflows;
 
@@ -50,6 +51,7 @@ public static class WfAssistApp
     internal static void ConfigureWfAssistAppBuilder(this WebApplicationBuilder builder)
     {
         Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)
             .WriteTo.Console()
             .CreateLogger();
 
