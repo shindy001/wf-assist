@@ -258,27 +258,27 @@ export type GetApiWorkflowsEventsResponses = {
 
 export type GetApiWorkflowsEventsResponse = GetApiWorkflowsEventsResponses[keyof GetApiWorkflowsEventsResponses];
 
-export type PostApiWorkflowsByIdQueueRunData = {
+export type PostApiWorkflowsByIdQueueExecutionData = {
     body?: never;
     path: {
         id: string;
     };
     query?: never;
-    url: '/api/workflows/{id}/queueRun';
+    url: '/api/workflows/{id}/queueExecution';
 };
 
-export type PostApiWorkflowsByIdQueueRunErrors = {
+export type PostApiWorkflowsByIdQueueExecutionErrors = {
     /**
      * Not Found
      */
     404: unknown;
 };
 
-export type PostApiWorkflowsByIdQueueRunResponses = {
+export type PostApiWorkflowsByIdQueueExecutionResponses = {
     /**
      * OK
      */
     200: RunWorkflowResponse;
 };
 
-export type PostApiWorkflowsByIdQueueRunResponse = PostApiWorkflowsByIdQueueRunResponses[keyof PostApiWorkflowsByIdQueueRunResponses];
+export type PostApiWorkflowsByIdQueueExecutionResponse = PostApiWorkflowsByIdQueueExecutionResponses[keyof PostApiWorkflowsByIdQueueExecutionResponses];

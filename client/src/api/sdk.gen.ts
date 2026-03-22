@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { DeleteApiWorkflowsByIdData, DeleteApiWorkflowsByIdResponses, GetApiWorkflowsByIdData, GetApiWorkflowsByIdErrors, GetApiWorkflowsByIdResponses, GetApiWorkflowsEventsData, GetApiWorkflowsEventsResponses, GetApiWorkflowsIdentitiesData, GetApiWorkflowsIdentitiesResponses, PostApiWorkflowsByIdQueueRunData, PostApiWorkflowsByIdQueueRunErrors, PostApiWorkflowsByIdQueueRunResponses, PostApiWorkflowsByIdRenameData, PostApiWorkflowsByIdRenameErrors, PostApiWorkflowsByIdRenameResponses, PostApiWorkflowsByIdUpdateDataData, PostApiWorkflowsByIdUpdateDataErrors, PostApiWorkflowsByIdUpdateDataResponses, PostApiWorkflowsData, PostApiWorkflowsResponses } from './types.gen';
+import type { DeleteApiWorkflowsByIdData, DeleteApiWorkflowsByIdResponses, GetApiWorkflowsByIdData, GetApiWorkflowsByIdErrors, GetApiWorkflowsByIdResponses, GetApiWorkflowsEventsData, GetApiWorkflowsEventsResponses, GetApiWorkflowsIdentitiesData, GetApiWorkflowsIdentitiesResponses, PostApiWorkflowsByIdQueueExecutionData, PostApiWorkflowsByIdQueueExecutionErrors, PostApiWorkflowsByIdQueueExecutionResponses, PostApiWorkflowsByIdRenameData, PostApiWorkflowsByIdRenameErrors, PostApiWorkflowsByIdRenameResponses, PostApiWorkflowsByIdUpdateDataData, PostApiWorkflowsByIdUpdateDataErrors, PostApiWorkflowsByIdUpdateDataResponses, PostApiWorkflowsData, PostApiWorkflowsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -53,4 +53,4 @@ export const postApiWorkflowsByIdUpdateData = <ThrowOnError extends boolean = fa
 
 export const getApiWorkflowsEvents = <ThrowOnError extends boolean = false>(options?: Options<GetApiWorkflowsEventsData, ThrowOnError>) => (options?.client ?? client).sse.get<GetApiWorkflowsEventsResponses, unknown, ThrowOnError>({ url: '/api/workflows/events', ...options });
 
-export const postApiWorkflowsByIdQueueRun = <ThrowOnError extends boolean = false>(options: Options<PostApiWorkflowsByIdQueueRunData, ThrowOnError>) => (options.client ?? client).post<PostApiWorkflowsByIdQueueRunResponses, PostApiWorkflowsByIdQueueRunErrors, ThrowOnError>({ url: '/api/workflows/{id}/queueRun', ...options });
+export const postApiWorkflowsByIdQueueExecution = <ThrowOnError extends boolean = false>(options: Options<PostApiWorkflowsByIdQueueExecutionData, ThrowOnError>) => (options.client ?? client).post<PostApiWorkflowsByIdQueueExecutionResponses, PostApiWorkflowsByIdQueueExecutionErrors, ThrowOnError>({ url: '/api/workflows/{id}/queueExecution', ...options });
