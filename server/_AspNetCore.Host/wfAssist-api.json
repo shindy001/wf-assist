@@ -191,7 +191,7 @@
         }
       }
     },
-    "/api/workflows/{id}/queueRun": {
+    "/api/workflows/{id}/queueExecution": {
       "post": {
         "tags": [
           "WfAssist_Workflows"

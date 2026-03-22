@@ -11,7 +11,7 @@ public static class QueueWorkflowExecution
 {
     public static void MapQueueWorkflowExecutionEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/{id:guid}/queueRun", async Task<Results<Ok<RunWorkflowResponse>, NotFound<string>>> (
+        endpoints.MapPost("/{id:guid}/queueExecution", async Task<Results<Ok<RunWorkflowResponse>, NotFound<string>>> (
                 Guid id,
                 IWorkflowRepository workflowRepository,
                 IExecutionRepository executionRepository) =>
