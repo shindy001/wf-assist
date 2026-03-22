@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Routing;
 using WfAssist.Workflows.Core.Models.Notifications;
 using WfAssist.Workflows.Core.Services;
 
-namespace WfAssist.Workflows.Api.Workflows.Features;
+namespace WfAssist.Workflows.Api.Features;
 
 public static class Subscribe
 {

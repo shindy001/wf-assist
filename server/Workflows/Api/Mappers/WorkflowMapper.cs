@@ -1,7 +1,7 @@
-using WfAssist.Workflows.Api.Workflows.Dtos;
+using WfAssist.Workflows.Api.Dtos;
 using WfAssist.Workflows.Core.Models;
 
-namespace WfAssist.Workflows.Api.Workflows.Mappers;
+namespace WfAssist.Workflows.Api.Mappers;
 
 internal static class WorkflowMapper
 {

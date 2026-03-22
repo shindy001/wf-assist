@@ -1,3 +1,3 @@
-namespace WfAssist.Workflows.Api.Workflows.Dtos;
+namespace WfAssist.Workflows.Api.Dtos;
 
 internal sealed record PositionDto(float X, float Y);

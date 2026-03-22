@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using WfAssist.Workflows.Api.Workflows.Dtos;
-using WfAssist.Workflows.Api.Workflows.Mappers;
+using WfAssist.Workflows.Api.Dtos;
+using WfAssist.Workflows.Api.Mappers;
 using WfAssist.Workflows.Core.Services;
 
-namespace WfAssist.Workflows.Api.Workflows.Features;
+namespace WfAssist.Workflows.Api.Features;
 
 public static class GetById
 {

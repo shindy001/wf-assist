@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace WfAssist.Workflows.Api.Workflows.Dtos;
+namespace WfAssist.Workflows.Api.Dtos;
 
 internal class WorkflowDto
 {

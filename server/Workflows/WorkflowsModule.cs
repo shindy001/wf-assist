@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Shared;
-using WfAssist.Workflows.Api.Workflows;
+using WfAssist.Workflows.Api;
 using WfAssist.Workflows.Core.Runtime;
 using WfAssist.Workflows.Core.Runtime.NodeProcessors;
 using WfAssist.Workflows.Core.Services;

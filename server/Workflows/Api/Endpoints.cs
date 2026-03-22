@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Shared;
-using WfAssist.Workflows.Api.Workflows.Features;
+using WfAssist.Workflows.Api.Features;
 
-namespace WfAssist.Workflows.Api.Workflows;
+namespace WfAssist.Workflows.Api;
 
 internal static class Endpoints
 {
