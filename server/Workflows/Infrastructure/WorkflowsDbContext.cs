@@ -1,7 +1,9 @@
 ﻿using System.Collections.Immutable;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Options;
 using Shared;
 using WfAssist.Workflows.Core.Models;
 
@@ -12,9 +14,13 @@ internal class WorkflowsDbContext : DbContext
     public DbSet<Workflow> Workflows { get; set; }
     public DbSet<Execution> Executions { get; set; }
 
-    private readonly JsonSerializerOptions _serializerOptions = JsonDefaults.SerializerOptions;
+    private readonly JsonSerializerOptions _serializerOptions;
 
-    public WorkflowsDbContext(DbContextOptions<WorkflowsDbContext> options) : base(options) { }
+    public WorkflowsDbContext(DbContextOptions<WorkflowsDbContext> options, IOptions<JsonOptions> jsonOptions) :
+        base(options)
+    {
+        _serializerOptions = jsonOptions.Value.SerializerOptions;
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
