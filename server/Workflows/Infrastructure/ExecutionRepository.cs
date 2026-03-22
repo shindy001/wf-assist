@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Microsoft.EntityFrameworkCore;
 using WfAssist.Workflows.Core.Models;
 using WfAssist.Workflows.Core.Services;
@@ -30,7 +31,7 @@ internal sealed class ExecutionRepository(WorkflowsDbContext dbContext) : IExecu
         return run.Id;
     }
 
-    public async Task Complete(Guid runId, ExecutionStatus status, Dictionary<string, ProcessingResult> processingResults)
+    public async Task Complete(Guid runId, ExecutionStatus status, ImmutableDictionary<string, ProcessingResult> processingResults)
     {
         var item = await dbContext.Executions.FindAsync(runId);
         if (item is null)

@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Microsoft.Extensions.Logging;
 using WfAssist.Workflows.Core.Models;
 using WfAssist.Workflows.Core.Models.Notifications;
@@ -74,7 +75,7 @@ internal sealed partial class ExecutionManager
             if (_processingContext.IsProcessingSuccessful())
             {
                 await _executionRepository.Complete(execution.Id, ExecutionStatus.Completed,
-                    _processingContext.ProcessingResults);
+                    _processingContext.ProcessingResults.ToImmutableDictionary());
 
                 LogExecutionCompleted(execution.Id);
                 await _notificationDispatcher.Dispatch(new WorkflowExecutionEnded
@@ -88,7 +89,7 @@ internal sealed partial class ExecutionManager
             else
             {
                 await _executionRepository.Complete(execution.Id, ExecutionStatus.Failed,
-                    _processingContext.ProcessingResults);
+                    _processingContext.ProcessingResults.ToImmutableDictionary());
 
                 LogExecutionCompletedWithErrors(execution.Id);
                 await _notificationDispatcher.Dispatch(new WorkflowExecutionEnded
@@ -108,7 +109,7 @@ internal sealed partial class ExecutionManager
                 $"Unexpected error during execution: {e.Message}", string.Empty));
 
             await _executionRepository.Complete(execution.Id, ExecutionStatus.Failed,
-                _processingContext.ProcessingResults);
+                _processingContext.ProcessingResults.ToImmutableDictionary());
 
             await _notificationDispatcher.Dispatch(new WorkflowExecutionEnded
             {
