@@ -7,9 +7,9 @@ using WfAssist.Workflows.Core.Services;
 
 namespace WfAssist.Workflows.Api.Features;
 
-public static class GetById
+public static class GetWorkflowById
 {
-    public static void MapGetByIdEndpoint(this IEndpointRouteBuilder endpoints)
+    public static void MapGetWorkflowByIdEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/{id:guid}", async (Guid id, IWorkflowRepository workflowRepository) =>
             {

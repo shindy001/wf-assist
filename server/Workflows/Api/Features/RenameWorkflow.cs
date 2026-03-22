@@ -5,7 +5,7 @@ using WfAssist.Workflows.Core.Services;
 
 namespace WfAssist.Workflows.Api.Features;
 
-public static class Rename
+public static class RenameWorkflow
 {
     public static void MapRenameEndpoint(this IEndpointRouteBuilder endpoints)
     {

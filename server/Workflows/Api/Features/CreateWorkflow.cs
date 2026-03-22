@@ -10,7 +10,7 @@ namespace WfAssist.Workflows.Api.Features;
 
 public static class Create
 {
-    public static void MapCreateEndpoint(this IEndpointRouteBuilder endpoints)
+    public static void MapCreateWorkflowEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPost("/", async (CreateWorkflowRequest request, IWorkflowRepository workflowRepository) =>
             {

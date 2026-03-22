@@ -7,7 +7,7 @@ namespace WfAssist.Workflows.Api.Features;
 
 public static class Delete
 {
-    public static void MapDeleteEndpoint(this IEndpointRouteBuilder endpoints)
+    public static void MapDeleteWorkflowEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapDelete("/{id:guid}", async (Guid id, IWorkflowRepository workflowRepository) =>
             {

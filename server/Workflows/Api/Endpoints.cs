@@ -14,15 +14,15 @@ internal static class Endpoints
             .MapGroup("/workflows")
             .WithTags($"{Constants.AppName}_Workflows");
 
-        workflowsGroup.MapGetIdentitiesEndpoint();
-        workflowsGroup.MapGetByIdEndpoint();
+        workflowsGroup.MapGetWorkflowIdentitiesEndpoint();
+        workflowsGroup.MapGetWorkflowByIdEndpoint();
 
-        workflowsGroup.MapCreateEndpoint();
+        workflowsGroup.MapCreateWorkflowEndpoint();
         workflowsGroup.MapRenameEndpoint();
         workflowsGroup.MapUpdateDataEndpoint();
-        workflowsGroup.MapDeleteEndpoint();
+        workflowsGroup.MapDeleteWorkflowEndpoint();
 
-        workflowsGroup.MapSubscribeEndpoint();
-        workflowsGroup.MapQueueRunEndpoint();
+        workflowsGroup.MapSubscribeToWorkflowEventsEndpoint();
+        workflowsGroup.MapQueueWorkflowExecutionEndpoint();
     }
 }

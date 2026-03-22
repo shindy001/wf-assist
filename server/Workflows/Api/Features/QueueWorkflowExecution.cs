@@ -7,9 +7,9 @@ using WfAssist.Workflows.Core.Services;
 
 namespace WfAssist.Workflows.Api.Features;
 
-public static class QueueWorkflowRun
+public static class QueueWorkflowExecution
 {
-    public static void MapQueueRunEndpoint(this IEndpointRouteBuilder endpoints)
+    public static void MapQueueWorkflowExecutionEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPost("/{id:guid}/queueRun", async Task<Results<Ok<RunWorkflowResponse>, NotFound<string>>> (
                 Guid id,

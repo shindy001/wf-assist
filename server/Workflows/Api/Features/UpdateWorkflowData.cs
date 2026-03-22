@@ -7,7 +7,7 @@ using WfAssist.Workflows.Core.Services;
 
 namespace WfAssist.Workflows.Api.Features;
 
-public static class UpdateData
+public static class UpdateWorkflowData
 {
     public static void MapUpdateDataEndpoint(this IEndpointRouteBuilder endpoints)
     {

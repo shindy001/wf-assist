@@ -8,7 +8,7 @@ namespace WfAssist.Workflows.Api.Features;
 
 public static class GetIdentities
 {
-    public static void MapGetIdentitiesEndpoint(this IEndpointRouteBuilder endpoints)
+    public static void MapGetWorkflowIdentitiesEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/identities", async (IWorkflowRepository workflowRepository) =>
             {
