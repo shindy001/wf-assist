@@ -1,6 +1,6 @@
 namespace WfAssist.Workflows.Core.Models;
 
-public record ProcessingResult
+internal record ProcessingResult
 {
     public bool IsSuccessful { get; init; }
     public ProcessResultValueType ValueType { get; init; }

@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace WfAssist.Workflows.Api.Workflows.Dtos;
 
 [JsonConverter(typeof(JsonStringEnumConverter<RequestTypeDto>))]
-public enum RequestTypeDto
+internal enum RequestTypeDto
 {
     Get,
     Post,

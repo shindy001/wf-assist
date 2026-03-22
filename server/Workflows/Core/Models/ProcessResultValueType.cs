@@ -1,6 +1,6 @@
 namespace WfAssist.Workflows.Core.Models;
 
-public enum ProcessResultValueType
+internal enum ProcessResultValueType
 {
     None,
     JsonDocument,

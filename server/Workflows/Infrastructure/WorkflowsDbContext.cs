@@ -5,7 +5,7 @@ using WfAssist.Workflows.Core.Models;
 
 namespace WfAssist.Workflows.Infrastructure;
 
-public class WorkflowsDbContext : DbContext
+internal class WorkflowsDbContext : DbContext
 {
     public DbSet<Workflow> Workflows { get; set; }
     public DbSet<Execution> Executions { get; set; }

@@ -2,7 +2,7 @@ using WfAssist.Workflows.Core.Models;
 
 namespace WfAssist.Workflows.Core.Runtime.NodeProcessors;
 
-public interface IWorkflowNodeProcessor
+internal interface IWorkflowNodeProcessor
 {
     Task<ProcessingResult> Process(WorkflowNode workflowNode);
 }

@@ -1,3 +1,3 @@
 namespace WfAssist.Workflows.Core.Models;
 
-public sealed record WorkflowIdentity(Guid Id, string Name);
+internal sealed record WorkflowIdentity(Guid Id, string Name);

@@ -3,9 +3,9 @@ using WfAssist.Workflows.Core.Models;
 
 namespace WfAssist.Workflows.Api.Workflows.Mappers;
 
-public static class WorkflowMapper
+internal static class WorkflowMapper
 {
-    public static WorkflowDto ToDto(this Workflow entity)
+    internal static WorkflowDto ToDto(this Workflow entity)
         => new()
         {
             Id = entity.Id,
@@ -13,7 +13,7 @@ public static class WorkflowMapper
             Data = entity.Data.ToDto()
         };
 
-    public static Workflow ToDomain(this WorkflowDto dto)
+    internal static Workflow ToDomain(this WorkflowDto dto)
         => new()
         {
             Id = dto.Id,
@@ -21,7 +21,7 @@ public static class WorkflowMapper
             Data = dto.Data.ToDomain()
         };
 
-    public static WorkflowData ToDomain(this WorkflowDataDto dto)
+    internal static WorkflowData ToDomain(this WorkflowDataDto dto)
         => new()
         {
             Edges = dto.Edges.Select(ToDomain),

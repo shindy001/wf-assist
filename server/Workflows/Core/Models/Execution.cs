@@ -1,6 +1,6 @@
 namespace WfAssist.Workflows.Core.Models;
 
-public sealed record Execution
+internal sealed record Execution
 {
     public required Guid Id { get; init; }
     public required ExecutionStatus Status { get; init; }
@@ -8,7 +8,7 @@ public sealed record Execution
     public Dictionary<string, ProcessingResult> ProcessingResults { get; init; } = [];
 }
 
-public static class ExecutionFactory
+internal static class ExecutionFactory
 {
     public static Execution CreateQueued(Workflow workflow)
     {

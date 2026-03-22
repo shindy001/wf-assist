@@ -2,7 +2,7 @@ using WfAssist.Workflows.Core.Models;
 
 namespace WfAssist.Workflows.Core.Runtime;
 
-public static class WorkflowTopologySorter
+internal static class WorkflowTopologySorter
 {
     /// <summary>
     /// Calculates dependency graph, topologically orders the nodes and returns nodes according to execution order

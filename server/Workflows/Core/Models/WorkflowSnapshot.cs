@@ -1,6 +1,6 @@
 namespace WfAssist.Workflows.Core.Models;
 
-public sealed record WorkflowSnapshot
+internal sealed record WorkflowSnapshot
 {
     public required Guid Id { get; init; }
     public required string Name { get; init; }

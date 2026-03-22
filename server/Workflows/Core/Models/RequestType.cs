@@ -1,6 +1,6 @@
 namespace WfAssist.Workflows.Core.Models;
 
-public enum RequestType
+internal enum RequestType
 {
     Get,
     Post,

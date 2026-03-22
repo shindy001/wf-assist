@@ -1,3 +1,3 @@
 namespace WfAssist.Workflows.Core.Models;
 
-public sealed record Position(float X, float Y);
+internal sealed record Position(float X, float Y);
