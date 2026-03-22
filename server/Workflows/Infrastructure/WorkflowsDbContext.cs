@@ -1,5 +1,7 @@
-﻿using System.Text.Json;
+﻿using System.Collections.Immutable;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shared;
 using WfAssist.Workflows.Core.Models;
 
@@ -32,7 +34,11 @@ internal class WorkflowsDbContext : DbContext
             .Property(x => x.ProcessingResults)
             .HasConversion(
                 v => JsonSerializer.Serialize(v, _serializerOptions),
-                v => JsonSerializer.Deserialize<Dictionary<string, ProcessingResult>>(v, _serializerOptions)!);
+                v => JsonSerializer.Deserialize<ImmutableDictionary<string, ProcessingResult>>(v, _serializerOptions)!,
+                new ValueComparer<ImmutableDictionary<string, ProcessingResult>>(
+                    (d1, d2) => ReferenceEquals(d1, d2),
+                    d => d.GetHashCode(),
+                    d => d));
 
         base.OnModelCreating(modelBuilder);
     }

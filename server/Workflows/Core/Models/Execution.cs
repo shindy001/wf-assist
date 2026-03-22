@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+
 namespace WfAssist.Workflows.Core.Models;
 
 internal sealed record Execution
@@ -5,7 +7,7 @@ internal sealed record Execution
     public required Guid Id { get; init; }
     public required ExecutionStatus Status { get; init; }
     public required WorkflowSnapshot Snapshot { get; init; }
-    public Dictionary<string, ProcessingResult> ProcessingResults { get; init; } = [];
+    public ImmutableDictionary<string, ProcessingResult> ProcessingResults { get; init; } = [];
 }
 
 internal static class ExecutionFactory
