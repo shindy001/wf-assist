@@ -11,6 +11,7 @@ using Scalar.AspNetCore;
 using Serilog;
 using Serilog.Events;
 using Shared;
+using Shared.CQRS;
 using WfAssist.Workflows;
 
 namespace WfAssist.AspNetCore;
@@ -86,6 +87,7 @@ public static class WfAssistApp
         });
 
         builder.Services.AddScoped<IDbConnectionProvider, SqliteDbConnectionProvider>();
+        builder.Services.AddCqrsServices(cqrsHandlerAssemblies: [typeof(WorkflowsModule).Assembly]);
 
         // Api modules
         builder.Services.AddWorkflows();
