@@ -19,7 +19,7 @@ internal static class Endpoints
 
         workflowsGroup.MapCreateWorkflowEndpoint();
         workflowsGroup.MapRenameWorkflowEndpoint();
-        workflowsGroup.MapUpdateDataEndpoint();
+        workflowsGroup.MapUpdateWorkflowDataEndpoint();
         workflowsGroup.MapDeleteWorkflowEndpoint();
 
         workflowsGroup.MapSubscribeToWorkflowEventsEndpoint();
