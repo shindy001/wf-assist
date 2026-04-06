@@ -108,7 +108,7 @@
     <Controls showLock={false} />
     <Background />
     {#if workflowsAppState.selectedWorkflowIdentity}
-      <div class="absolute bottom-18 z-4 w-full content-center text-center">
+      <div class="absolute bottom-36 z-4 h-0 w-full content-center text-center">
         <Button
           variant="default"
           size="xl"
