@@ -14,14 +14,15 @@ public static class RenameWorkflow
 {
     public static void MapRenameWorkflowEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/{id:guid}/rename", async (Guid id, RenameWorkflowRequest request, ICommandDispatcher commandDispatcher) =>
-            {
-                var result = await commandDispatcher.Dispatch(new RenameWorkflowCommand(id, request.NewName));
+        endpoints.MapPost("/{id:guid}/rename",
+                async (Guid id, RenameWorkflowRequest request, ICommandDispatcher commandDispatcher) =>
+                {
+                    var result = await commandDispatcher.Dispatch(new RenameWorkflowCommand(id, request.NewName));
 
-                return result.Match<Results<NoContent, NotFound<string>>>(
-                    noContent => TypedResults.NoContent(),
-                    notFoundError => TypedResults.NotFound(notFoundError.Message));
-            })
+                    return result.Match<Results<NoContent, NotFound<string>>>(
+                        noContent => TypedResults.NoContent(),
+                        notFoundError => TypedResults.NotFound(notFoundError.Message));
+                })
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound);
     }
