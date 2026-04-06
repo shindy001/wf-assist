@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using OneOf.Types;
+using Shared.CQRS;
 using WfAssist.Workflows.Api.Dtos;
 using WfAssist.Workflows.Api.Mappers;
 using WfAssist.Workflows.Core.Models;
@@ -12,16 +14,9 @@ public static class Create
 {
     public static void MapCreateWorkflowEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/", async (CreateWorkflowRequest request, IWorkflowRepository workflowRepository) =>
+        endpoints.MapPost("/", async (CreateWorkflowRequest request, ICommandDispatcher commandDispatcher) =>
             {
-                var newWorkflow = new Workflow
-                {
-                    Id = Guid.NewGuid(),
-                    Name = request.Name,
-                    Data = request.Data.ToDomain()
-                };
-
-                await workflowRepository.Create(newWorkflow);
+                await commandDispatcher.Dispatch(new CreateWorkflowCommand(request.Name, request.Data.ToDomain()));
 
                 return TypedResults.NoContent();
             })
@@ -30,4 +25,17 @@ public static class Create
 
     private sealed record CreateWorkflowRequest(string Name, WorkflowDataDto Data);
 
+}
+
+internal record CreateWorkflowCommand(string Name, WorkflowData Data) : ICommand<Success>;
+
+internal sealed class CreateWorkflowCommandHandler(IWorkflowRepository workflowRepository)
+    : ICommandHandler<CreateWorkflowCommand, Success>
+{
+    public async Task<Success> Handle(CreateWorkflowCommand command, CancellationToken cancellationToken = default)
+    {
+        var newWorkflow = new Workflow {Id = Guid.NewGuid(), Name = command.Name, Data = command.Data};
+        await workflowRepository.Create(newWorkflow);
+        return new Success();
+    }
 }
