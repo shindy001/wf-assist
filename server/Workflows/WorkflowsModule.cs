@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Shared;
+using Shared.CQRS;
 using WfAssist.Workflows.Api;
 using WfAssist.Workflows.Core.Runtime;
 using WfAssist.Workflows.Core.Runtime.NodeProcessors;
@@ -16,6 +17,9 @@ public static class WorkflowsModule
 {
     public static void AddWorkflows(this IServiceCollection services)
     {
+        // Register command/query handlers from WorkflowModule
+        services.AddCqrsServices(serviceAssemblies: [typeof(WorkflowsModule).Assembly]);
+
         services.AddDbContext<WorkflowsDbContext>((sp, options) =>
         {
             var connectionProvider = sp.GetRequiredService<IDbConnectionProvider>();

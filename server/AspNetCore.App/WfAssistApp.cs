@@ -87,7 +87,7 @@ public static class WfAssistApp
         });
 
         builder.Services.AddScoped<IDbConnectionProvider, SqliteDbConnectionProvider>();
-        builder.Services.AddCqrsServices(cqrsHandlerAssemblies: [typeof(WorkflowsModule).Assembly]);
+        builder.Services.AddCqrsCore();
 
         // Api modules
         builder.Services.AddWorkflows();
