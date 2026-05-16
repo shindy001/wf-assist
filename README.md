@@ -40,6 +40,7 @@ App (server + UI client) is expected to be deployed and released as nuget packag
 ## Dev Requirements
 - `Visual Studio 2026` or `Rider` that supports .net 10
 - .net 10 SDK
+- [Bun](https://bun.sh/) js toolkit (Svelte FrontEnd)
 
 ## How to run
 1. Open `WFAssist.slnx`
