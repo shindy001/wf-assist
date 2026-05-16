@@ -1,6 +1,6 @@
-# Workflow Assist
+# Workflow Assist (in development)
 
-Workflow Assist is an simple app for execution of work/task specified by workflows. It is expected to run alongside your server/app during `development` and contain workflows somewhat related to your server/app like creation of test data (seeding) with auto login, execution of specific actions or cleaning actions.
+Workflow Assist is an simple app for execution of work/task specified by workflows. It is expected to run alongside your server/app during development and contain workflows somewhat related to your server/app like creation of test data (seeding) with auto login, execution of specific actions or cleaning actions.
 
 <img width="2467" height="1359" alt="Image" src="https://github.com/user-attachments/assets/ed5640c7-7a25-44aa-9605-7a8a9d0573ca" />
 
