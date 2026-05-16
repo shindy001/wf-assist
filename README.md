@@ -10,7 +10,7 @@ App (server + UI client) is expected to be deployed and released as nuget packag
 ## Current state of app features
 - Workflows
   - [x] Execution engine (server)
-  - [x] Topology sorter (server)
+  - [x] Topological sorter (server)
   - [x] Workflow management (CRUD)
   - [x] Nodes drag and drop to canvas
   - [x] Node result references in other nodes (referenced node must run before the node where it is used) - i.e. reference to node1 json result with access token property `#{node:1}.access_token`
