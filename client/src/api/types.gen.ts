@@ -9,8 +9,6 @@ export type CreateWorkflowRequest = {
     data: WorkflowDataDto;
 };
 
-export type ExecutionStatus = 'Queued' | 'Running' | 'Completed' | 'Failed';
-
 export type GetIdentitiesResponse = {
     identities: Array<WorkFlowIdentityDto>;
 };
@@ -35,7 +33,7 @@ export type NotificationWorkflowExecutionEnded = {
     executionId: string;
     workflowId: string;
     workflowName: string;
-    status: ExecutionStatus;
+    status: string;
 };
 
 export type NotificationWorkflowExecutionStarted = {
