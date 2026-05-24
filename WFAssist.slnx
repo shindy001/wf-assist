@@ -10,10 +10,16 @@
   </Folder>
   <Folder Name="/server/">
     <File Path="server/README.md" />
+  </Folder>
+  <Folder Name="/server/API/">
     <Project Path="server/AspNetCore.App/AspNetCore.App.csproj" />
+    <Project Path="server/_AspNetCore.Host/_AspNetCore.Host.csproj" />
+  </Folder>
+  <Folder Name="/server/shared/">
     <Project Path="server/Shared/Shared.csproj" />
+  </Folder>
+  <Folder Name="/server/workflows/">
     <Project Path="server/Workflows.Tests/Workflows.Tests.csproj" />
     <Project Path="server/Workflows/Workflows.csproj" />
-    <Project Path="server/_AspNetCore.Host/_AspNetCore.Host.csproj" />
   </Folder>
 </Solution>
