@@ -1,4 +1,4 @@
-using WfAssist.Workflows.Core.Models;
+using WfAssist.Shared.Contracts;
 
 namespace WfAssist.Workflows.Core.Runtime;
 

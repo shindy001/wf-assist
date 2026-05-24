@@ -1,3 +1,4 @@
+using WfAssist.Shared.Contracts;
 using WfAssist.Workflows.Core.Models;
 
 namespace WfAssist.Workflows.Core.Runtime.NodeProcessors;

@@ -1,4 +1,4 @@
-namespace WfAssist.Workflows.Core.Models;
+namespace WfAssist.Executions.Core.Models;
 
 internal sealed record ExecutionIdentity
 {

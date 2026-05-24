@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using OneOf.Types;
-using Shared.CQRS;
+using WfAssist.Shared.CQRS;
 using WfAssist.Workflows.Core.Services;
 
 namespace WfAssist.Workflows.Api.Features;

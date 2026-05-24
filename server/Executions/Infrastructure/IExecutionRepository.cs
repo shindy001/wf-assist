@@ -1,7 +1,9 @@
 using System.Collections.Immutable;
-using WfAssist.Workflows.Core.Models;
+using WfAssist.Executions.Contracts;
+using WfAssist.Executions.Core.Models;
+using WfAssist.Shared.Contracts;
 
-namespace WfAssist.Workflows.Core.Services;
+namespace WfAssist.Executions.Infrastructure;
 
 internal interface IExecutionRepository
 {

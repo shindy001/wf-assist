@@ -1,5 +1,7 @@
 using System.Collections.Immutable;
 using Microsoft.Extensions.Logging;
+using WfAssist.Executions.Contracts;
+using WfAssist.Shared.Contracts;
 using WfAssist.Workflows.Core.Models;
 using WfAssist.Workflows.Core.Models.Notifications;
 using WfAssist.Workflows.Core.Services;
@@ -8,20 +10,20 @@ namespace WfAssist.Workflows.Core.Runtime;
 
 internal sealed partial class ExecutionManager
 {
-    private readonly IExecutionRepository _executionRepository;
+    private readonly IExecutionsFacade _executionsFacade;
     private readonly INotificationDispatcher _notificationDispatcher;
     private readonly WorkflowExecutor _workflowExecutor;
     private readonly ProcessingContext _processingContext;
     private readonly ILogger<ExecutionManager> _logger;
 
     public ExecutionManager(
-        IExecutionRepository executionRepository,
+        IExecutionsFacade executionsFacade,
         INotificationDispatcher notificationDispatcher,
         WorkflowExecutor workflowExecutor,
         ProcessingContext processingContext,
         ILogger<ExecutionManager> logger)
     {
-        _executionRepository = executionRepository;
+        _executionsFacade = executionsFacade;
         _notificationDispatcher = notificationDispatcher;
         _workflowExecutor = workflowExecutor;
         _processingContext = processingContext;
@@ -29,75 +31,73 @@ internal sealed partial class ExecutionManager
     }
 
     /// <summary>
-    /// Runs <see cref="Execution"/> specified by ID.
+    /// Runs queued <see cref="Workflow"/>.
     /// </summary>
-    /// <param name="executionId"></param>
-    /// <exception cref="ArgumentException">When <see cref="Execution"/> with specified ID was not found.</exception>
+    /// <param name="executionId">ID of the execution containing Workflow data.</param>
+    /// <exception cref="ArgumentException">When queued Workflow with specified execution ID was not found.</exception>
     public async Task Execute(Guid executionId)
     {
-        var execution = await _executionRepository.GetById(executionId);
-        if (execution is null)
+        var data = await _executionsFacade.GetQueued<Workflow>(executionId, ExecutionDataType.Workflow);
+        if (data is null)
         {
-            throw new ArgumentException($"Execution {executionId} could not be found.");
+            throw new ArgumentException($"Data for Execution '{executionId}' not be found.");
         }
 
-        await Execute(execution);
+        await Execute(executionId, data);
     }
 
     /// <summary>
-    /// Runs next queued <see cref="Execution"/> if there is any.
+    /// Runs next queued Workflow execution.
     /// </summary>
-    /// <remarks>Does nothing if there is no queued <see cref="Execution"/>.</remarks>
+    /// <remarks>Does nothing if there is no queued Workflow.</remarks>
     public async Task ExecuteNextInQueue()
     {
-        var execution = await _executionRepository.GetQueued();
-        if (execution is not null)
+        var next = await _executionsFacade.GetNextQueued<Workflow>(ExecutionDataType.Workflow);
+        if (next is not null)
         {
-            await Execute(execution);
+            await Execute(next.Value.executionId, next.Value.data);
         }
     }
 
-    private async Task Execute(Execution execution)
+    private async Task Execute(Guid executionId, Workflow workflow)
     {
         try
         {
-            await _executionRepository.UpdateStatus(execution.Id, ExecutionStatus.Running);
+            await _executionsFacade.MarkAsRunning(executionId);
 
-            LogExecutionStarted(execution.Id);
+            LogExecutionStarted(executionId);
             await _notificationDispatcher.Dispatch(new WorkflowExecutionStarted
             {
-                ExecutionId = execution.Id,
-                WorkflowId = execution.Snapshot.Id,
-                WorkflowName = execution.Snapshot.Name
+                ExecutionId = executionId,
+                WorkflowId = workflow.Id,
+                WorkflowName = workflow.Name
             });
 
-            await _workflowExecutor.Execute(execution.Snapshot);
+            await _workflowExecutor.Execute(workflow);
             if (_processingContext.IsProcessingSuccessful())
             {
-                await _executionRepository.Complete(execution.Id, ExecutionStatus.Completed,
-                    _processingContext.ProcessingResults.ToImmutableDictionary());
+                await _executionsFacade.Complete(executionId, _processingContext.ProcessingResults.ToImmutableDictionary());
 
-                LogExecutionCompleted(execution.Id);
+                LogExecutionCompleted(executionId);
                 await _notificationDispatcher.Dispatch(new WorkflowExecutionEnded
                 {
-                    ExecutionId = execution.Id,
-                    WorkflowId = execution.Snapshot.Id,
-                    WorkflowName = execution.Snapshot.Name,
-                    Status = ExecutionStatus.Completed
+                    ExecutionId = executionId,
+                    WorkflowId = workflow.Id,
+                    WorkflowName = workflow.Name,
+                    Status = "Completed"
                 });
             }
             else
             {
-                await _executionRepository.Complete(execution.Id, ExecutionStatus.Failed,
-                    _processingContext.ProcessingResults.ToImmutableDictionary());
+                await _executionsFacade.Fail(executionId, _processingContext.ProcessingResults.ToImmutableDictionary());
 
-                LogExecutionCompletedWithErrors(execution.Id);
+                LogExecutionCompletedWithErrors(executionId);
                 await _notificationDispatcher.Dispatch(new WorkflowExecutionEnded
                 {
-                    ExecutionId = execution.Id,
-                    WorkflowId = execution.Snapshot.Id,
-                    WorkflowName = execution.Snapshot.Name,
-                    Status = ExecutionStatus.Failed
+                    ExecutionId = executionId,
+                    WorkflowId = workflow.Id,
+                    WorkflowName = workflow.Name,
+                    Status = "Failed"
                 });
             }
         }
@@ -108,15 +108,14 @@ internal sealed partial class ExecutionManager
             _processingContext.AddResult("ProcessingError", ProcessingResult.Error(
                 $"Unexpected error during execution: {e.Message}", string.Empty));
 
-            await _executionRepository.Complete(execution.Id, ExecutionStatus.Failed,
-                _processingContext.ProcessingResults.ToImmutableDictionary());
+            await _executionsFacade.Fail(executionId, _processingContext.ProcessingResults.ToImmutableDictionary());
 
             await _notificationDispatcher.Dispatch(new WorkflowExecutionEnded
             {
-                ExecutionId = execution.Id,
-                WorkflowId = execution.Snapshot.Id,
-                WorkflowName = execution.Snapshot.Name,
-                Status = ExecutionStatus.Failed
+                ExecutionId = executionId,
+                WorkflowId = workflow.Id,
+                WorkflowName = workflow.Name,
+                Status = "Failed"
             });
         }
     }

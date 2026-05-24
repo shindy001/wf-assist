@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Shared;
-using Shared.CQRS;
+using WfAssist.Shared;
+using WfAssist.Shared.CQRS;
 using WfAssist.Workflows.Api;
 using WfAssist.Workflows.Core.Runtime;
 using WfAssist.Workflows.Core.Runtime.NodeProcessors;
@@ -22,12 +22,12 @@ public static class WorkflowsModule
 
         services.AddDbContext<WorkflowsDbContext>((sp, options) =>
         {
-            var connectionProvider = sp.GetRequiredService<IDbConnectionProvider>();
-            options.UseSqlite(connectionProvider.DbConnection);
+            var connectionStringProvider = sp.GetRequiredService<IDbConnectionStringProvider>();
+            var connectionString = connectionStringProvider.GetConnectionString("workflows");
+            options.UseSqlite(connectionString);
         });
 
         services.AddScoped<IWorkflowRepository, WorkflowRepository>();
-        services.AddScoped<IExecutionRepository, ExecutionRepository>();
 
         services.AddHttpClient();
         services.AddScoped<ProcessingContext>();

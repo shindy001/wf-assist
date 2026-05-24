@@ -1,11 +1,13 @@
 using System.Collections.Immutable;
 using Microsoft.EntityFrameworkCore;
-using WfAssist.Workflows.Core.Models;
-using WfAssist.Workflows.Core.Services;
+using WfAssist.Executions.Contracts;
+using WfAssist.Executions.Core.Models;
+using WfAssist.Shared.Contracts;
 
-namespace WfAssist.Workflows.Infrastructure;
+namespace WfAssist.Executions.Infrastructure;
 
-internal sealed class ExecutionRepository(WorkflowsDbContext dbContext) : IExecutionRepository
+// TODO - inline methods with dbContext in usages and remove repository
+internal sealed class ExecutionRepository(ExecutionsDbContext dbContext) : IExecutionRepository
 {
     public async Task<IEnumerable<ExecutionIdentity>> GetAll()
     {

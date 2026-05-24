@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Shared;
+using WfAssist.Shared;
 using WfAssist.Workflows.Api.Features;
 
 namespace WfAssist.Workflows.Api;

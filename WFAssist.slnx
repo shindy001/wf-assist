@@ -20,6 +20,7 @@
     <Project Path="server/Executions/Executions.csproj" />
   </Folder>
   <Folder Name="/server/shared/">
+    <Project Path="server/Shared.Contracts/Shared.Contracts.csproj" />
     <Project Path="server/Shared/Shared.csproj" />
   </Folder>
   <Folder Name="/server/workflows/">

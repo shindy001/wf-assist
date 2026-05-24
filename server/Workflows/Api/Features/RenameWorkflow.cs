@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
 using OneOf;
 using OneOf.Types;
-using Shared;
-using Shared.CQRS;
+using WfAssist.Shared;
+using WfAssist.Shared.CQRS;
 using WfAssist.Workflows.Core.Services;
 
 namespace WfAssist.Workflows.Api.Features;

@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Json.More;
 using Shouldly;
+using WfAssist.Shared.Contracts;
 using WfAssist.Workflows.Core.Models;
 using WfAssist.Workflows.Core.Runtime;
 

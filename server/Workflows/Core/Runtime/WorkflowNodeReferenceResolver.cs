@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Json.Path;
-using WfAssist.Workflows.Core.Models;
+using WfAssist.Shared.Contracts;
 
 namespace WfAssist.Workflows.Core.Runtime;
 

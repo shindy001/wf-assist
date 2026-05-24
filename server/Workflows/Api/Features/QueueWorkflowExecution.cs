@@ -4,11 +4,10 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
 using OneOf;
 using OneOf.Types;
-using Shared;
-using Shared.CQRS;
-using WfAssist.Workflows.Core.Models;
+using WfAssist.Executions.Contracts;
+using WfAssist.Shared;
+using WfAssist.Shared.CQRS;
 using WfAssist.Workflows.Core.Services;
-using NotFound = OneOf.Types.NotFound;
 
 namespace WfAssist.Workflows.Api.Features;
 
@@ -36,7 +35,7 @@ public static class QueueWorkflowExecution
 
 internal record QueueWorkflowExecutionCommand(Guid Id) : ICommand<OneOf<Success<Guid>, NotFoundError>>;
 
-internal sealed class QueueWorkflowExecutionCommandHandler(IWorkflowRepository workflowRepository, IExecutionRepository executionRepository)
+internal sealed class QueueWorkflowExecutionCommandHandler(IWorkflowRepository workflowRepository, IExecutionsFacade executionsFacade)
     : ICommandHandler<QueueWorkflowExecutionCommand, OneOf<Success<Guid>, NotFoundError>>
 {
     public async Task<OneOf<Success<Guid>, NotFoundError>> Handle(QueueWorkflowExecutionCommand command,
@@ -48,8 +47,7 @@ internal sealed class QueueWorkflowExecutionCommandHandler(IWorkflowRepository w
             return new NotFoundError($"Workflow with ID '{command.Id}' was not found.");
         }
 
-        var execution = ExecutionFactory.CreateQueued(workflow);
-        var executionId = await executionRepository.Add(execution);
+        var executionId = await executionsFacade.Queue(ExecutionDataType.Workflow, workflow);
         return new Success<Guid>(executionId);
     }
 }

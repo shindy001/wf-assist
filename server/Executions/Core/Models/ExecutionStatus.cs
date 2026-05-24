@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace WfAssist.Workflows.Core.Models;
+namespace WfAssist.Executions.Core.Models;
 
 [JsonConverter(typeof(JsonStringEnumConverter<ExecutionStatus>))]
 internal enum ExecutionStatus

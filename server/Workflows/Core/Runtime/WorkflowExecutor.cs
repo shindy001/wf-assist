@@ -20,14 +20,14 @@ internal sealed partial class WorkflowExecutor
     }
 
     /// <summary>
-    /// Execute specified <see cref="WorkflowSnapshot"/>.
+    /// Execute specified <see cref="Workflow"/>.
     /// </summary>
-    /// <param name="snapshot"><see cref="WorkflowSnapshot"/></param>
-    public async Task Execute(WorkflowSnapshot snapshot)
+    /// <param name="workflow">Workflow to execute</param>
+    public async Task Execute(Workflow workflow)
     {
-        LogExecutionStart(snapshot.Name);
+        LogExecutionStart(workflow.Name);
 
-        var executionOrder = WorkflowTopologySorter.CalculateNodeExecution(snapshot.Data);
+        var executionOrder = WorkflowTopologySorter.CalculateNodeExecution(workflow.Data);
         LogExecutionOrder(executionOrder.Select(x => x.Id));
 
         foreach (var node in executionOrder)
@@ -39,12 +39,12 @@ internal sealed partial class WorkflowExecutor
 
             if (!result.IsSuccessful)
             {
-                LogExecutionInterrupted(snapshot.Name, $"Error during processing of node {node.Id}.");
+                LogExecutionInterrupted(workflow.Name, $"Error during processing of node {node.Id}.");
                 return;
             }
         }
 
-        LogExecutionCompleted(snapshot.Name);
+        LogExecutionCompleted(workflow.Name);
     }
 
     [LoggerMessage(LogLevel.Information, "Executing workflow '{workflowName}'.")]

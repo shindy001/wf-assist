@@ -1,6 +1,7 @@
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
+using WfAssist.Shared.Contracts;
 using WfAssist.Workflows.Core.Models;
 
 namespace WfAssist.Workflows.Core.Runtime.NodeProcessors;
