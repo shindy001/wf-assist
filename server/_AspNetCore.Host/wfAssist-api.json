@@ -242,14 +242,6 @@
           }
         }
       },
-      "ExecutionStatus": {
-        "enum": [
-          "Queued",
-          "Running",
-          "Completed",
-          "Failed"
-        ]
-      },
       "GetIdentitiesResponse": {
         "required": [
           "identities"
@@ -337,7 +329,7 @@
             "type": "string"
           },
           "status": {
-            "$ref": "#/components/schemas/ExecutionStatus"
+            "type": "string"
           }
         }
       },
