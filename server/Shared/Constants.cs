@@ -1,4 +1,4 @@
-namespace Shared;
+namespace WfAssist.Shared;
 
 public static class Constants
 {
@@ -15,18 +15,18 @@ public static class Constants
     public const string FaviconFile = "favicon.ico";
 
     public static readonly string ClientRootDirectoryPath = Path.Combine(AppContext.BaseDirectory, WwwRootDirectory, AppRoute);
-    public static readonly string SqliteDbConnectionString = GetSqliteConnectionString();
+    public static readonly string SqliteDbDirectoryPath = GetSqliteDbDirectoryPath();
 
-    private static string GetSqliteConnectionString()
+    private static string GetSqliteDbDirectoryPath()
     {
-        var folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        var dbPath = Path.Combine(folderPath, "WfAssist", "wf-assist.db");
+        var localAppDataDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        var dbDir = Path.Combine(localAppDataDir, "WfAssist");
 
-        if (!Directory.Exists(dbPath))
+        if (!Directory.Exists(dbDir))
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
+            Directory.CreateDirectory(Path.GetDirectoryName(dbDir)!);
         }
 
-        return $"Data Source={dbPath}";
+        return dbDir;
     }
 }

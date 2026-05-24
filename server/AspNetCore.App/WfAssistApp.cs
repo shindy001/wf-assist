@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,8 +11,9 @@ using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
 using Serilog.Events;
-using Shared;
-using Shared.CQRS;
+using WfAssist.Executions;
+using WfAssist.Shared;
+using WfAssist.Shared.CQRS;
 using WfAssist.Workflows;
 
 namespace WfAssist.AspNetCore;
@@ -86,10 +88,12 @@ public static class WfAssistApp
             options.AddPolicy(CorsAllowAllPolicy, policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
         });
 
-        builder.Services.AddScoped<IDbConnectionProvider, SqliteDbConnectionProvider>();
+        builder.Services.AddScoped<IDbConnectionStringProvider, SqliteDbConnectionStringProvider>();
         builder.Services.AddCqrsCore();
+        builder.Services.AddHttpClient();
 
         // Api modules
+        builder.Services.AddExecutions();
         builder.Services.AddWorkflows();
     }
 
@@ -112,6 +116,7 @@ public static class WfAssistApp
         app.MapWfAssistAppClient();
 
         // Api modules
+        app.MapExecutions();
         app.MapWorkflows();
     }
 

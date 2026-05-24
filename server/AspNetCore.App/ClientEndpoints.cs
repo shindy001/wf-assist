@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
-using Shared;
+using WfAssist.Shared;
 
 namespace WfAssist.AspNetCore;
 
