@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Shared.CQRS;
+namespace WfAssist.Shared.CQRS;
 
 public interface IQuery<out TResult>;
 

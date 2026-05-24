@@ -1,4 +1,4 @@
-﻿namespace Shared;
+﻿namespace WfAssist.Shared;
 
 public abstract record Error(string Message);
 

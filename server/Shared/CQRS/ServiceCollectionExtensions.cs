@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Shared.CQRS;
+namespace WfAssist.Shared.CQRS;
 
 public static class ServiceCollectionExtensions
 {
