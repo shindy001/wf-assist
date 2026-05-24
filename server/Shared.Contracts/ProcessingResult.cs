@@ -1,6 +1,6 @@
-namespace WfAssist.Workflows.Core.Models;
+namespace WfAssist.Shared.Contracts;
 
-internal record ProcessingResult
+public sealed record ProcessingResult
 {
     public bool IsSuccessful { get; init; }
     public ProcessResultValueType ValueType { get; init; }
