@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using WfAssist.Shared;
 using WfAssist.Workflows.Core.Models;
 
 namespace WfAssist.Workflows.Infrastructure;
 
-internal class WorkflowsDbContext : DbContext
+internal class WorkflowsDbContext : DbContext, IUnitOfWork, IRepository<Workflow>
 {
     public DbSet<Workflow> Workflows { get; set; }
 
@@ -17,6 +18,12 @@ internal class WorkflowsDbContext : DbContext
     {
         _serializerOptions = jsonOptions.Value.SerializerOptions;
     }
+
+    public IRepository<TAggregate> GetRepository<TAggregate>() => (IRepository<TAggregate>) this;
+
+    public async Task<Workflow?> TryFindAsync(Guid key) => await Workflows.FindAsync([key]);
+    public void Add(Workflow aggregate) => Workflows.Add(aggregate);
+    public void Delete(Workflow aggregate) => Workflows.Remove(aggregate);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
