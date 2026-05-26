@@ -6,7 +6,7 @@ using OneOf;
 using OneOf.Types;
 using WfAssist.Shared;
 using WfAssist.Shared.CQRS;
-using WfAssist.Workflows.Core.Services;
+using WfAssist.Workflows.Core.Models;
 
 namespace WfAssist.Workflows.Api.Features;
 
@@ -33,20 +33,21 @@ public static class RenameWorkflow
 
 internal record RenameWorkflowCommand(Guid Id, string NewName) : ICommand<OneOf<Success, NotFoundError>>;
 
-internal sealed class RenameWorkflowCommandHandler(IWorkflowRepository workflowRepository)
+internal sealed class RenameWorkflowCommandHandler(IUnitOfWork uow)
     : ICommandHandler<RenameWorkflowCommand, OneOf<Success, NotFoundError>>
 {
     public async Task<OneOf<Success, NotFoundError>> Handle(RenameWorkflowCommand command,
         CancellationToken cancellationToken = default)
 
     {
-        var workflow = await workflowRepository.GetById(command.Id);
+        var workflow = await uow.GetRepository<Workflow>().TryFindAsync(command.Id);
         if (workflow is null)
         {
             return new NotFoundError($"Workflow {command.Id} not found.");
         }
 
-        await workflowRepository.Rename(command.Id, command.NewName);
+        workflow.ChangeName(command.NewName);
+        await uow.SaveChangesAsync(cancellationToken);
         return new Success();
     }
 }

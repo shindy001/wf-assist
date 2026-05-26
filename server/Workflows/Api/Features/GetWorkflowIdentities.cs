@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using WfAssist.Shared.CQRS;
 using WfAssist.Workflows.Api.Dtos;
 using WfAssist.Workflows.Api.Mappers;
 using WfAssist.Workflows.Core.Models;
-using WfAssist.Workflows.Core.Services;
+using WfAssist.Workflows.Infrastructure;
 
 namespace WfAssist.Workflows.Api.Features;
 
@@ -34,12 +35,12 @@ public static class GetIdentities
 
 internal record GetWorkflowIdentitiesQuery : IQuery<IEnumerable<WorkflowIdentity>>;
 
-internal sealed class GetWorkflowIdentitiesQueryHandler(IWorkflowRepository workflowRepository)
+internal sealed class GetWorkflowIdentitiesQueryHandler(WorkflowsDbContext dbContext)
     : IQueryHandler<GetWorkflowIdentitiesQuery, IEnumerable<WorkflowIdentity>>
 {
     public async Task<IEnumerable<WorkflowIdentity>> Handle(GetWorkflowIdentitiesQuery query,
         CancellationToken cancellationToken = default)
     {
-        return await workflowRepository.GetIdentities();
+        return await dbContext.Workflows.Select(x => new WorkflowIdentity(x.Id, x.Name)).ToListAsync(cancellationToken);
     }
 }

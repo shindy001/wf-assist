@@ -14,12 +14,7 @@ internal static class WorkflowMapper
         };
 
     internal static Workflow ToDomain(this WorkflowDto dto)
-        => new()
-        {
-            Id = dto.Id,
-            Name = dto.Name,
-            Data = dto.Data.ToDomain()
-        };
+        => new(dto.Id, dto.Name, dto.Data.ToDomain());
 
     internal static WorkflowData ToDomain(this WorkflowDataDto dto)
         => new()

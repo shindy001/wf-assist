@@ -27,7 +27,7 @@ public static class WorkflowsModule
             options.UseSqlite(connectionString);
         });
 
-        services.AddScoped<IWorkflowRepository, WorkflowRepository>();
+        services.AddScoped<IUnitOfWork, WorkflowsDbContext>();
 
         services.AddHttpClient();
         services.AddScoped<ProcessingContext>();

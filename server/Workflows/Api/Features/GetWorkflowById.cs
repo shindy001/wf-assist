@@ -8,7 +8,7 @@ using WfAssist.Shared.CQRS;
 using WfAssist.Workflows.Api.Dtos;
 using WfAssist.Workflows.Api.Mappers;
 using WfAssist.Workflows.Core.Models;
-using WfAssist.Workflows.Core.Services;
+using WfAssist.Workflows.Infrastructure;
 
 namespace WfAssist.Workflows.Api.Features;
 
@@ -35,13 +35,13 @@ public static class GetWorkflowById
 
 internal record GetWorkflowByIdQuery(Guid Id) : IQuery<OneOf<Workflow, NotFoundError>>;
 
-internal sealed class GetWorkflowByIdQueryHandler(IWorkflowRepository workflowRepository)
+internal sealed class GetWorkflowByIdQueryHandler(WorkflowsDbContext dbContext)
     : IQueryHandler<GetWorkflowByIdQuery, OneOf<Workflow, NotFoundError>>
 {
     public async Task<OneOf<Workflow, NotFoundError>> Handle(GetWorkflowByIdQuery query,
         CancellationToken cancellationToken = default)
     {
-        var workflow = await workflowRepository.GetById(query.Id);
+        var workflow = await dbContext.Workflows.FindAsync([query.Id], cancellationToken: cancellationToken);
         return workflow is null
             ? new NotFoundError($"Workflow with id '{query.Id}' not found")
             : workflow;

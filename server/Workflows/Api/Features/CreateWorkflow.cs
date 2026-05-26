@@ -2,11 +2,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using OneOf.Types;
+using WfAssist.Shared;
 using WfAssist.Shared.CQRS;
 using WfAssist.Workflows.Api.Dtos;
 using WfAssist.Workflows.Api.Mappers;
 using WfAssist.Workflows.Core.Models;
-using WfAssist.Workflows.Core.Services;
 
 namespace WfAssist.Workflows.Api.Features;
 
@@ -29,13 +29,14 @@ public static class Create
 
 internal record CreateWorkflowCommand(string Name, WorkflowData Data) : ICommand<Success>;
 
-internal sealed class CreateWorkflowCommandHandler(IWorkflowRepository workflowRepository)
+internal sealed class CreateWorkflowCommandHandler(IUnitOfWork uow)
     : ICommandHandler<CreateWorkflowCommand, Success>
 {
     public async Task<Success> Handle(CreateWorkflowCommand command, CancellationToken cancellationToken = default)
     {
-        var newWorkflow = new Workflow {Id = Guid.NewGuid(), Name = command.Name, Data = command.Data};
-        await workflowRepository.Create(newWorkflow);
+        uow.GetRepository<Workflow>().Add(new Workflow(Guid.NewGuid(), command.Name, command.Data));
+        await uow.SaveChangesAsync(cancellationToken);
+
         return new Success();
     }
 }

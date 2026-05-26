@@ -7,7 +7,7 @@ using OneOf.Types;
 using WfAssist.Executions.Contracts;
 using WfAssist.Shared;
 using WfAssist.Shared.CQRS;
-using WfAssist.Workflows.Core.Services;
+using WfAssist.Workflows.Infrastructure;
 
 namespace WfAssist.Workflows.Api.Features;
 
@@ -35,13 +35,13 @@ public static class QueueWorkflowExecution
 
 internal record QueueWorkflowExecutionCommand(Guid Id) : ICommand<OneOf<Success<Guid>, NotFoundError>>;
 
-internal sealed class QueueWorkflowExecutionCommandHandler(IWorkflowRepository workflowRepository, IExecutionsFacade executionsFacade)
+internal sealed class QueueWorkflowExecutionCommandHandler(WorkflowsDbContext dbContext, IExecutionsFacade executionsFacade)
     : ICommandHandler<QueueWorkflowExecutionCommand, OneOf<Success<Guid>, NotFoundError>>
 {
     public async Task<OneOf<Success<Guid>, NotFoundError>> Handle(QueueWorkflowExecutionCommand command,
         CancellationToken cancellationToken = default)
     {
-        var workflow = await workflowRepository.GetById(command.Id);
+        var workflow = await dbContext.Workflows.FindAsync([command.Id], cancellationToken: cancellationToken);
         if (workflow is null)
         {
             return new NotFoundError($"Workflow with ID '{command.Id}' was not found.");

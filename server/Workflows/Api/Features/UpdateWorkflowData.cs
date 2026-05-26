@@ -9,7 +9,6 @@ using WfAssist.Shared.CQRS;
 using WfAssist.Workflows.Api.Dtos;
 using WfAssist.Workflows.Api.Mappers;
 using WfAssist.Workflows.Core.Models;
-using WfAssist.Workflows.Core.Services;
 
 namespace WfAssist.Workflows.Api.Features;
 
@@ -37,20 +36,21 @@ public static class UpdateWorkflowData
 
 internal record UpdateWorkflowDataCommand(Guid Id, WorkflowData Data) : ICommand<OneOf<Success, NotFoundError>>;
 
-internal sealed class UpdateWorkflowDataCommandHandler(IWorkflowRepository workflowRepository)
+internal sealed class UpdateWorkflowDataCommandHandler(IUnitOfWork uow)
     : ICommandHandler<UpdateWorkflowDataCommand, OneOf<Success, NotFoundError>>
 {
     public async Task<OneOf<Success, NotFoundError>> Handle(UpdateWorkflowDataCommand command,
         CancellationToken cancellationToken = default)
 
     {
-        var workflow = await workflowRepository.GetById(command.Id);
+        var workflow = await uow.GetRepository<Workflow>().TryFindAsync(command.Id);
         if (workflow is null)
         {
             return new NotFoundError($"Workflow {command.Id} not found.");
         }
 
-        await workflowRepository.UpdateData(command.Id, command.Data);
+        workflow.ChangeData(command.Data);
+        await uow.SaveChangesAsync(cancellationToken);
         return new Success();
     }
 }

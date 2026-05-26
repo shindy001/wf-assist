@@ -2,8 +2,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using OneOf.Types;
+using WfAssist.Shared;
 using WfAssist.Shared.CQRS;
-using WfAssist.Workflows.Core.Services;
+using WfAssist.Workflows.Core.Models;
 
 namespace WfAssist.Workflows.Api.Features;
 
@@ -23,12 +24,13 @@ public static class Delete
 
 internal record DeleteWorkflowCommand(Guid Id) : ICommand<Success>;
 
-internal sealed class DeleteWorkflowCommandHandler(IWorkflowRepository workflowRepository)
+internal sealed class DeleteWorkflowCommandHandler(IUnitOfWork uow)
     : ICommandHandler<DeleteWorkflowCommand, Success>
 {
     public async Task<Success> Handle(DeleteWorkflowCommand command, CancellationToken cancellationToken = default)
     {
-        await workflowRepository.Delete(command.Id);
+        await uow.GetRepository<Workflow>().Delete(command.Id);
+        await uow.SaveChangesAsync(cancellationToken);
         return new Success();
     }
 }
