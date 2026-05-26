@@ -4,9 +4,19 @@ namespace WfAssist.Workflows.Core.Models;
 
 internal sealed class Workflow
 {
-    public required Guid Id { get; init; }
-    public required string Name { get; init; }
-    public required WorkflowData Data { get; init; }
+    public Guid Id { get; init; }
+    public string Name { get; private set; }
+    public WorkflowData Data { get; private set; }
+
+    public Workflow(Guid id, string name, WorkflowData data)
+    {
+        Id = id;
+        Name = name;
+        Data = data;
+    }
+
+    public void ChangeName(string newName) => Name = newName;
+    public void ChangeData(WorkflowData data) => Data = data;
 }
 
 internal sealed record WorkflowData
