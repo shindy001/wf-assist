@@ -1,3 +1,5 @@
+using WfAssist.Shared.Notifications;
+
 namespace WfAssist.Workflows.Core.Models.Notifications;
 
 internal sealed record WorkflowExecutionStarted : Notification

@@ -289,17 +289,17 @@
         "type": "object",
         "anyOf": [
           {
-            "$ref": "#/components/schemas/NotificationWorkflowExecutionStarted"
+            "$ref": "#/components/schemas/NotificationWorkflowExecutionEnded"
           },
           {
-            "$ref": "#/components/schemas/NotificationWorkflowExecutionEnded"
+            "$ref": "#/components/schemas/NotificationWorkflowExecutionStarted"
           }
         ],
         "discriminator": {
           "propertyName": "type",
           "mapping": {
-            "WorkflowExecutionStarted": "#/components/schemas/NotificationWorkflowExecutionStarted",
-            "WorkflowExecutionEnded": "#/components/schemas/NotificationWorkflowExecutionEnded"
+            "WorkflowExecutionEnded": "#/components/schemas/NotificationWorkflowExecutionEnded",
+            "WorkflowExecutionStarted": "#/components/schemas/NotificationWorkflowExecutionStarted"
           }
         }
       },

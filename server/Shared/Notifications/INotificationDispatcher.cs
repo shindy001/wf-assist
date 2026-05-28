@@ -1,9 +1,8 @@
 using System.Threading.Channels;
-using WfAssist.Workflows.Core.Models.Notifications;
 
-namespace WfAssist.Workflows.Core.Services;
+namespace WfAssist.Shared.Notifications;
 
-internal interface INotificationDispatcher
+public interface INotificationDispatcher
 {
     ChannelReader<Notification> Register(Guid clientId);
 

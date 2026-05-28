@@ -2,9 +2,9 @@ using System.Collections.Immutable;
 using Microsoft.Extensions.Logging;
 using WfAssist.Executions.Contracts;
 using WfAssist.Shared.Contracts;
+using WfAssist.Shared.Notifications;
 using WfAssist.Workflows.Core.Models;
 using WfAssist.Workflows.Core.Models.Notifications;
-using WfAssist.Workflows.Core.Services;
 
 namespace WfAssist.Workflows.Core.Runtime;
 

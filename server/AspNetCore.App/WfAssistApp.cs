@@ -14,6 +14,7 @@ using Serilog.Events;
 using WfAssist.Executions;
 using WfAssist.Shared;
 using WfAssist.Shared.CQRS;
+using WfAssist.Shared.Notifications;
 using WfAssist.Workflows;
 
 namespace WfAssist.AspNetCore;
@@ -68,6 +69,7 @@ public static class WfAssistApp
             options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict; // do not allow Quoted numbers (JSON strings for number properties)
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            options.SerializerOptions.TypeInfoResolverChain.Insert(0, new NotificationTypeJsonResolver());
         });
 
         builder.Services.AddOpenApi(opt =>
@@ -88,6 +90,7 @@ public static class WfAssistApp
             options.AddPolicy(CorsAllowAllPolicy, policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
         });
 
+        builder.Services.AddSingleton<INotificationDispatcher, NotificationDispatcher>();
         builder.Services.AddScoped<IDbConnectionStringProvider, SqliteDbConnectionStringProvider>();
         builder.Services.AddCqrsCore();
         builder.Services.AddHttpClient();

@@ -5,10 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WfAssist.Shared;
 using WfAssist.Shared.CQRS;
+using WfAssist.Shared.Notifications;
 using WfAssist.Workflows.Api;
 using WfAssist.Workflows.Core.Runtime;
 using WfAssist.Workflows.Core.Runtime.NodeProcessors;
-using WfAssist.Workflows.Core.Services;
 using WfAssist.Workflows.Infrastructure;
 
 namespace WfAssist.Workflows;
@@ -18,7 +18,10 @@ public static class WorkflowsModule
     public static void AddWorkflows(this IServiceCollection services)
     {
         // Register command/query handlers from WorkflowModule
-        services.AddCqrsServices(serviceAssemblies: [typeof(WorkflowsModule).Assembly]);
+        var assembly = typeof(WorkflowsModule).Assembly;
+        services.AddCqrsServices(serviceAssemblies: assembly);
+        // Register notification types used by INotificationDispatcher
+        services.RegisterNotificationTypes(notificationAssemblies: assembly);
 
         services.AddDbContext<WorkflowsDbContext>((sp, options) =>
         {
@@ -28,8 +31,6 @@ public static class WorkflowsModule
         });
 
         services.AddScoped<IUnitOfWork, WorkflowsDbContext>();
-
-        services.AddHttpClient();
         services.AddScoped<ProcessingContext>();
         services.AddScoped<WorkflowNodeReferenceResolver>();
 
@@ -40,7 +41,6 @@ public static class WorkflowsModule
         services.AddScoped<WorkflowExecutor>();
         services.AddScoped<ExecutionManager>();
 
-        services.AddSingleton<INotificationDispatcher, NotificationDispatcher>();
         services.AddHostedService<ExecutionBackgroundService>();
     }
 
