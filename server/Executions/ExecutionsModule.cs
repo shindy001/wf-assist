@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using WfAssist.Executions.Api;
 using WfAssist.Executions.Contracts;
 using WfAssist.Executions.Infrastructure;
 using WfAssist.Shared;
@@ -41,7 +42,7 @@ public static class ExecutionsModule
             .AllowAnonymous();
 
         // Api endpoints
-        //wfAssistApiDefaultRouteGroup.MapExecutionEndpoints();
+        wfAssistApiDefaultRouteGroup.MapExecutionEndpoints();
     }
 
     private static void UpdateDatabase(IApplicationBuilder app)

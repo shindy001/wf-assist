@@ -13,19 +13,3 @@ internal sealed record Execution
     public required JsonDocument Data { get; init; }
     public ImmutableDictionary<string, ProcessingResult> ProcessingResults { get; init; } = [];
 }
-
-
-
-internal static class ExecutionFactory
-{
-    public static Execution CreateQueued(ExecutionDataType dataType, JsonDocument data)
-    {
-        return new Execution
-        {
-            Id = Guid.NewGuid(),
-            Status = ExecutionStatus.Queued,
-            DataType = dataType,
-            Data = data
-        };
-    }
-}
