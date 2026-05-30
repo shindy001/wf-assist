@@ -43,8 +43,7 @@ internal sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
         {
             return ProcessingResult.Error(
                 $"Unsupported Response content MediaType '{response.Content.Headers.ContentType?.MediaType}'. " +
-                $"Only '{MediaTypeNames.Application.Json}' is supported.",
-                workflowNode.Id);
+                $"Only '{MediaTypeNames.Application.Json}' is supported.");
         }
 
         var (resultValueType, resultData) = ParseResponse(responseBody.Trim());

@@ -106,7 +106,7 @@ internal sealed partial class ExecutionManager
             LogUnexpectedErrorDuringExecution(e.Message);
 
             _processingContext.AddResult("ProcessingError", ProcessingResult.Error(
-                $"Unexpected error during execution: {e.Message}", string.Empty));
+                $"Unexpected error during execution: {e.Message}"));
 
             await _executionsFacade.Fail(executionId, _processingContext.ProcessingResults.ToImmutableDictionary());
 

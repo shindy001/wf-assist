@@ -287,7 +287,7 @@ public class WorkflowNodeReferenceResolverTests
         // Arrange
         var processingContext = new ProcessingContext();
         processingContext.AddResult("1",
-            ProcessingResult.Error("Uh oh, something happened", "1"));
+            ProcessingResult.Error("Uh oh, something happened", "some other data"));
 
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
