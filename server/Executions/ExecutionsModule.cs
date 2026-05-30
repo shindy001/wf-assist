@@ -24,7 +24,6 @@ public static class ExecutionsModule
             options.UseSqlite(connectionString);
         });
 
-        services.AddScoped<IExecutionRepository, ExecutionRepository>();
         services.AddScoped<IExecutionsFacade, ExecutionsFacade>();
     }
 
