@@ -5,6 +5,25 @@
     "description": "API for WFAssist client."
   },
   "paths": {
+    "/api/executions": {
+      "get": {
+        "tags": [
+          "WfAssist_Executions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkflowExecutionsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/workflows/identities": {
       "get": {
         "tags": [
@@ -242,6 +261,49 @@
           }
         }
       },
+      "ExecutionDataTypeDto": {
+        "enum": [
+          "Workflow"
+        ]
+      },
+      "ExecutionDto": {
+        "required": [
+          "id",
+          "status",
+          "dataType",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ExecutionStatusDto"
+          },
+          "dataType": {
+            "$ref": "#/components/schemas/ExecutionDataTypeDto"
+          },
+          "data": {
+            "$ref": "#/components/schemas/JsonDocument"
+          },
+          "processingResults": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ProcessingResult"
+            }
+          }
+        }
+      },
+      "ExecutionStatusDto": {
+        "enum": [
+          "Queued",
+          "Running",
+          "Completed",
+          "Failed"
+        ]
+      },
       "GetIdentitiesResponse": {
         "required": [
           "identities"
@@ -267,6 +329,20 @@
           }
         }
       },
+      "GetWorkflowExecutionsResponse": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExecutionDto"
+            }
+          }
+        }
+      },
       "HttpHeaderDto": {
         "required": [
           "name",
@@ -282,6 +358,7 @@
           }
         }
       },
+      "JsonDocument": { },
       "Notification": {
         "required": [
           "type"
@@ -375,6 +452,35 @@
             "format": "float"
           }
         }
+      },
+      "ProcessingResult": {
+        "required": [
+          "isSuccessful",
+          "valueType"
+        ],
+        "type": "object",
+        "properties": {
+          "isSuccessful": {
+            "type": "boolean"
+          },
+          "valueType": {
+            "$ref": "#/components/schemas/ProcessResultValueType"
+          },
+          "data": { },
+          "errorMessage": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "ProcessResultValueType": {
+        "enum": [
+          "None",
+          "JsonDocument",
+          "Error"
+        ]
       },
       "RenameWorkflowRequest": {
         "required": [
@@ -603,6 +709,9 @@
     }
   },
   "tags": [
+    {
+      "name": "WfAssist_Executions"
+    },
     {
       "name": "WfAssist_Workflows"
     }
