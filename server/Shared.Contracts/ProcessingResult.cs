@@ -7,7 +7,7 @@ public sealed record ProcessingResult
     public object? Data { get; init; }
     public string? ErrorMessage { get; init; }
 
-    private ProcessingResult(
+    public ProcessingResult(
         bool IsSuccessful,
         ProcessResultValueType ValueType,
         object? Data = null,
