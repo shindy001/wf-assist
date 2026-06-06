@@ -90,7 +90,7 @@ public static class WfAssistApp
             options.AddPolicy(CorsAllowAllPolicy, policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
         });
 
-        builder.Services.AddSingleton<INotificationDispatcher, NotificationDispatcher>();
+        builder.Services.AddNotificationDispatcher(typeof(NotificationDispatcher));
         builder.Services.AddScoped<IDbConnectionStringProvider, SqliteDbConnectionStringProvider>();
         builder.Services.AddCqrsCore();
         builder.Services.AddHttpClient();

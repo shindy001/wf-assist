@@ -20,8 +20,6 @@ public static class WorkflowsModule
         // Register command/query handlers from WorkflowModule
         var assembly = typeof(WorkflowsModule).Assembly;
         services.AddCqrsServices(serviceAssemblies: assembly);
-        // Register notification types used by INotificationDispatcher
-        services.RegisterNotificationTypes(notificationAssemblies: assembly);
 
         services.AddDbContext<WorkflowsDbContext>((sp, options) =>
         {
