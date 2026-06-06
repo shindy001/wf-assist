@@ -15,9 +15,6 @@ public static class ExecutionsModule
 {
     public static void AddExecutions(this IServiceCollection services)
     {
-        // Register command/query handlers from ExecutionsModule
-        services.AddCqrsServices(serviceAssemblies: [typeof(ExecutionsModule).Assembly]);
-
         services.AddDbContext<ExecutionsDbContext>((sp, options) =>
         {
             var connectionStringProvider = sp.GetRequiredService<IDbConnectionStringProvider>();

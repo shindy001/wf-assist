@@ -92,7 +92,7 @@ public static class WfAssistApp
 
         builder.Services.AddNotificationDispatcher(typeof(NotificationDispatcher));
         builder.Services.AddScoped<IDbConnectionStringProvider, SqliteDbConnectionStringProvider>();
-        builder.Services.AddCqrsCore();
+        builder.Services.AddCqrs();
         builder.Services.AddHttpClient();
 
         // Api modules

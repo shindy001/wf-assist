@@ -17,10 +17,6 @@ public static class WorkflowsModule
 {
     public static void AddWorkflows(this IServiceCollection services)
     {
-        // Register command/query handlers from WorkflowModule
-        var assembly = typeof(WorkflowsModule).Assembly;
-        services.AddCqrsServices(serviceAssemblies: assembly);
-
         services.AddDbContext<WorkflowsDbContext>((sp, options) =>
         {
             var connectionStringProvider = sp.GetRequiredService<IDbConnectionStringProvider>();
