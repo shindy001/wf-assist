@@ -2,6 +2,9 @@
 
 namespace WfAssist.Shared.Notifications;
 
+/// <summary>
+/// Registers specified implementation of <see cref="INotificationDispatcher"/> and probes app domain assemblies for <see cref="Notification"/> types.
+/// </summary>
 public static class NotificationServiceCollectionExtensions
 {
 	public static void AddNotificationDispatcher(this IServiceCollection services, Type dispatcherType)
