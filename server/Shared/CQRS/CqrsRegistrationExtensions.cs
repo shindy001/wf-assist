@@ -16,7 +16,7 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
-    /// Registers cqrs specific services from given assemblies like <see cref="ICommandHandler{TCommand,TResult}"/>
+    /// Registers cqrs specific services from given current app domain assemblies like <see cref="ICommandHandler{TCommand,TResult}"/>
     /// and <see cref="IQueryHandler{TQuery,TResult}"/>.
     /// </summary>
     private static void AddCqrsServices(this IServiceCollection services)
