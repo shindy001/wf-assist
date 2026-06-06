@@ -261,42 +261,7 @@
           }
         }
       },
-      "ExecutionDataTypeDto": {
-        "enum": [
-          "Workflow"
-        ]
-      },
-      "ExecutionDto": {
-        "required": [
-          "id",
-          "status",
-          "dataType",
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "status": {
-            "$ref": "#/components/schemas/ExecutionStatusDto"
-          },
-          "dataType": {
-            "$ref": "#/components/schemas/ExecutionDataTypeDto"
-          },
-          "data": {
-            "$ref": "#/components/schemas/JsonDocument"
-          },
-          "processingResults": {
-            "type": "object",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/ProcessingResult"
-            }
-          }
-        }
-      },
-      "ExecutionStatusDto": {
+      "ExecutionStatus": {
         "enum": [
           "Queued",
           "Running",
@@ -338,7 +303,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ExecutionDto"
+              "$ref": "#/components/schemas/WorkflowExecutionDto"
             }
           }
         }
@@ -605,6 +570,32 @@
           },
           "target": {
             "type": "string"
+          }
+        }
+      },
+      "WorkflowExecutionDto": {
+        "required": [
+          "id",
+          "status",
+          "dataSnapshot"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ExecutionStatus"
+          },
+          "dataSnapshot": {
+            "$ref": "#/components/schemas/JsonDocument"
+          },
+          "processingResults": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ProcessingResult"
+            }
           }
         }
       },
