@@ -9,6 +9,8 @@ export type CreateWorkflowRequest = {
     data: WorkflowDataDto;
 };
 
+export type ExecutionStatus = 'Queued' | 'Running' | 'Completed' | 'Failed';
+
 export type GetIdentitiesResponse = {
     identities: Array<WorkFlowIdentityDto>;
 };
@@ -17,16 +19,22 @@ export type GetWorkflowByIdResponse = {
     item: WorkflowDto;
 };
 
+export type GetWorkflowExecutionsResponse = {
+    items: Array<WorkflowExecutionDto>;
+};
+
 export type HttpHeaderDto = {
     name: string;
     value: string;
 };
 
+export type JsonDocument = unknown;
+
 export type Notification = ({
-    type?: 'WorkflowExecutionStarted';
-} & NotificationWorkflowExecutionStarted) | ({
     type?: 'WorkflowExecutionEnded';
-} & NotificationWorkflowExecutionEnded);
+} & NotificationWorkflowExecutionEnded) | ({
+    type?: 'WorkflowExecutionStarted';
+} & NotificationWorkflowExecutionStarted);
 
 export type NotificationWorkflowExecutionEnded = {
     type?: 'WorkflowExecutionEnded';
@@ -47,6 +55,15 @@ export type PositionDto = {
     x: number;
     y: number;
 };
+
+export type ProcessingResult = {
+    isSuccessful: boolean;
+    valueType: ProcessResultValueType;
+    data?: unknown;
+    errorMessage?: null | string;
+};
+
+export type ProcessResultValueType = 'None' | 'JsonDocument' | 'Error';
 
 export type RenameWorkflowRequest = {
     newName: string;
@@ -86,6 +103,15 @@ export type WorkflowEdgeDto = {
     target: string;
 };
 
+export type WorkflowExecutionDto = {
+    id: string;
+    status: ExecutionStatus;
+    dataSnapshot: JsonDocument;
+    processingResults?: {
+        [key: string]: ProcessingResult;
+    };
+};
+
 export type WorkFlowIdentityDto = {
     id: string;
     name: string;
@@ -114,6 +140,22 @@ export type WorkflowNodeDto = {
     position: PositionDto;
     data: WorkflowNodeDataDto;
 };
+
+export type GetApiExecutionsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/executions';
+};
+
+export type GetApiExecutionsResponses = {
+    /**
+     * OK
+     */
+    200: GetWorkflowExecutionsResponse;
+};
+
+export type GetApiExecutionsResponse = GetApiExecutionsResponses[keyof GetApiExecutionsResponses];
 
 export type GetApiWorkflowsIdentitiesData = {
     body?: never;

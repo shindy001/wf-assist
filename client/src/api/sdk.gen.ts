@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { DeleteApiWorkflowsByIdData, DeleteApiWorkflowsByIdResponses, GetApiWorkflowsByIdData, GetApiWorkflowsByIdErrors, GetApiWorkflowsByIdResponses, GetApiWorkflowsEventsData, GetApiWorkflowsEventsResponses, GetApiWorkflowsIdentitiesData, GetApiWorkflowsIdentitiesResponses, PostApiWorkflowsByIdQueueExecutionData, PostApiWorkflowsByIdQueueExecutionErrors, PostApiWorkflowsByIdQueueExecutionResponses, PostApiWorkflowsByIdRenameData, PostApiWorkflowsByIdRenameErrors, PostApiWorkflowsByIdRenameResponses, PostApiWorkflowsByIdUpdateDataData, PostApiWorkflowsByIdUpdateDataErrors, PostApiWorkflowsByIdUpdateDataResponses, PostApiWorkflowsData, PostApiWorkflowsResponses } from './types.gen';
+import type { DeleteApiWorkflowsByIdData, DeleteApiWorkflowsByIdResponses, GetApiExecutionsData, GetApiExecutionsResponses, GetApiWorkflowsByIdData, GetApiWorkflowsByIdErrors, GetApiWorkflowsByIdResponses, GetApiWorkflowsEventsData, GetApiWorkflowsEventsResponses, GetApiWorkflowsIdentitiesData, GetApiWorkflowsIdentitiesResponses, PostApiWorkflowsByIdQueueExecutionData, PostApiWorkflowsByIdQueueExecutionErrors, PostApiWorkflowsByIdQueueExecutionResponses, PostApiWorkflowsByIdRenameData, PostApiWorkflowsByIdRenameErrors, PostApiWorkflowsByIdRenameResponses, PostApiWorkflowsByIdUpdateDataData, PostApiWorkflowsByIdUpdateDataErrors, PostApiWorkflowsByIdUpdateDataResponses, PostApiWorkflowsData, PostApiWorkflowsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -17,6 +17,8 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
      */
     meta?: Record<string, unknown>;
 };
+
+export const getApiExecutions = <ThrowOnError extends boolean = false>(options?: Options<GetApiExecutionsData, ThrowOnError>) => (options?.client ?? client).get<GetApiExecutionsResponses, unknown, ThrowOnError>({ url: '/api/executions', ...options });
 
 export const getApiWorkflowsIdentities = <ThrowOnError extends boolean = false>(options?: Options<GetApiWorkflowsIdentitiesData, ThrowOnError>) => (options?.client ?? client).get<GetApiWorkflowsIdentitiesResponses, unknown, ThrowOnError>({ url: '/api/workflows/identities', ...options });
 
