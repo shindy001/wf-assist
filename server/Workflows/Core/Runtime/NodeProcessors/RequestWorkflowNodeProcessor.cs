@@ -56,7 +56,9 @@ internal sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
         return requestNodeData with
         {
             Url = _nodeReferenceResolver.Resolve(requestNodeData.Url),
-            RequestBody = _nodeReferenceResolver.Resolve(requestNodeData.RequestBody ?? string.Empty)
+            RequestBody = requestNodeData.RequestBody is null
+                ? null
+                : _nodeReferenceResolver.Resolve(requestNodeData.RequestBody)
         };
     }
 

@@ -63,42 +63,23 @@ internal sealed partial class ExecutionManager
     {
         try
         {
+            LogExecutionStarted(executionId);
+            await NotifyWorkflowExecutionStart(executionId, workflow);
             await _executionsFacade.MarkAsRunning(executionId);
 
-            LogExecutionStarted(executionId);
-            await _notificationDispatcher.Dispatch(new WorkflowExecutionStarted
-            {
-                ExecutionId = executionId,
-                WorkflowId = workflow.Id,
-                WorkflowName = workflow.Name
-            });
-
             await _workflowExecutor.Execute(workflow);
+
             if (_processingContext.IsProcessingSuccessful())
             {
-                await _executionsFacade.Complete(executionId, _processingContext.ProcessingResults.ToImmutableDictionary());
-
                 LogExecutionCompleted(executionId);
-                await _notificationDispatcher.Dispatch(new WorkflowExecutionEnded
-                {
-                    ExecutionId = executionId,
-                    WorkflowId = workflow.Id,
-                    WorkflowName = workflow.Name,
-                    Status = "Completed"
-                });
+                await _executionsFacade.Complete(executionId, _processingContext.ProcessingResults.ToImmutableDictionary());
+                await NotifyWorkflowExecutionEnd(executionId, workflow, "Completed");
             }
             else
             {
-                await _executionsFacade.Fail(executionId, _processingContext.ProcessingResults.ToImmutableDictionary());
-
                 LogExecutionCompletedWithErrors(executionId);
-                await _notificationDispatcher.Dispatch(new WorkflowExecutionEnded
-                {
-                    ExecutionId = executionId,
-                    WorkflowId = workflow.Id,
-                    WorkflowName = workflow.Name,
-                    Status = "Failed"
-                });
+                await _executionsFacade.Fail(executionId, _processingContext.ProcessingResults.ToImmutableDictionary());
+                await NotifyWorkflowExecutionEnd(executionId, workflow, "Failed");
             }
         }
         catch (Exception e)
@@ -109,15 +90,29 @@ internal sealed partial class ExecutionManager
                 $"Unexpected error during execution: {e.Message}"));
 
             await _executionsFacade.Fail(executionId, _processingContext.ProcessingResults.ToImmutableDictionary());
-
-            await _notificationDispatcher.Dispatch(new WorkflowExecutionEnded
-            {
-                ExecutionId = executionId,
-                WorkflowId = workflow.Id,
-                WorkflowName = workflow.Name,
-                Status = "Failed"
-            });
+            await NotifyWorkflowExecutionEnd(executionId, workflow, "Failed");
         }
+    }
+
+    private async Task NotifyWorkflowExecutionEnd(Guid executionId, Workflow workflow, string status)
+    {
+        await _notificationDispatcher.Dispatch(new WorkflowExecutionEnded
+        {
+            ExecutionId = executionId,
+            WorkflowId = workflow.Id,
+            WorkflowName = workflow.Name,
+            Status = status
+        });
+    }
+
+    private async Task NotifyWorkflowExecutionStart(Guid executionId, Workflow workflow)
+    {
+        await _notificationDispatcher.Dispatch(new WorkflowExecutionStarted
+        {
+            ExecutionId = executionId,
+            WorkflowId = workflow.Id,
+            WorkflowName = workflow.Name
+        });
     }
 
     [LoggerMessage(LogLevel.Information, "Execution {runId} started.")]
