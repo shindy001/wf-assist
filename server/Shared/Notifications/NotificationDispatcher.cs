@@ -2,9 +2,8 @@ using System.Collections.Concurrent;
 using System.Threading.Channels;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using WfAssist.Shared.Notifications;
 
-namespace WfAssist.AspNetCore;
+namespace WfAssist.Shared.Notifications;
 
 internal sealed class NotificationDispatcher : INotificationDispatcher
 {

@@ -1,31 +1,31 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Http.Json;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace WfAssist.Shared.Notifications;
 
-/// <summary>
-/// Registers specified implementation of <see cref="INotificationDispatcher"/> and probes app domain assemblies for <see cref="Notification"/> types.
-/// </summary>
 public static class NotificationServiceCollectionExtensions
 {
-	public static void AddNotificationDispatcher(this IServiceCollection services, Type dispatcherType)
+	/// <summary>
+	/// Registers notification dispatcher,
+	/// probes app domain assemblies for <see cref="Notification"/> derived types and adds
+	/// <see cref="NotificationTypeJsonResolver"/> with the derived types to <see cref="JsonSerializerOptions.TypeInfoResolverChain"/>.
+	/// </summary>
+	public static void AddNotifications(this IServiceCollection services)
 	{
-		if (!typeof(INotificationDispatcher).IsAssignableFrom(dispatcherType))
-		{
-			throw new ArgumentException(
-				$"{dispatcherType.Name} must implement {nameof(INotificationDispatcher)}");
-		}
+		services.AddSingleton<INotificationDispatcher, NotificationDispatcher>();
 
-		RegisterNotificationTypes();
-		services.AddSingleton(typeof(INotificationDispatcher), dispatcherType);
+		var notificationTypes = GetNotificationTypes();
+		services.Configure<JsonOptions>(options =>
+			options.SerializerOptions.TypeInfoResolverChain.Insert(0,
+				new NotificationTypeJsonResolver(notificationTypes)));
 	}
 
-	private static void RegisterNotificationTypes()
+	private static Type[] GetNotificationTypes()
 	{
-		var notificationTypes = AppDomain.CurrentDomain.GetAssemblies()
+		return AppDomain.CurrentDomain.GetAssemblies()
 			.SelectMany(assembly => assembly.GetTypes())
 			.Where(t => !t.IsAbstract && typeof(Notification).IsAssignableFrom(t))
-			.ToList();
-
-		NotificationTypeRegistry.RegisterNotificationTypes(notificationTypes);
+			.ToArray();
 	}
 }

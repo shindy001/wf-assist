@@ -3,23 +3,23 @@ using System.Text.Json.Serialization.Metadata;
 
 namespace WfAssist.Shared.Notifications;
 
-public sealed class NotificationTypeJsonResolver : DefaultJsonTypeInfoResolver
+internal sealed class NotificationTypeJsonResolver(Type[] notificationTypes) : DefaultJsonTypeInfoResolver
 {
 	public override JsonTypeInfo GetTypeInfo(Type type, JsonSerializerOptions options)
 	{
 		var info = base.GetTypeInfo(type, options);
 
-		if (type != typeof(Notification))
+		if (type != typeof(Notification) || notificationTypes.Length <= 0)
 		{
 			return info;
 		}
 
-		info.PolymorphismOptions = new JsonPolymorphismOptions()
+		info.PolymorphismOptions = new JsonPolymorphismOptions
 		{
-			TypeDiscriminatorPropertyName = "type"
+			TypeDiscriminatorPropertyName = "type",
 		};
 
-		foreach (var derivedType in NotificationTypeRegistry.GetNotificationTypes())
+		foreach (var derivedType in notificationTypes)
 		{
 			info.PolymorphismOptions.DerivedTypes.Add(new JsonDerivedType(derivedType, derivedType.Name));
 		}

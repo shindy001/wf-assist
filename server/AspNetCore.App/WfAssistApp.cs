@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Json;
@@ -69,7 +70,6 @@ public static class WfAssistApp
             options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict; // do not allow Quoted numbers (JSON strings for number properties)
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            options.SerializerOptions.TypeInfoResolverChain.Insert(0, new NotificationTypeJsonResolver());
         });
 
         builder.Services.AddOpenApi(opt =>
@@ -90,9 +90,9 @@ public static class WfAssistApp
             options.AddPolicy(CorsAllowAllPolicy, policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
         });
 
-        builder.Services.AddNotificationDispatcher(typeof(NotificationDispatcher));
-        builder.Services.AddScoped<IDbConnectionStringProvider, SqliteDbConnectionStringProvider>();
         builder.Services.AddCqrs();
+        builder.Services.AddNotifications();
+        builder.Services.AddScoped<IDbConnectionStringProvider, SqliteDbConnectionStringProvider>();
         builder.Services.AddHttpClient();
 
         // Api modules
