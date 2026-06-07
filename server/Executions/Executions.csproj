@@ -6,10 +6,6 @@
         <Nullable>enable</Nullable>
         <RootNamespace>WfAssist.Executions</RootNamespace>
     </PropertyGroup>
-
-    <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    </ItemGroup>
     
     <ItemGroup>
       <ProjectReference Include="..\Executions.Contracts\Executions.Contracts.csproj" />
