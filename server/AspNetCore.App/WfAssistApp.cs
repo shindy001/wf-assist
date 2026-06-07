@@ -1,10 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Json;
-using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -92,7 +90,7 @@ public static class WfAssistApp
 
         builder.Services.AddCqrs();
         builder.Services.AddNotifications();
-        builder.Services.AddScoped<IDbConnectionStringProvider, SqliteDbConnectionStringProvider>();
+        builder.Services.AddSqliteDbConnectionStringProvider();
         builder.Services.AddHttpClient();
 
         // Api modules
