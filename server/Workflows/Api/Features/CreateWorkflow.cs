@@ -10,9 +10,9 @@ using WfAssist.Workflows.Core.Models;
 
 namespace WfAssist.Workflows.Api.Features;
 
-public static class Create
+internal static class Create
 {
-    public static void MapCreateWorkflowEndpoint(this IEndpointRouteBuilder endpoints)
+    internal static void MapCreateWorkflowEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPost("/", async (CreateWorkflowRequest request, ICommandDispatcher commandDispatcher) =>
             {

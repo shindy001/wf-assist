@@ -8,11 +8,11 @@ using WfAssist.Workflows.Core.Models.Notifications;
 
 namespace WfAssist.Workflows.Api.Features;
 
-public static class SubscribeToWorkflowEvents
+internal static class SubscribeToWorkflowEvents
 {
     [ProducesResponseType(typeof(IAsyncEnumerable<WorkflowExecutionStarted>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(IAsyncEnumerable<WorkflowExecutionEnded>), StatusCodes.Status200OK)]
-    public static void MapSubscribeToWorkflowEventsEndpoint(this IEndpointRouteBuilder endpoints)
+    internal static void MapSubscribeToWorkflowEventsEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/events",
             (INotificationDispatcher notificationDispatcher, CancellationToken cancellationToken) =>

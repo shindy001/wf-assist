@@ -10,9 +10,9 @@ using WfAssist.Workflows.Infrastructure;
 
 namespace WfAssist.Workflows.Api.Features;
 
-public static class GetIdentities
+internal static class GetIdentities
 {
-    public static void MapGetWorkflowIdentitiesEndpoint(this IEndpointRouteBuilder endpoints)
+    internal static void MapGetWorkflowIdentitiesEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/identities", async (IQueryDispatcher queryDispatcher) =>
             {

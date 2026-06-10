@@ -10,9 +10,9 @@ using WfAssist.Workflows.Core.Models;
 
 namespace WfAssist.Workflows.Api.Features;
 
-public static class RenameWorkflow
+internal static class RenameWorkflow
 {
-    public static void MapRenameWorkflowEndpoint(this IEndpointRouteBuilder endpoints)
+    internal static void MapRenameWorkflowEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPost("/{id:guid}/rename",
                 async (Guid id, RenameWorkflowRequest request, ICommandDispatcher commandDispatcher) =>

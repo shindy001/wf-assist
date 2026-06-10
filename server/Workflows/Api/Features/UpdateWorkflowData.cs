@@ -12,9 +12,9 @@ using WfAssist.Workflows.Core.Models;
 
 namespace WfAssist.Workflows.Api.Features;
 
-public static class UpdateWorkflowData
+internal static class UpdateWorkflowData
 {
-    public static void MapUpdateWorkflowDataEndpoint(this IEndpointRouteBuilder endpoints)
+    internal static void MapUpdateWorkflowDataEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPost("/{id:guid}/updateData",
                 async (Guid id, UpdateWorkflowDataRequest request, ICommandDispatcher commandDispatcher) =>

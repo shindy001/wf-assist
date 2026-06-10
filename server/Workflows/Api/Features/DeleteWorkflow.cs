@@ -8,9 +8,9 @@ using WfAssist.Workflows.Core.Models;
 
 namespace WfAssist.Workflows.Api.Features;
 
-public static class Delete
+internal static class Delete
 {
-    public static void MapDeleteWorkflowEndpoint(this IEndpointRouteBuilder endpoints)
+    internal static void MapDeleteWorkflowEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapDelete("/{id:guid}", async (Guid id, ICommandDispatcher commandDispatcher) =>
             {

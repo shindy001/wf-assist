@@ -11,9 +11,9 @@ using WfAssist.Workflows.Infrastructure;
 
 namespace WfAssist.Workflows.Api.Features;
 
-public static class QueueWorkflowExecution
+internal static class QueueWorkflowExecution
 {
-    public static void MapQueueWorkflowExecutionEndpoint(this IEndpointRouteBuilder endpoints)
+    internal static void MapQueueWorkflowExecutionEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPost("/{id:guid}/queueExecution", async Task<Results<Ok<RunWorkflowResponse>, NotFound<string>>> (
                 Guid id,
