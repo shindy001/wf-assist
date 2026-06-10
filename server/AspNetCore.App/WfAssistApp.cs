@@ -61,6 +61,7 @@ public static class WfAssistApp
             .CreateLogger();
 
         builder.Services.AddSerilog();
+        builder.Services.AddProblemDetails();
         builder.Services.Configure<JsonOptions>(options =>
         {
             options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
@@ -112,6 +113,9 @@ public static class WfAssistApp
 
             });
         }
+
+        app.UseExceptionHandler();
+        app.UseStatusCodePages();
 
         // JS client
         app.MapWfAssistAppClient();
