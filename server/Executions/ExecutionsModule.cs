@@ -2,12 +2,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using WfAssist.Executions.Api;
 using WfAssist.Executions.Contracts;
 using WfAssist.Executions.Infrastructure;
 using WfAssist.Shared;
-using WfAssist.Shared.CQRS;
 
 namespace WfAssist.Executions;
 
@@ -28,9 +26,6 @@ public static class ExecutionsModule
     public static void MapExecutions(this WebApplication app)
     {
         UpdateDatabase(app);
-
-        var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
-        var logger = loggerFactory.CreateLogger($"{nameof(ExecutionsModule)}-API_and_UI_registration");
 
         var wfAssistApiDefaultRouteGroup = app
             .MapGroup(Constants.ApiRoute)

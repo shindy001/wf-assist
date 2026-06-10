@@ -2,10 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using WfAssist.Shared;
-using WfAssist.Shared.CQRS;
-using WfAssist.Shared.Notifications;
 using WfAssist.Workflows.Api;
 using WfAssist.Workflows.Core.Runtime;
 using WfAssist.Workflows.Core.Runtime.NodeProcessors;
@@ -41,9 +38,6 @@ public static class WorkflowsModule
     public static void MapWorkflows(this WebApplication app)
     {
         UpdateDatabase(app);
-
-        var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
-        var logger = loggerFactory.CreateLogger($"{nameof(WorkflowsModule)}-API_and_UI_registration");
 
         var wfAssistApiDefaultRouteGroup = app
             .MapGroup(Constants.ApiRoute)
