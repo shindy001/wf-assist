@@ -8,7 +8,7 @@ namespace WfAssist.Executions.Api;
 
 internal static class Endpoints
 {
-    public static void MapExecutionEndpoints(this IEndpointRouteBuilder endpointBuilder)
+    internal static void MapExecutionEndpoints(this IEndpointRouteBuilder endpointBuilder)
     {
         var executionsGroup = endpointBuilder
             .MapGroup("/executions")

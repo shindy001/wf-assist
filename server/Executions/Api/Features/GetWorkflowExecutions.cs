@@ -12,9 +12,9 @@ using WfAssist.Shared.CQRS;
 
 namespace WfAssist.Executions.Api.Features;
 
-public static class GetWorkflowExecutions
+internal static class GetWorkflowExecutions
 {
-    public static void MapGetWorkflowExecutionsEndpoint(this IEndpointRouteBuilder endpoints)
+    internal static void MapGetWorkflowExecutionsEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/", async (IQueryDispatcher queryDispatcher) =>
             {
