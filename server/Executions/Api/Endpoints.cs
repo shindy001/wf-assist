@@ -15,5 +15,6 @@ internal static class Endpoints
             .WithTags($"{Constants.AppName}_Executions");
 
         executionsGroup.MapGetWorkflowExecutionsEndpoint();
+        executionsGroup.MapGetWorkflowExecutionByIdEndpoint();
     }
 }
