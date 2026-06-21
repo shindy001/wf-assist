@@ -5,17 +5,17 @@ This template creates a very basic [Svelte Flow](https://svelteflow.dev) app wit
 ## Installation
 
 ```sh
-bun install
+pnpm install
 ```
 
 ## Development
 
 ```sh
-bun run dev
+pnpm run dev
 ```
 
 ## Build
 
 ```sh
-bun run build
+pnpm run build
 ```
