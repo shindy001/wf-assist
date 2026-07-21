@@ -64,6 +64,7 @@ public static class WfAssistApp
         builder.Services.AddProblemDetails();
         builder.Services.Configure<JsonOptions>(options =>
         {
+            options.SerializerOptions.AllowOutOfOrderMetadataProperties = true;
             options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             options.SerializerOptions.PropertyNameCaseInsensitive = true;
             options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
