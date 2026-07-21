@@ -1,9 +1,9 @@
 import {
   type WorkflowIdentity,
-  WorkflowNodeDataType,
   failed,
-  type SvelteFlowWorkflowNode,
-  type SvelteFlowWorkflowEdge,
+  type WorkflowNode,
+  type WorkflowEdge,
+  WorkflowNodeType,
 } from "$lib/types";
 import { createGetWorkflowIdentitiesQuery } from "../actions/getWorkflowIdentitiesQuery";
 import { createGetWorkflowQuery } from "../actions/getWorkflowQuery";
@@ -13,11 +13,11 @@ import { getNextId } from "./idGenerator";
 class WorkflowsAppState {
   #workflowIdentities = $state<WorkflowIdentity[] | undefined>();
   #selectedWorkflowIdentity = $state<WorkflowIdentity | undefined>();
-  #selectedNodeType = $state<WorkflowNodeDataType>(
-    WorkflowNodeDataType.Default,
+  #selectedNodeType = $state<WorkflowNodeType>(
+    WorkflowNodeType.RequestNode,
   );
-  flowCanvasNodes = $state.raw<SvelteFlowWorkflowNode[]>([]);
-  flowCanvasEdges = $state.raw<SvelteFlowWorkflowEdge[]>([]);
+  flowCanvasNodes = $state.raw<WorkflowNode[]>([]);
+  flowCanvasEdges = $state.raw<WorkflowEdge[]>([]);
 
   private saveRateLimitInMiliseconds = 1000;
   private saveWorkflowCommand = createSaveWorkflowCommand(
@@ -36,16 +36,17 @@ class WorkflowsAppState {
     return this.#selectedNodeType;
   }
 
-  set selectedNodeType(nodeType: WorkflowNodeDataType) {
+  set selectedNodeType(nodeType: WorkflowNodeType) {
     this.#selectedNodeType = nodeType;
   }
 
-  addFlowCanvasNode(node: SvelteFlowWorkflowNode) {
+  addFlowCanvasNode(node: WorkflowNode) {
     const nextId = getNextId(this.flowCanvasNodes.at(-1)?.id ?? "000");
-    this.flowCanvasNodes = [...this.flowCanvasNodes, { ...node, id: nextId }];
+    const newNode = { ...node, id: nextId };
+    this.flowCanvasNodes = [...this.flowCanvasNodes, { ...newNode, data: { ...newNode } }]; // Copy props to data so Custom nodes can use them
   }
 
-  addFlowCanvasEdge(edge: SvelteFlowWorkflowEdge) {
+  addFlowCanvasEdge(edge: WorkflowEdge) {
     this.flowCanvasEdges = [...this.flowCanvasEdges, edge];
   }
 
@@ -70,10 +71,7 @@ class WorkflowsAppState {
         name: workflow.name,
       };
 
-      this.flowCanvasNodes = workflow.data.nodes.map((x) => ({
-        type: x.data.type,
-        ...x,
-      }));
+      this.flowCanvasNodes = workflow.data.nodes;
       this.flowCanvasEdges = workflow.data.edges;
     }
   }

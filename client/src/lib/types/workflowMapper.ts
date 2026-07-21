@@ -1,20 +1,18 @@
 import type {
   WorkflowDataDto,
   WorkflowDto,
-  WorkflowEdgeDto,
-  WorkflowNodeDataDto,
-  WorkflowNodeDataDtoHeadersNodeDataDto,
-  WorkflowNodeDataDtoRequestNodeDataDto,
-  WorkflowNodeDto,
+  EdgeDto,
+  NodeDtoHeadersNodeDto,
+  NodeDtoRequestNodeDto,
+  NodeDto,
 } from "$api";
 import {
-  type RequestNodeData,
-  type HeadersNodeData,
+  type RequestNode,
+  type HeadersNode,
   type Workflow,
   type WorkflowData,
   type WorkflowEdge,
   type WorkflowNode,
-  type WorkflowNodeData,
 } from "./workflow";
 
 export function toWorkflow(dto: WorkflowDto): Workflow {
@@ -34,12 +32,12 @@ export function toWorkflowData(dto: WorkflowDataDto): WorkflowData {
 
 export function toWorkflowDataDto(data: WorkflowData): WorkflowDataDto {
   return {
-    nodes: data.nodes?.map((x) => toWorkflowNodeDto(x)) ?? [],
+    nodes: data.nodes?.map((x) => ({ ...x.data, ...x } as NodeDto)) ?? [],
     edges: data.edges?.map((x) => toWorkflowEdgeDto(x)) ?? [],
   };
 }
 
-function toWorkflowEdge(dto: WorkflowEdgeDto): WorkflowEdge {
+function toWorkflowEdge(dto: EdgeDto): WorkflowEdge {
   return {
     id: dto.id,
     source: dto.source,
@@ -47,7 +45,7 @@ function toWorkflowEdge(dto: WorkflowEdgeDto): WorkflowEdge {
   };
 }
 
-function toWorkflowEdgeDto(data: WorkflowEdge): WorkflowEdgeDto {
+function toWorkflowEdgeDto(data: WorkflowEdge): EdgeDto {
   return {
     id: data.id,
     source: data.source,
@@ -55,40 +53,13 @@ function toWorkflowEdgeDto(data: WorkflowEdge): WorkflowEdgeDto {
   };
 }
 
-function toWorkflowNode(dto: WorkflowNodeDto): WorkflowNode {
-  return {
-    id: dto.id,
-    position: { x: dto.position.x, y: dto.position.y },
-    data: toWorkflowNodeData(dto),
-  };
-}
-
-function toWorkflowNodeDto(data: WorkflowNode): WorkflowNodeDto {
-  return {
-    id: data.id,
-    position: { x: data.position.x, y: data.position.y },
-    data: toWorkflowNodeDataDto(data),
-  };
-}
-
-function toWorkflowNodeData(dto: WorkflowNodeDto): WorkflowNodeData {
-  switch (dto.data.type) {
-    case "Request":
-      return dto.data as RequestNodeData;
-    case "Headers":
-      return dto.data as HeadersNodeData;
+function toWorkflowNode(dto: NodeDto): WorkflowNode {
+  switch (dto.type) {
+    case "RequestNode":
+      return { ...dto, data: { ...dto } } as RequestNode;
+    case "HeadersNode":
+      return { ...dto, data: { ...dto } } as HeadersNode;
     default:
-      throw new Error(`Unknown WorkflowNodeDataDto type '${dto.data.type}'`);
-  }
-}
-
-function toWorkflowNodeDataDto(node: WorkflowNode): WorkflowNodeDataDto {
-  switch (node.data.type) {
-    case "Request":
-      return node.data as WorkflowNodeDataDtoRequestNodeDataDto;
-    case "Headers":
-      return node.data as WorkflowNodeDataDtoHeadersNodeDataDto;
-    default:
-      throw new Error(`Unknown WorkflowNodeData type '${node.data.type}'`);
-  }
+      throw new Error(`Unknown NodeDto type '${dto.type}'`);
+  };
 }

@@ -17,40 +17,26 @@ export type WorkflowEdge = {
 
 export type WorkflowNode = {
   id: string;
+  type: WorkflowNodeType;
   position: Position;
-  data: WorkflowNodeData;
+  data: Record<string, unknown>;
 };
 
-// SvelteFlow node (needs type prop at the top level)
-export type SvelteFlowWorkflowNode = WorkflowNode &
-  Pick<WorkflowNodeData, "type">;
-
-// SvelteFlow edge
-export type SvelteFlowWorkflowEdge = WorkflowEdge;
-
-export type WorkflowNodeData = RequestNodeData | HeadersNodeData;
-
-export type WorkflowNodeDataBase = {
-  type: WorkflowNodeDataType;
-};
-
-export enum RequestType {
-  Get = "Get",
-  Post = "Post",
-  Put = "Put",
-  Patch = "Patch",
-  Delete = "Delete",
+// These enum values (except Default) needs to be exact match to the values on server as they are mapped in "workflowMapper.ts"
+export enum WorkflowNodeType {
+  RequestNode = "RequestNode",
+  HeadersNode = "HeadersNode",
 }
 
-export type RequestNodeData = {
+export type RequestNode = {
   url: string;
   requestType: RequestType;
   requestBody?: string;
-} & WorkflowNodeDataBase;
+} & WorkflowNode;
 
-export type HeadersNodeData = {
+export type HeadersNode = {
   headers: Array<HttpHeader>;
-} & WorkflowNodeDataBase;
+} & WorkflowNode;
 
 export type HttpHeader = {
   name: string;
@@ -62,11 +48,12 @@ export type Position = {
   y: number;
 };
 
-// These enum values (except Default) needs to be exact match to the values on server as they are mapped in "workflowMapper.ts"
-export enum WorkflowNodeDataType {
-  Default = "Default",
-  Request = "Request",
-  Headers = "Headers",
+export enum RequestType {
+  Get = "Get",
+  Post = "Post",
+  Put = "Put",
+  Patch = "Patch",
+  Delete = "Delete",
 }
 
 export type WorkflowIdentity = {
@@ -75,36 +62,41 @@ export type WorkflowIdentity = {
 };
 
 /* Node data factories */
-function createRequestNodeData(
-  data?: Partial<Omit<RequestNodeData, "type">>,
-): WorkflowNodeData {
+function createRequestNode(
+  data?: Partial<Omit<RequestNode, "type">>,
+): RequestNode {
   return {
-    type: WorkflowNodeDataType.Request,
+    id: "",
+    type: WorkflowNodeType.RequestNode,
+    position: {x: 0, y: 0},
     url: "",
     requestType: RequestType.Get,
     ...data,
   };
 }
 
-function createHeadersNodeData(
-  data?: Partial<Omit<HeadersNodeData, "type">>,
-): WorkflowNodeData {
+function createHeadersNode(
+  data?: Partial<Omit<HeadersNode, "type">>,
+): HeadersNode {
   return {
-    type: WorkflowNodeDataType.Headers,
+    id: "",
+    type: WorkflowNodeType.HeadersNode,
+    position: {x: 0, y: 0},
     headers: [],
     ...data,
   };
 }
 
-export function createDefaultWorkflowNodeData(
-  nodeType: WorkflowNodeDataType,
-): WorkflowNodeData {
+export function createWorkflowNode(
+  nodeType: WorkflowNodeType,
+  position?: Position
+): RequestNode | HeadersNode {
   switch (nodeType) {
-    case WorkflowNodeDataType.Request:
-      return createRequestNodeData();
-    case WorkflowNodeDataType.Headers:
-      return createHeadersNodeData();
+    case WorkflowNodeType.RequestNode:
+      return createRequestNode({position: position});
+    case WorkflowNodeType.HeadersNode:
+      return createHeadersNode({position: position});
     default:
-      throw new Error(`Unsupported WorkflowNode type '${nodeType}'`);
+      throw new Error(`Unsupported node type '${nodeType}'`);
   }
 }

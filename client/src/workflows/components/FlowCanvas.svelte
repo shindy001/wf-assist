@@ -9,9 +9,7 @@
   import RequestNode from "./nodes/RequestNode.svelte";
   import HeadersNode from "./nodes/HeadersNode.svelte";
   import {
-    createDefaultWorkflowNodeData,
-    type SvelteFlowWorkflowNode,
-    WorkflowNodeDataType,
+    createWorkflowNode, WorkflowNodeType, type WorkflowNode
   } from "$lib/types";
   import { useWorkflowEvents, useWorkflowsAppState } from "../state/";
   import TurboEdge from "./nodes/TurboEdge.svelte";
@@ -21,8 +19,8 @@
 
   const workflowsAppState = useWorkflowsAppState();
   const additionalNodeTypes = {
-    [WorkflowNodeDataType.Request]: RequestNode,
-    [WorkflowNodeDataType.Headers]: HeadersNode,
+    [WorkflowNodeType.RequestNode]: RequestNode,
+    [WorkflowNodeType.HeadersNode]: HeadersNode,
   };
 
   const { screenToFlowPosition } = $derived(useSvelteFlow());
@@ -63,16 +61,10 @@
       y: event.clientY,
     });
 
-    const data = createDefaultWorkflowNodeData(
+    const newNode = createWorkflowNode(
       workflowsAppState.selectedNodeType,
+      position
     );
-
-    const newNode: SvelteFlowWorkflowNode = {
-      id: "",
-      position,
-      type: data.type,
-      data: data,
-    };
 
     workflowsAppState.addFlowCanvasNode(newNode);
   };
