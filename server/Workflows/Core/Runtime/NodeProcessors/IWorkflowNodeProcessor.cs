@@ -5,5 +5,5 @@ namespace WfAssist.Workflows.Core.Runtime.NodeProcessors;
 
 internal interface IWorkflowNodeProcessor
 {
-    Task<ProcessingResult> Process(WorkflowNode workflowNode);
+    Task<ProcessingResult> Process(Node node);
 }

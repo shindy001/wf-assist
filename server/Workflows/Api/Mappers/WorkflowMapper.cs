@@ -30,7 +30,7 @@ internal static class WorkflowMapper
             Nodes = entity.Nodes.Select(ToDto)
         };
 
-    private static WorkflowEdgeDto ToDto(this WorkflowEdge entity)
+    private static EdgeDto ToDto(this Edge entity)
         => new()
         {
             Id = entity.Id,
@@ -38,7 +38,7 @@ internal static class WorkflowMapper
             Target = entity.Target,
         };
 
-    private static WorkflowEdge ToDomain(this WorkflowEdgeDto dto)
+    private static Edge ToDomain(this EdgeDto dto)
         => new()
         {
             Id = dto.Id,
@@ -46,59 +46,47 @@ internal static class WorkflowMapper
             Target = dto.Target,
         };
 
-    private static WorkflowNodeDto ToDto(this WorkflowNode entity)
+    private static NodeDto ToDto(this Node entity)
     {
-        return new WorkflowNodeDto
+        return entity switch
         {
-            Id = entity.Id,
-            Position = new PositionDto(entity.Position.X, entity.Position.Y),
-            Data = entity.Data.ToDto()
-        };
-    }
-
-    private static WorkflowNode ToDomain(this WorkflowNodeDto dto)
-    {
-        return new WorkflowNode
-        {
-            Id = dto.Id,
-            Position = new Position(dto.Position.X, dto.Position.Y),
-            Data = dto.Data.ToDomain()
-        };
-    }
-
-    private static WorkflowNodeDataDto ToDto(this WorkflowNodeData workflowNodeData)
-    {
-        return workflowNodeData switch
-        {
-            RequestNodeData data => new RequestNodeDataDto
+            RequestNode requestNode => new RequestNodeDto
             {
-                RequestType = data.RequestType.ToDto(),
-                Url = data.Url,
-                RequestBody = data.RequestBody
+                Id = requestNode.Id,
+                Position = new PositionDto(entity.Position.X, entity.Position.Y),
+                RequestType = requestNode.RequestType.ToDto(),
+                Url = requestNode.Url,
+                RequestBody = requestNode.RequestBody
             },
-            HeadersNodeData data => new HeadersNodeDataDto
+            HeadersNode headersNode => new HeadersNodeDto
             {
-                Headers = data.Headers.Select(x => new HttpHeaderDto(x.Name, x.Value)).ToList()
+                Id = headersNode.Id,
+                Position = new PositionDto(entity.Position.X, entity.Position.Y),
+                Headers = headersNode.Headers.Select(x => new HttpHeaderDto(x.Name, x.Value)).ToList()
             },
-            _ => throw new InvalidOperationException($"Unknown WorkflowNodeData type {workflowNodeData.GetType().Name}")
+            _ => throw new ArgumentOutOfRangeException(nameof(entity))
         };
     }
 
-    private static WorkflowNodeData ToDomain(this WorkflowNodeDataDto dto)
+    private static Node ToDomain(this NodeDto dto)
     {
         return dto switch
         {
-            RequestNodeDataDto data => new RequestNodeData
+            RequestNodeDto requestNodeDto => new RequestNode
             {
-                RequestType = data.RequestType.ToDomain(),
-                Url = data.Url,
-                RequestBody = data.RequestBody
+                Id = requestNodeDto.Id,
+                Position = new Position(requestNodeDto.Position.X, requestNodeDto.Position.Y),
+                RequestType = requestNodeDto.RequestType.ToDomain(),
+                Url = requestNodeDto.Url,
+                RequestBody = requestNodeDto.RequestBody
             },
-            HeadersNodeDataDto data => new HeadersNodeData
+            HeadersNodeDto headersNodeDto => new HeadersNode
             {
-                Headers = data.Headers.Select(x => new HttpHeader(x.Name, x.Value)).ToList()
+                Id = headersNodeDto.Id,
+                Position = new Position(headersNodeDto.Position.X, headersNodeDto.Position.Y),
+                Headers = headersNodeDto.Headers.Select(x => new HttpHeader(x.Name, x.Value)).ToList()
             },
-            _ => throw new InvalidOperationException($"Unknown WorkflowNodeDataDto type {dto.GetType().Name}")
+            _ => throw new ArgumentOutOfRangeException(nameof(dto))
         };
     }
 

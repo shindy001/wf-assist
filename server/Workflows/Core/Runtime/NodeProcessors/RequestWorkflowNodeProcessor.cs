@@ -19,14 +19,14 @@ internal sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
         _nodeReferenceResolver = nodeReferenceResolver;
     }
 
-    public async Task<ProcessingResult> Process(WorkflowNode workflowNode)
+    public async Task<ProcessingResult> Process(Node node)
     {
-        if (workflowNode.Data is not RequestNodeData requestNodeData)
+        if (node is not RequestNode requestNode)
         {
-            throw new ArgumentException($"Expected node data type {nameof(RequestNodeData)} but got {workflowNode.Data.GetType().Name}");
+            throw new ArgumentException($"Expected node of type {nameof(RequestNode)} but got {node.GetType().Name}");
         }
 
-        var data = ResolveNodeReferences(requestNodeData);
+        var data = ResolveNodeReferences(requestNode);
         var requestMessage = GetRequestMessage(data.RequestType, data.Url, data.RequestBody);
 
         var response = await _httpClient.SendAsync(requestMessage);
@@ -51,14 +51,14 @@ internal sealed class RequestWorkflowNodeProcessor : IWorkflowNodeProcessor
         return ProcessingResult.Success(resultValueType, resultData);
     }
 
-    private RequestNodeData ResolveNodeReferences(RequestNodeData requestNodeData)
+    private RequestNode ResolveNodeReferences(RequestNode requestNode)
     {
-        return requestNodeData with
+        return requestNode with
         {
-            Url = _nodeReferenceResolver.Resolve(requestNodeData.Url),
-            RequestBody = requestNodeData.RequestBody is null
+            Url = _nodeReferenceResolver.Resolve(requestNode.Url),
+            RequestBody = requestNode.RequestBody is null
                 ? null
-                : _nodeReferenceResolver.Resolve(requestNodeData.RequestBody)
+                : _nodeReferenceResolver.Resolve(requestNode.RequestBody)
         };
     }
 

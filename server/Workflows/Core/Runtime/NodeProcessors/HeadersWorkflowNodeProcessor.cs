@@ -16,14 +16,14 @@ internal sealed class HeadersWorkflowNodeProcessor : IWorkflowNodeProcessor
         _nodeReferenceResolver = nodeReferenceResolver;
     }
 
-    public Task<ProcessingResult> Process(WorkflowNode workflowNode)
+    public Task<ProcessingResult> Process(Node node)
     {
-        if (workflowNode.Data is not HeadersNodeData headersNodeData)
+        if (node is not HeadersNode headersNode)
         {
-            throw new ArgumentException($"Expected node data type {nameof(HeadersNodeData)} but got {workflowNode.Data.GetType().Name}");
+            throw new ArgumentException($"Expected node of type {nameof(HeadersNode)} but got {node.GetType().Name}");
         }
 
-        var resolvedData = ResolveNodeReferences(headersNodeData);
+        var resolvedData = ResolveNodeReferences(headersNode);
         foreach (var header in resolvedData.Headers)
         {
             // TryAddWithoutValidation does not throw when invalid header like Content-Type(http response specific) is added to default headers
@@ -33,11 +33,11 @@ internal sealed class HeadersWorkflowNodeProcessor : IWorkflowNodeProcessor
         return Task.FromResult(ProcessingResult.Success(ProcessResultValueType.None));
     }
 
-    private HeadersNodeData ResolveNodeReferences(HeadersNodeData headersNodeData)
+    private HeadersNode ResolveNodeReferences(HeadersNode headersNode)
     {
-        return headersNodeData with
+        return headersNode with
         {
-            Headers = headersNodeData.Headers
+            Headers = headersNode.Headers
                 .Select(header => header with {Value = _nodeReferenceResolver.Resolve(header.Value)}).ToList()
         };
     }

@@ -21,37 +21,34 @@ internal sealed class Workflow
 
 internal sealed record WorkflowData
 {
-    public IEnumerable<WorkflowNode> Nodes { get; init; } = [];
-    public IEnumerable<WorkflowEdge> Edges { get; init; } = [];
+    public IEnumerable<Node> Nodes { get; init; } = [];
+    public IEnumerable<Edge> Edges { get; init; } = [];
 }
 
-internal sealed record WorkflowEdge
+internal sealed record Edge
 {
     public required string Id { get; init; }
     public required string Source { get; init; }
     public required string Target { get; init; }
 }
 
-internal sealed record WorkflowNode
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(RequestNode), nameof(RequestNode))]
+[JsonDerivedType(typeof(HeadersNode), nameof(HeadersNode))]
+internal abstract record Node
 {
     public required string Id { get; init; }
     public required Position Position { get; init; }
-    public required WorkflowNodeData Data { get; init; }
 }
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(RequestNodeData), nameof(RequestNodeData))]
-[JsonDerivedType(typeof(HeadersNodeData), nameof(HeadersNodeData))]
-internal abstract record WorkflowNodeData;
-
-internal sealed record RequestNodeData : WorkflowNodeData
+internal sealed record RequestNode : Node
 {
     public required RequestType RequestType { get; init; }
     public required string Url { get; init; }
     public string? RequestBody { get; init; }
 }
 
-internal sealed record HeadersNodeData : WorkflowNodeData
+internal sealed record HeadersNode : Node
 {
     public List<HttpHeader> Headers { get; init; } = [];
 }

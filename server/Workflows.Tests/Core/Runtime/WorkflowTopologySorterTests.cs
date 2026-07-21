@@ -242,19 +242,20 @@ public class WorkflowTopologySorterTests
             .Message.ShouldBe("Cycle detected in workflow graph, cannot calculate execution order.");
     }
 
-    private static WorkflowNode CreateRequestNode()
+    private static RequestNode CreateRequestNode()
     {
-        return new WorkflowNode
+        return new RequestNode
         {
             Id = Guid.NewGuid().ToString(),
             Position = new Position(0, 0),
-            Data = new RequestNodeData { RequestType = RequestType.Get, Url = string.Empty }
+            RequestType = RequestType.Get,
+            Url = string.Empty
         };
     }
 
-    private static WorkflowEdge CreateEdge(string sourceId, string targetId)
+    private static Edge CreateEdge(string sourceId, string targetId)
     {
-        return new WorkflowEdge
+        return new Edge
         {
             Id = Guid.NewGuid().ToString(),
             Source = sourceId,

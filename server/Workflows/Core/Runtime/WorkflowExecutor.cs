@@ -32,7 +32,7 @@ internal sealed partial class WorkflowExecutor
 
         foreach (var node in executionOrder)
         {
-            var processor = _processorProvider.GetProcessor(node.Data);
+            var processor = _processorProvider.GetProcessor(node);
             var result = await processor.Process(node);
 
             _processingContext.AddResult(node.Id, result);

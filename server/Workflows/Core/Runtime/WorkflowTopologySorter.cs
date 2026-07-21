@@ -8,8 +8,8 @@ internal static class WorkflowTopologySorter
     /// Calculates dependency graph, topologically orders the nodes and returns nodes according to execution order
     /// </summary>
     /// <param name="data"><see cref="WorkflowData"/> - collection of nodes and edges</param>
-    /// <returns><see cref="List{WorkflowNode}"/> in execution order</returns>
-    public static List<WorkflowNode> CalculateNodeExecution(WorkflowData data)
+    /// <returns><see cref="List{Node}"/> in execution order</returns>
+    public static List<Node> CalculateNodeExecution(WorkflowData data)
     {
         if (!data.Nodes.Any())
         {
