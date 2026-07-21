@@ -294,6 +294,25 @@
           }
         }
       },
+      "EdgeDto": {
+        "required": [
+          "id",
+          "source",
+          "target"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
       "ExecutionStatus": {
         "enum": [
           "Queued",
@@ -383,6 +402,87 @@
         }
       },
       "JsonDocument": { },
+      "NodeDto": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/NodeDtoRequestNodeDto"
+          },
+          {
+            "$ref": "#/components/schemas/NodeDtoHeadersNodeDto"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "RequestNode": "#/components/schemas/NodeDtoRequestNodeDto",
+            "HeadersNode": "#/components/schemas/NodeDtoHeadersNodeDto"
+          }
+        }
+      },
+      "NodeDtoHeadersNodeDto": {
+        "required": [
+          "id",
+          "position"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "HeadersNode"
+            ],
+            "type": "string"
+          },
+          "headers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HttpHeaderDto"
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "position": {
+            "$ref": "#/components/schemas/PositionDto"
+          }
+        }
+      },
+      "NodeDtoRequestNodeDto": {
+        "required": [
+          "requestType",
+          "url",
+          "id",
+          "position"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "RequestNode"
+            ],
+            "type": "string"
+          },
+          "requestType": {
+            "$ref": "#/components/schemas/RequestTypeDto"
+          },
+          "url": {
+            "type": "string"
+          },
+          "requestBody": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "position": {
+            "$ref": "#/components/schemas/PositionDto"
+          }
+        }
+      },
       "Notification": {
         "required": [
           "type"
@@ -582,13 +682,13 @@
           "nodes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/WorkflowNodeDto"
+              "$ref": "#/components/schemas/NodeDto"
             }
           },
           "edges": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/WorkflowEdgeDto"
+              "$ref": "#/components/schemas/EdgeDto"
             }
           }
         }
@@ -610,25 +710,6 @@
           },
           "data": {
             "$ref": "#/components/schemas/WorkflowDataDto"
-          }
-        }
-      },
-      "WorkflowEdgeDto": {
-        "required": [
-          "id",
-          "source",
-          "target"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "source": {
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
           }
         }
       },
@@ -671,88 +752,6 @@
           },
           "name": {
             "type": "string"
-          }
-        }
-      },
-      "WorkflowNodeDataDto": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/WorkflowNodeDataDtoRequestNodeDataDto"
-          },
-          {
-            "$ref": "#/components/schemas/WorkflowNodeDataDtoHeadersNodeDataDto"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "type",
-          "mapping": {
-            "Request": "#/components/schemas/WorkflowNodeDataDtoRequestNodeDataDto",
-            "Headers": "#/components/schemas/WorkflowNodeDataDtoHeadersNodeDataDto"
-          }
-        }
-      },
-      "WorkflowNodeDataDtoHeadersNodeDataDto": {
-        "properties": {
-          "type": {
-            "enum": [
-              "Headers"
-            ],
-            "type": "string"
-          },
-          "headers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/HttpHeaderDto"
-            }
-          }
-        }
-      },
-      "WorkflowNodeDataDtoRequestNodeDataDto": {
-        "required": [
-          "requestType",
-          "url"
-        ],
-        "properties": {
-          "type": {
-            "enum": [
-              "Request"
-            ],
-            "type": "string"
-          },
-          "requestType": {
-            "$ref": "#/components/schemas/RequestTypeDto"
-          },
-          "url": {
-            "type": "string"
-          },
-          "requestBody": {
-            "type": [
-              "null",
-              "string"
-            ]
-          }
-        }
-      },
-      "WorkflowNodeDto": {
-        "required": [
-          "id",
-          "position",
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "position": {
-            "$ref": "#/components/schemas/PositionDto"
-          },
-          "data": {
-            "$ref": "#/components/schemas/WorkflowNodeDataDto"
           }
         }
       }
