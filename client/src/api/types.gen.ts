@@ -9,6 +9,12 @@ export type CreateWorkflowRequest = {
     data: WorkflowDataDto;
 };
 
+export type EdgeDto = {
+    id: string;
+    source: string;
+    target: string;
+};
+
 export type ExecutionStatus = 'Queued' | 'Running' | 'Completed' | 'Failed';
 
 export type GetIdentitiesResponse = {
@@ -17,6 +23,15 @@ export type GetIdentitiesResponse = {
 
 export type GetWorkflowByIdResponse = {
     item: WorkflowDto;
+};
+
+export type GetWorkflowExecutionByIdResponse = {
+    id: string;
+    status: ExecutionStatus;
+    dataSnapshot: JsonDocument;
+    processingResults?: {
+        [key: string]: ProcessingResult;
+    };
 };
 
 export type GetWorkflowExecutionsResponse = {
@@ -29,6 +44,28 @@ export type HttpHeaderDto = {
 };
 
 export type JsonDocument = unknown;
+
+export type NodeDto = ({
+    type?: 'RequestNode';
+} & NodeDtoRequestNodeDto) | ({
+    type?: 'HeadersNode';
+} & NodeDtoHeadersNodeDto);
+
+export type NodeDtoHeadersNodeDto = {
+    type?: 'HeadersNode';
+    headers?: Array<HttpHeaderDto>;
+    id: string;
+    position: PositionDto;
+};
+
+export type NodeDtoRequestNodeDto = {
+    type?: 'RequestNode';
+    requestType: RequestTypeDto;
+    url: string;
+    requestBody?: null | string;
+    id: string;
+    position: PositionDto;
+};
 
 export type Notification = ({
     type?: 'WorkflowExecutionEnded';
@@ -87,20 +124,14 @@ export type UpdateWorkflowDataRequest = {
 };
 
 export type WorkflowDataDto = {
-    nodes?: Array<WorkflowNodeDto>;
-    edges?: Array<WorkflowEdgeDto>;
+    nodes?: Array<NodeDto>;
+    edges?: Array<EdgeDto>;
 };
 
 export type WorkflowDto = {
     id: string;
     name: string;
     data: WorkflowDataDto;
-};
-
-export type WorkflowEdgeDto = {
-    id: string;
-    source: string;
-    target: string;
 };
 
 export type WorkflowExecutionDto = {
@@ -115,30 +146,6 @@ export type WorkflowExecutionDto = {
 export type WorkFlowIdentityDto = {
     id: string;
     name: string;
-};
-
-export type WorkflowNodeDataDto = ({
-    type?: 'Request';
-} & WorkflowNodeDataDtoRequestNodeDataDto) | ({
-    type?: 'Headers';
-} & WorkflowNodeDataDtoHeadersNodeDataDto);
-
-export type WorkflowNodeDataDtoHeadersNodeDataDto = {
-    type?: 'Headers';
-    headers?: Array<HttpHeaderDto>;
-};
-
-export type WorkflowNodeDataDtoRequestNodeDataDto = {
-    type?: 'Request';
-    requestType: RequestTypeDto;
-    url: string;
-    requestBody?: null | string;
-};
-
-export type WorkflowNodeDto = {
-    id: string;
-    position: PositionDto;
-    data: WorkflowNodeDataDto;
 };
 
 export type GetApiExecutionsData = {
@@ -156,6 +163,31 @@ export type GetApiExecutionsResponses = {
 };
 
 export type GetApiExecutionsResponse = GetApiExecutionsResponses[keyof GetApiExecutionsResponses];
+
+export type GetApiExecutionsByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/executions/{id}';
+};
+
+export type GetApiExecutionsByIdErrors = {
+    /**
+     * Not Found
+     */
+    404: unknown;
+};
+
+export type GetApiExecutionsByIdResponses = {
+    /**
+     * OK
+     */
+    200: GetWorkflowExecutionByIdResponse;
+};
+
+export type GetApiExecutionsByIdResponse = GetApiExecutionsByIdResponses[keyof GetApiExecutionsByIdResponses];
 
 export type GetApiWorkflowsIdentitiesData = {
     body?: never;
