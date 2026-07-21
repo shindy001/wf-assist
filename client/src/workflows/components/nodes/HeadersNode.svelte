@@ -1,11 +1,8 @@
 <script lang="ts" module>
-  import { WorkflowNodeDataType, type HeadersNodeData } from "$lib/types";
+  import { type HeadersNode } from "$lib/types";
   import { type Node } from "@xyflow/svelte";
 
-  export type HeadersNodeType = Node<
-    HeadersNodeData,
-    WorkflowNodeDataType.Headers
-  >;
+  export type HeadersNodeType = Node<HeadersNode>;
 </script>
 
 <script lang="ts">
@@ -15,35 +12,33 @@
   import OutputHandle from "./OutputHandle.svelte";
   import { Button } from "$lib/components/ui/button";
   import { Icon } from "$lib/components/ui/icons";
-  import { untrack } from "svelte";
+  import { untrack, onMount } from "svelte";
 
-  const { updateNodeData, updateNode } = useSvelteFlow();
+  const { updateNodeData } = useSvelteFlow();
 
   let props: NodeProps<HeadersNodeType> = $props();
-  let nodeId = $state(untrack(() => props.id));
   let initialData = $state(untrack(() => props.data));
   let headers = $state(
-    initialData.headers.length <= 0
+    initialData.headers?.length <= 0
       ? [{ name: "", value: "" }]
       : initialData.headers,
   );
 
-  // Set default node width after data init
-  updateNode(nodeId, { width: 320, height: 200 });
-
   $effect(() => {
-    updateNodeData(nodeId, { headers: headers });
+    updateNodeData(props.id, { headers: headers });
   });
 </script>
 
 <TurboNode
   label="Set Http Headers"
+  id={props.id}
   resizable
   minResizableWidth={320}
   minResizableHeight={200}
+  style={`min-width: 320px; min-height: 200px`}
 >
-  <InputHandle {nodeId} />
-  <OutputHandle {nodeId} />
+  <InputHandle nodeId={props.id} />
+  <OutputHandle nodeId={props.id} />
 
   <div
     class="flex flex-col space-y-2 h-full max-h-full max-w-full overflow-auto"

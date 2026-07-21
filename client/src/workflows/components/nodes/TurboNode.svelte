@@ -1,6 +1,6 @@
 <script lang="ts">
   import { NodeResizeControl } from "@xyflow/svelte";
-  import type { Snippet } from "svelte";
+  import { type Snippet } from "svelte";
   import type { ClassValue } from "svelte/elements";
   import { Icon } from "$lib/components/ui/icons";
   import { CopyButton } from "$lib/components/ui/copy-button";
@@ -8,13 +8,14 @@
 
   const props: {
     label: string;
-    id?: string;
+    id: string;
     resizable?: boolean;
     isActive?: boolean;
-    minResizableHeight?: number;
     minResizableWidth?: number;
+    minResizableHeight?: number;
     children?: Snippet;
     class?: ClassValue;
+    style?: string;
   } = $props();
 </script>
 
@@ -24,6 +25,7 @@
     "turbo-node",
     props.isActive ? "turbo-node_gradient-animation" : "turbo-node_gradient",
   ]}
+  style={props.style}
 >
   <div
     class="relative flex flex-col bg-white dark:bg-black w-full text-xs p-2 border-b border-solid font-mono font-semibold rounded-md family-mono"
