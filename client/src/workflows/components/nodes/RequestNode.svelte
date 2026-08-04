@@ -30,7 +30,7 @@
 
 <TurboNode
   label="Request"
-  id={props.id}
+  refId={props.data.refId}
   minResizableWidth={200}
   minResizableHeight={300}
 >

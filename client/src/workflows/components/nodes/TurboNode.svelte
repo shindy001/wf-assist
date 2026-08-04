@@ -8,7 +8,7 @@
 
   const props: {
     label: string;
-    id: string;
+    refId: string;
     isActive?: boolean;
     minResizableWidth?: number;
     minResizableHeight?: number;
@@ -38,16 +38,16 @@
     <hr class="my-2" />
     {@render props.children?.()}
 
-    {#if props.id}
+    {#if props.refId}
       <hr class="my-2" />
       <div class="flex gap-1 text-gray-500">
         <Tooltip.Provider>
           <Tooltip.Root>
             <Tooltip.Trigger>
               <CopyButton
-                text={`#{node:${props.id}}`}
+                text={`#{node:${props.refId}}`}
                 class="nodrag p-1 size-fit"
-                variant="outline">{`$ref: ${props.id}`}</CopyButton
+                variant="outline">{`$ref: ${props.refId}`}</CopyButton
               >
             </Tooltip.Trigger>
             <Tooltip.Content>

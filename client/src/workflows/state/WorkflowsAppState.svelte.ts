@@ -41,8 +41,9 @@ class WorkflowsAppState {
   }
 
   addFlowCanvasNode(node: WorkflowNode) {
-    const nextId = getNextId(this.flowCanvasNodes.at(-1)?.id ?? "000");
-    const newNode = { ...node, id: nextId };
+    const id = crypto.randomUUID();
+    const refId = getNextId(this.flowCanvasNodes.at(-1)?.refId ?? "000");
+    const newNode = { ...node, id: id, refId: refId };
     this.flowCanvasNodes = [...this.flowCanvasNodes, { ...newNode, data: { ...newNode } }]; // Copy props to data so Custom nodes can use them
   }
 
@@ -59,6 +60,8 @@ class WorkflowsAppState {
   async setSelectedWorkflow(id?: string) {
     if (!id) {
       this.#selectedWorkflowIdentity = undefined;
+      this.flowCanvasNodes = [];
+      this.flowCanvasEdges = [];
       return;
     }
 

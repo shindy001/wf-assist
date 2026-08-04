@@ -31,7 +31,7 @@
 
 <TurboNode
   label="Set Http Headers"
-  id={props.id}
+  refId={props.data.refId}
   minResizableWidth={320}
   minResizableHeight={200}
 >
