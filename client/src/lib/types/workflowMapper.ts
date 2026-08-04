@@ -33,7 +33,6 @@ export function toWorkflowData(dto: WorkflowDataDto): WorkflowData {
 }
 
 export function toWorkflowDataDto(data: WorkflowData): WorkflowDataDto {
-  console.log(data);
   return {
     nodes: data.nodes?.map((x) => toWorkflowNodeDto(x)) ?? [],
     edges: data.edges?.map((x) => toWorkflowEdgeDto(x)) ?? [],

@@ -17,6 +17,7 @@ export type WorkflowEdge = {
 
 export type WorkflowNode = {
   id: string; // UUID
+  refId: string; // Short ID for referencing between nodes. Should be unique only in specific Workflow context.
   type: WorkflowNodeType;
   height: number;
   width: number;
@@ -69,6 +70,7 @@ function createRequestNode(
 ): RequestNode {
   return {
     id: "",
+    refId: "",
     type: WorkflowNodeType.RequestNode,
     height: 0,
     width: 0,
@@ -85,6 +87,7 @@ function createHeadersNode(
 ): HeadersNode {
   return {
     id: "",
+    refId: "",
     type: WorkflowNodeType.HeadersNode,
     height: 0,
     width: 0,

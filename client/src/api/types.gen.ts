@@ -9,6 +9,10 @@ export type CreateWorkflowRequest = {
     data: WorkflowDataDto;
 };
 
+export type CreateWorkflowResponse = {
+    id: string;
+};
+
 export type EdgeDto = {
     id: string;
     source: string;
@@ -55,6 +59,7 @@ export type NodeDtoHeadersNodeDto = {
     type?: 'HeadersNode';
     headers?: Array<HttpHeaderDto>;
     id: string;
+    refId: string;
     size: SizeDto;
     position: PositionDto;
 };
@@ -65,6 +70,7 @@ export type NodeDtoRequestNodeDto = {
     url: string;
     requestBody?: null | string;
     id: string;
+    refId: string;
     size: SizeDto;
     position: PositionDto;
 };
@@ -262,19 +268,14 @@ export type PostApiWorkflowsData = {
     url: '/api/workflows';
 };
 
-export type PostApiWorkflowsErrors = {
-    /**
-     * Not Found
-     */
-    404: unknown;
-};
-
 export type PostApiWorkflowsResponses = {
     /**
-     * Created
+     * OK
      */
-    201: unknown;
+    200: CreateWorkflowResponse;
 };
+
+export type PostApiWorkflowsResponse = PostApiWorkflowsResponses[keyof PostApiWorkflowsResponses];
 
 export type PostApiWorkflowsByIdRenameData = {
     body: RenameWorkflowRequest;
