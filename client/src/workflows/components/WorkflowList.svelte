@@ -75,7 +75,9 @@
 
   async function selectWorkflow(id?: string) {
     await workflowsAppState.setSelectedWorkflow(id);
-    await fitView({ nodes: workflowsAppState.flowCanvasNodes });
+    if (workflowsAppState.flowCanvasNodes.length > 0) {
+      await fitView();
+    }
   }
 
   function hideContextMenu() {
@@ -101,7 +103,7 @@
 {/if}
 
 <Dialog.Root bind:open={showRenameDialog}>
-  <Dialog.Content class="sm:max-w-[425px]">
+  <Dialog.Content class="sm:max-w-106.25">
     <Dialog.Header>
       <Dialog.Title>Edit Workflow</Dialog.Title>
     </Dialog.Header>
@@ -139,7 +141,7 @@
       <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
       <AlertDialog.Action
         onclick={() =>
-          removeWorkflow().then(() => (showRemoveWorkflowDialog = false))}
+          removeWorkflow().then(() => showRemoveWorkflowDialog = false) }
         >Remove</AlertDialog.Action
       >
     </AlertDialog.Footer>

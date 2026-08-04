@@ -93,7 +93,6 @@
     nodeTypes={additionalNodeTypes}
     edgeTypes={{ turbo: TurboEdge }}
     defaultEdgeOptions={{ type: "turbo" }}
-    fitView
     ondragover={onDragOver}
     ondrop={onDrop}
   >
