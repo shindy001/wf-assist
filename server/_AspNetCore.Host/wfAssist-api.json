@@ -146,11 +146,15 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "Not Found"
-          },
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateWorkflowResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -297,6 +301,18 @@
           }
         }
       },
+      "CreateWorkflowResponse": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
       "EdgeDto": {
         "required": [
           "id",
@@ -429,6 +445,7 @@
       "NodeDtoHeadersNodeDto": {
         "required": [
           "id",
+          "refId",
           "size",
           "position"
         ],
@@ -448,6 +465,9 @@
           "id": {
             "type": "string"
           },
+          "refId": {
+            "type": "string"
+          },
           "size": {
             "$ref": "#/components/schemas/SizeDto"
           },
@@ -461,6 +481,7 @@
           "requestType",
           "url",
           "id",
+          "refId",
           "size",
           "position"
         ],
@@ -484,6 +505,9 @@
             ]
           },
           "id": {
+            "type": "string"
+          },
+          "refId": {
             "type": "string"
           },
           "size": {

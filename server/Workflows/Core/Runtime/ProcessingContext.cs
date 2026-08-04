@@ -11,9 +11,9 @@ internal sealed class ProcessingContext
         return ProcessingResults.GetValueOrDefault(nodeId);
     }
 
-    public void AddResult(string nodeId, ProcessingResult result)
+    public void AddResult(string nodeRefId, ProcessingResult result)
     {
-        ProcessingResults.Add(nodeId, result);
+        ProcessingResults.Add(nodeRefId, result);
     }
 
     public bool IsProcessingSuccessful() => ProcessingResults.Values.All(x => x.IsSuccessful);

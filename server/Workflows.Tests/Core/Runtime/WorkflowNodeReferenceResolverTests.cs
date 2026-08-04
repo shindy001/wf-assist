@@ -2,7 +2,6 @@ using System.Text.Json;
 using Json.More;
 using Shouldly;
 using WfAssist.Shared.Contracts;
-using WfAssist.Workflows.Core.Models;
 using WfAssist.Workflows.Core.Runtime;
 
 namespace WfAssist.AspNetCore.Tests.Core.Runtime;
@@ -21,7 +20,7 @@ public class WorkflowNodeReferenceResolverTests
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
         // Act
-        var result = resolver.Resolve("Test resolve #{node:1.name}");
+        var result = resolver.Resolve("Test resolve #{nodeRef:1.name}");
 
         // Assert
         result.ShouldNotBeNullOrWhiteSpace();
@@ -40,7 +39,7 @@ public class WorkflowNodeReferenceResolverTests
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
         // Act
-        var result = resolver.Resolve("Test resolve #{   node   :   1  .   name   }");
+        var result = resolver.Resolve("Test resolve #{   nodeRef   :   1  .   name   }");
 
         // Assert
         result.ShouldNotBeNullOrWhiteSpace();
@@ -59,7 +58,7 @@ public class WorkflowNodeReferenceResolverTests
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
         // Act
-        var result = resolver.Resolve("Test resolve #{1.name}"); // Expression type 'node:' missing before the JSON prop path
+        var result = resolver.Resolve("Test resolve #{1.name}"); // Expression type 'nodeRef:' missing before the JSON prop path
 
         // Assert
         result.ShouldNotBeNullOrWhiteSpace();
@@ -78,7 +77,7 @@ public class WorkflowNodeReferenceResolverTests
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
         // Act
-        var result = resolver.Resolve("Test #{node:1.id} resolve #{1.name}"); // Expression type 'node:' missing before the JSON prop path
+        var result = resolver.Resolve("Test #{nodeRef:1.id} resolve #{1.name}"); // Expression type 'nodeRef:' missing before the JSON prop path
 
         // Assert
         result.ShouldNotBeNullOrWhiteSpace();
@@ -97,7 +96,7 @@ public class WorkflowNodeReferenceResolverTests
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
         // Act
-        var result = resolver.Resolve("Test resolve #{node:1.data.prop1.prop2}");
+        var result = resolver.Resolve("Test resolve #{nodeRef:1.data.prop1.prop2}");
 
         // Assert
         result.ShouldNotBeNullOrWhiteSpace();
@@ -117,7 +116,7 @@ public class WorkflowNodeReferenceResolverTests
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
         // Act
-        var result = resolver.Resolve("Test resolve #{node:1.data.items[0].name} #{node:1.data.items[1].name}");
+        var result = resolver.Resolve("Test resolve #{nodeRef:1.data.items[0].name} #{nodeRef:1.data.items[1].name}");
 
         // Assert
         result.ShouldNotBeNullOrWhiteSpace();
@@ -137,7 +136,7 @@ public class WorkflowNodeReferenceResolverTests
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
         // Act
-        var result = resolver.Resolve("Test resolve #{node:1.data.id}, second is #{node:1.data.prop1.data.prop3}");
+        var result = resolver.Resolve("Test resolve #{nodeRef:1.data.id}, second is #{nodeRef:1.data.prop1.data.prop3}");
 
         // Assert
         result.ShouldNotBeNullOrWhiteSpace();
@@ -157,7 +156,7 @@ public class WorkflowNodeReferenceResolverTests
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
         // Act
-        var result = resolver.Resolve("""{"id": "1", "data": #{node:1.data} }""");
+        var result = resolver.Resolve("""{"id": "1", "data": #{nodeRef:1.data} }""");
 
         // Assert
         result.ShouldNotBeNullOrWhiteSpace();
@@ -177,7 +176,7 @@ public class WorkflowNodeReferenceResolverTests
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
         // Act
-        var result = resolver.Resolve("""{"id": "1", "data": #{node:1.data} }""");
+        var result = resolver.Resolve("""{"id": "1", "data": #{nodeRef:1.data} }""");
 
         // Assert
         result.ShouldNotBeNullOrWhiteSpace();
@@ -197,7 +196,7 @@ public class WorkflowNodeReferenceResolverTests
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
         // Act
-        var result = resolver.Resolve("Test resolve #{node:1.data.id} #{node:1.data.prop1}");
+        var result = resolver.Resolve("Test resolve #{nodeRef:1.data.id} #{nodeRef:1.data.prop1}");
 
         // Assert
         result.ShouldNotBeNullOrWhiteSpace();
@@ -225,7 +224,7 @@ public class WorkflowNodeReferenceResolverTests
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
         // Act
-        var result = resolver.Resolve("Test resolve #{node:2.items.count} #{node:1.data.prop1.name}");
+        var result = resolver.Resolve("Test resolve #{nodeRef:2.items.count} #{nodeRef:1.data.prop1.name}");
 
         // Assert
         result.ShouldNotBeNullOrWhiteSpace();
@@ -240,10 +239,10 @@ public class WorkflowNodeReferenceResolverTests
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
         // Act
-        Action act = () =>  resolver.Resolve("Test resolve #{node:1.name}");
+        Action act = () =>  resolver.Resolve("Test resolve #{nodeRef:1.name}");
 
         // Assert
-        act.ShouldThrow<ArgumentException>().Message.ShouldBe("There is no result for node 1. Used expression: #{node:1.name}");
+        act.ShouldThrow<ArgumentException>().Message.ShouldBe("There is no result for node with refId '1'. Used expression: #{nodeRef:1.name}");
     }
 
     [Fact]
@@ -275,10 +274,10 @@ public class WorkflowNodeReferenceResolverTests
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
         // Act
-        Action act =  () => resolver.Resolve("Test resolve #{node:1.name}");
+        Action act =  () => resolver.Resolve("Test resolve #{nodeRef:1.name}");
 
         // Assert
-        act.ShouldThrow<ArgumentException>().Message.ShouldBe("Result for node expression '#{node:1.name}' does not have value.");
+        act.ShouldThrow<ArgumentException>().Message.ShouldBe("Result for node expression '#{nodeRef:1.name}' does not have value.");
     }
 
     [Fact]
@@ -292,10 +291,10 @@ public class WorkflowNodeReferenceResolverTests
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
         // Act
-        Action act =  () => resolver.Resolve("Test resolve #{node:1.name}");
+        Action act =  () => resolver.Resolve("Test resolve #{nodeRef:1.name}");
 
         // Assert
-        act.ShouldThrow<ArgumentException>().Message.ShouldBe("Result for node expression '#{node:1.name}' has error value only.");
+        act.ShouldThrow<ArgumentException>().Message.ShouldBe("Result for node expression '#{nodeRef:1.name}' has error value only.");
     }
 
     [Fact]
@@ -309,7 +308,7 @@ public class WorkflowNodeReferenceResolverTests
         var resolver = new WorkflowNodeReferenceResolver(processingContext);
 
         // Act
-        Action act =  () => resolver.Resolve("Test resolve #{node:1.name}");
+        Action act =  () => resolver.Resolve("Test resolve #{nodeRef:1.name}");
 
         // Assert
         act.ShouldThrow<ArgumentException>().Message.ShouldBe("Cannot resolve json path name, json document is empty.");

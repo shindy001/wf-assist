@@ -53,6 +53,7 @@ internal static class WorkflowMapper
             RequestNode requestNode => new RequestNodeDto
             {
                 Id = requestNode.Id,
+                RefId = requestNode.RefId,
                 Size = new SizeDto(requestNode.Size.Width, requestNode.Size.Height),
                 Position = new PositionDto(requestNode.Position.X, requestNode.Position.Y),
                 RequestType = requestNode.RequestType.ToDto(),
@@ -62,6 +63,7 @@ internal static class WorkflowMapper
             HeadersNode headersNode => new HeadersNodeDto
             {
                 Id = headersNode.Id,
+                RefId = headersNode.RefId,
                 Size = new SizeDto(headersNode.Size.Width, headersNode.Size.Height),
                 Position = new PositionDto(headersNode.Position.X, headersNode.Position.Y),
                 Headers = headersNode.Headers.Select(x => new HttpHeaderDto(x.Name, x.Value)).ToList()
@@ -77,6 +79,7 @@ internal static class WorkflowMapper
             RequestNodeDto requestNodeDto => new RequestNode
             {
                 Id = requestNodeDto.Id,
+                RefId = requestNodeDto.RefId,
                 Size = new Size(requestNodeDto.Size.Width, requestNodeDto.Size.Height),
                 Position = new Position(requestNodeDto.Position.X, requestNodeDto.Position.Y),
                 RequestType = requestNodeDto.RequestType.ToDomain(),
@@ -86,6 +89,7 @@ internal static class WorkflowMapper
             HeadersNodeDto headersNodeDto => new HeadersNode
             {
                 Id = headersNodeDto.Id,
+                RefId = headersNodeDto.RefId,
                 Size = new Size(headersNodeDto.Size.Width, headersNodeDto.Size.Height),
                 Position = new Position(headersNodeDto.Position.X, headersNodeDto.Position.Y),
                 Headers = headersNodeDto.Headers.Select(x => new HttpHeader(x.Name, x.Value)).ToList()

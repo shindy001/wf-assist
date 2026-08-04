@@ -28,6 +28,11 @@ internal sealed record EdgeDto
 internal abstract record NodeDto
 {
     public required string Id { get; init; }
+
+    /// <summary>
+    /// Short ID for referencing between nodes. Should be unique only in specific <see cref="WorkflowDto"/> context.
+    /// </summary>
+    public required string RefId { get; init; }
     public required SizeDto Size { get; init; }
     public required PositionDto Position { get; init; }
 }

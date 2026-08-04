@@ -33,7 +33,7 @@ internal partial class WorkflowNodeReferenceResolver
             var nodeResult = _processingContext.GetResult(nodeId);
             if (nodeResult is null)
             {
-                throw new ArgumentException($"There is no result for node {nodeId}. Used expression: {match.Value}");
+                throw new ArgumentException($"There is no result for node with refId '{nodeId}'. Used expression: {match.Value}");
             }
 
             return nodeResult.ValueType switch
@@ -68,15 +68,15 @@ internal partial class WorkflowNodeReferenceResolver
     }
 
     private static bool IsNodeReferenceExpression(string expressionType) =>
-        expressionType.Equals("node", StringComparison.OrdinalIgnoreCase);
+        expressionType.Equals("nodeRef", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
-    /// Node reference patterns #{[expressionType]:[nodeId].[dataPath]}
+    /// Node reference patterns #{[expressionType]:[node.RefId].[dataPath]}
     /// </summary>
     /// <example>
-    /// #{node:1.id}
-    /// #{node:1234.items[0].name}
-    /// #{node:id5.basket.items[0].price}
+    /// #{nodeRef:1.id}
+    /// #{nodeRef:1234.items[0].name}
+    /// #{nodeRef:id5.basket.items[0].price}
     /// </example>
     /// <returns></returns>
     [GeneratedRegex(@"#\{([^:}]+):([^\.}]+)\.([^}]+)\}", RegexOptions.Compiled)]

@@ -38,6 +38,12 @@ internal sealed record Edge
 internal abstract record Node
 {
     public required string Id { get; init; }
+
+    /// <summary>
+    /// Short ID for referencing between nodes. Should be unique only in specific <see cref="Workflow"/> context.
+    /// </summary>
+    public required string RefId { get; init; }
+
     public required Size Size { get; init; }
     public required Position Position { get; init; }
 }
