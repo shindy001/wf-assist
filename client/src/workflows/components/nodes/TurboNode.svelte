@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { NodeResizeControl } from "@xyflow/svelte";
+  import { NodeResizeControl, type NodeProps } from "@xyflow/svelte";
   import { type Snippet } from "svelte";
   import type { ClassValue } from "svelte/elements";
   import { Icon } from "$lib/components/ui/icons";
@@ -9,7 +9,6 @@
   const props: {
     label: string;
     id: string;
-    resizable?: boolean;
     isActive?: boolean;
     minResizableWidth?: number;
     minResizableHeight?: number;
@@ -25,7 +24,10 @@
     "turbo-node",
     props.isActive ? "turbo-node_gradient-animation" : "turbo-node_gradient",
   ]}
-  style={props.style}
+
+  style={props.minResizableWidth && props.minResizableHeight
+    ? `min-width: ${props.minResizableWidth}px; min-height: ${props.minResizableHeight}px; ${props.style}`
+    : props.style}
 >
   <div
     class="relative flex flex-col bg-white dark:bg-black w-full text-xs p-2 border-b border-solid font-mono font-semibold rounded-md family-mono"
@@ -57,7 +59,7 @@
     {/if}
   </div>
 
-  {#if props.resizable}
+  {#if props.minResizableWidth && props.minResizableHeight}
     <NodeResizeControl
       minHeight={props.minResizableHeight}
       minWidth={props.minResizableWidth}

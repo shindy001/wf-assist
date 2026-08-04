@@ -31,10 +31,8 @@
 <TurboNode
   label="Request"
   id={props.id}
-  resizable
   minResizableWidth={200}
   minResizableHeight={300}
-  style={`min-width: 200px; min-height: 300px`}
 >
   <InputHandle nodeId={props.id} />
   <OutputHandle nodeId={props.id} />

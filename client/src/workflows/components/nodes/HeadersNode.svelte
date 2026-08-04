@@ -12,7 +12,7 @@
   import OutputHandle from "./OutputHandle.svelte";
   import { Button } from "$lib/components/ui/button";
   import { Icon } from "$lib/components/ui/icons";
-  import { untrack, onMount } from "svelte";
+  import { untrack } from "svelte";
 
   const { updateNodeData } = useSvelteFlow();
 
@@ -32,10 +32,8 @@
 <TurboNode
   label="Set Http Headers"
   id={props.id}
-  resizable
   minResizableWidth={320}
   minResizableHeight={200}
-  style={`min-width: 320px; min-height: 200px`}
 >
   <InputHandle nodeId={props.id} />
   <OutputHandle nodeId={props.id} />
