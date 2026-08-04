@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using OneOf.Types;
 using WfAssist.Shared;
 using WfAssist.Shared.CQRS;
 using WfAssist.Workflows.Api.Dtos;
@@ -16,27 +15,28 @@ internal static class Create
     {
         endpoints.MapPost("/", async (CreateWorkflowRequest request, ICommandDispatcher commandDispatcher) =>
             {
-                await commandDispatcher.Dispatch(new CreateWorkflowCommand(request.Name, request.Data.ToDomain()));
+                var newId = await commandDispatcher.Dispatch(new CreateWorkflowCommand(request.Name, request.Data.ToDomain()));
 
-                return TypedResults.NoContent();
+                return TypedResults.Ok(new CreateWorkflowResponse(newId));
             })
-            .Produces(StatusCodes.Status204NoContent);
+            .Produces<CreateWorkflowResponse>();
     }
 
     private sealed record CreateWorkflowRequest(string Name, WorkflowDataDto Data);
-
+    private sealed record CreateWorkflowResponse(Guid Id);
 }
 
-internal record CreateWorkflowCommand(string Name, WorkflowData Data) : ICommand<Success>;
+internal record CreateWorkflowCommand(string Name, WorkflowData Data) : ICommand<Guid>;
 
 internal sealed class CreateWorkflowCommandHandler(IUnitOfWork uow)
-    : ICommandHandler<CreateWorkflowCommand, Success>
+    : ICommandHandler<CreateWorkflowCommand, Guid>
 {
-    public async Task<Success> Handle(CreateWorkflowCommand command, CancellationToken cancellationToken = default)
+    public async Task<Guid> Handle(CreateWorkflowCommand command, CancellationToken cancellationToken = default)
     {
-        uow.GetRepository<Workflow>().Add(new Workflow(Guid.NewGuid(), command.Name, command.Data));
+        var newId = Guid.NewGuid();
+        uow.GetRepository<Workflow>().Add(new Workflow(newId, command.Name, command.Data));
         await uow.SaveChangesAsync(cancellationToken);
 
-        return new Success();
+        return newId;
     }
 }

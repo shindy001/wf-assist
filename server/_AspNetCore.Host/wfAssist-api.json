@@ -146,8 +146,11 @@
           "required": true
         },
         "responses": {
-          "204": {
-            "description": "No Content"
+          "404": {
+            "description": "Not Found"
+          },
+          "201": {
+            "description": "Created"
           }
         }
       }
@@ -426,6 +429,7 @@
       "NodeDtoHeadersNodeDto": {
         "required": [
           "id",
+          "size",
           "position"
         ],
         "properties": {
@@ -444,6 +448,9 @@
           "id": {
             "type": "string"
           },
+          "size": {
+            "$ref": "#/components/schemas/SizeDto"
+          },
           "position": {
             "$ref": "#/components/schemas/PositionDto"
           }
@@ -454,6 +461,7 @@
           "requestType",
           "url",
           "id",
+          "size",
           "position"
         ],
         "properties": {
@@ -477,6 +485,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "size": {
+            "$ref": "#/components/schemas/SizeDto"
           },
           "position": {
             "$ref": "#/components/schemas/PositionDto"
@@ -635,6 +646,23 @@
           "runId": {
             "type": "string",
             "format": "uuid"
+          }
+        }
+      },
+      "SizeDto": {
+        "required": [
+          "width",
+          "height"
+        ],
+        "type": "object",
+        "properties": {
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
