@@ -247,7 +247,8 @@ public class WorkflowTopologySorterTests
         return new RequestNode
         {
             Id = Guid.NewGuid().ToString(),
-            Position = new Position(0, 0),
+            Size = Size.Default,
+            Position = Position.Default,
             RequestType = RequestType.Get,
             Url = string.Empty
         };

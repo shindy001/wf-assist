@@ -38,6 +38,7 @@ internal sealed record Edge
 internal abstract record Node
 {
     public required string Id { get; init; }
+    public required Size Size { get; init; }
     public required Position Position { get; init; }
 }
 

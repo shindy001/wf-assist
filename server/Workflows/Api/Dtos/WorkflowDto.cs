@@ -28,6 +28,7 @@ internal sealed record EdgeDto
 internal abstract record NodeDto
 {
     public required string Id { get; init; }
+    public required SizeDto Size { get; init; }
     public required PositionDto Position { get; init; }
 }
 

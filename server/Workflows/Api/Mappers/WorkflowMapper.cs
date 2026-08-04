@@ -53,7 +53,8 @@ internal static class WorkflowMapper
             RequestNode requestNode => new RequestNodeDto
             {
                 Id = requestNode.Id,
-                Position = new PositionDto(entity.Position.X, entity.Position.Y),
+                Size = new SizeDto(requestNode.Size.Width, requestNode.Size.Height),
+                Position = new PositionDto(requestNode.Position.X, requestNode.Position.Y),
                 RequestType = requestNode.RequestType.ToDto(),
                 Url = requestNode.Url,
                 RequestBody = requestNode.RequestBody
@@ -61,7 +62,8 @@ internal static class WorkflowMapper
             HeadersNode headersNode => new HeadersNodeDto
             {
                 Id = headersNode.Id,
-                Position = new PositionDto(entity.Position.X, entity.Position.Y),
+                Size = new SizeDto(headersNode.Size.Width, headersNode.Size.Height),
+                Position = new PositionDto(headersNode.Position.X, headersNode.Position.Y),
                 Headers = headersNode.Headers.Select(x => new HttpHeaderDto(x.Name, x.Value)).ToList()
             },
             _ => throw new ArgumentOutOfRangeException(nameof(entity))
@@ -75,6 +77,7 @@ internal static class WorkflowMapper
             RequestNodeDto requestNodeDto => new RequestNode
             {
                 Id = requestNodeDto.Id,
+                Size = new Size(requestNodeDto.Size.Width, requestNodeDto.Size.Height),
                 Position = new Position(requestNodeDto.Position.X, requestNodeDto.Position.Y),
                 RequestType = requestNodeDto.RequestType.ToDomain(),
                 Url = requestNodeDto.Url,
@@ -83,6 +86,7 @@ internal static class WorkflowMapper
             HeadersNodeDto headersNodeDto => new HeadersNode
             {
                 Id = headersNodeDto.Id,
+                Size = new Size(headersNodeDto.Size.Width, headersNodeDto.Size.Height),
                 Position = new Position(headersNodeDto.Position.X, headersNodeDto.Position.Y),
                 Headers = headersNodeDto.Headers.Select(x => new HttpHeader(x.Name, x.Value)).ToList()
             },
