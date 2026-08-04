@@ -16,10 +16,12 @@ export type WorkflowEdge = {
 };
 
 export type WorkflowNode = {
-  id: string;
+  id: string; // UUID
   type: WorkflowNodeType;
+  height: number;
+  width: number;
   position: Position;
-  data: Record<string, unknown>;
+  data: Record<string, unknown>; // Data prop is required by SvelteFlow as nodes are defined as generics [SvelteFlowNode]<[OurNode]>, i.e. Node<RequestNode>
 };
 
 // These enum values (except Default) needs to be exact match to the values on server as they are mapped in "workflowMapper.ts"
@@ -68,7 +70,10 @@ function createRequestNode(
   return {
     id: "",
     type: WorkflowNodeType.RequestNode,
-    position: {x: 0, y: 0},
+    height: 0,
+    width: 0,
+    position: { x: 0, y: 0 },
+    data: {},
     url: "",
     requestType: RequestType.Get,
     ...data,
@@ -81,7 +86,10 @@ function createHeadersNode(
   return {
     id: "",
     type: WorkflowNodeType.HeadersNode,
-    position: {x: 0, y: 0},
+    height: 0,
+    width: 0,
+    position: { x: 0, y: 0 },
+    data: {},
     headers: [],
     ...data,
   };

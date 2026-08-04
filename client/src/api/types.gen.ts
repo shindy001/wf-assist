@@ -55,6 +55,7 @@ export type NodeDtoHeadersNodeDto = {
     type?: 'HeadersNode';
     headers?: Array<HttpHeaderDto>;
     id: string;
+    size: SizeDto;
     position: PositionDto;
 };
 
@@ -64,6 +65,7 @@ export type NodeDtoRequestNodeDto = {
     url: string;
     requestBody?: null | string;
     id: string;
+    size: SizeDto;
     position: PositionDto;
 };
 
@@ -110,6 +112,11 @@ export type RequestTypeDto = 'Get' | 'Post' | 'Put' | 'Patch' | 'Delete';
 
 export type RunWorkflowResponse = {
     runId: string;
+};
+
+export type SizeDto = {
+    width: number;
+    height: number;
 };
 
 export type SseItemOfNotification = {
@@ -255,14 +262,19 @@ export type PostApiWorkflowsData = {
     url: '/api/workflows';
 };
 
-export type PostApiWorkflowsResponses = {
+export type PostApiWorkflowsErrors = {
     /**
-     * No Content
+     * Not Found
      */
-    204: void;
+    404: unknown;
 };
 
-export type PostApiWorkflowsResponse = PostApiWorkflowsResponses[keyof PostApiWorkflowsResponses];
+export type PostApiWorkflowsResponses = {
+    /**
+     * Created
+     */
+    201: unknown;
+};
 
 export type PostApiWorkflowsByIdRenameData = {
     body: RenameWorkflowRequest;

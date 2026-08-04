@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, ServerSentEventsResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { DeleteApiWorkflowsByIdData, DeleteApiWorkflowsByIdResponses, GetApiExecutionsByIdData, GetApiExecutionsByIdErrors, GetApiExecutionsByIdResponses, GetApiExecutionsData, GetApiExecutionsResponses, GetApiWorkflowsByIdData, GetApiWorkflowsByIdErrors, GetApiWorkflowsByIdResponses, GetApiWorkflowsEventsData, GetApiWorkflowsEventsResponse, GetApiWorkflowsEventsResponses, GetApiWorkflowsIdentitiesData, GetApiWorkflowsIdentitiesResponses, PostApiWorkflowsByIdQueueExecutionData, PostApiWorkflowsByIdQueueExecutionErrors, PostApiWorkflowsByIdQueueExecutionResponses, PostApiWorkflowsByIdRenameData, PostApiWorkflowsByIdRenameErrors, PostApiWorkflowsByIdRenameResponses, PostApiWorkflowsByIdUpdateDataData, PostApiWorkflowsByIdUpdateDataErrors, PostApiWorkflowsByIdUpdateDataResponses, PostApiWorkflowsData, PostApiWorkflowsResponses } from './types.gen';
+import type { DeleteApiWorkflowsByIdData, DeleteApiWorkflowsByIdResponses, GetApiExecutionsByIdData, GetApiExecutionsByIdErrors, GetApiExecutionsByIdResponses, GetApiExecutionsData, GetApiExecutionsResponses, GetApiWorkflowsByIdData, GetApiWorkflowsByIdErrors, GetApiWorkflowsByIdResponses, GetApiWorkflowsEventsData, GetApiWorkflowsEventsResponse, GetApiWorkflowsEventsResponses, GetApiWorkflowsIdentitiesData, GetApiWorkflowsIdentitiesResponses, PostApiWorkflowsByIdQueueExecutionData, PostApiWorkflowsByIdQueueExecutionErrors, PostApiWorkflowsByIdQueueExecutionResponses, PostApiWorkflowsByIdRenameData, PostApiWorkflowsByIdRenameErrors, PostApiWorkflowsByIdRenameResponses, PostApiWorkflowsByIdUpdateDataData, PostApiWorkflowsByIdUpdateDataErrors, PostApiWorkflowsByIdUpdateDataResponses, PostApiWorkflowsData, PostApiWorkflowsErrors, PostApiWorkflowsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -28,7 +28,7 @@ export const deleteApiWorkflowsById = <ThrowOnError extends boolean = false>(opt
 
 export const getApiWorkflowsById = <ThrowOnError extends boolean = false>(options: Options<GetApiWorkflowsByIdData, ThrowOnError>): RequestResult<GetApiWorkflowsByIdResponses, GetApiWorkflowsByIdErrors, ThrowOnError> => (options.client ?? client).get<GetApiWorkflowsByIdResponses, GetApiWorkflowsByIdErrors, ThrowOnError>({ url: '/api/workflows/{id}', ...options });
 
-export const postApiWorkflows = <ThrowOnError extends boolean = false>(options: Options<PostApiWorkflowsData, ThrowOnError>): RequestResult<PostApiWorkflowsResponses, unknown, ThrowOnError> => (options.client ?? client).post<PostApiWorkflowsResponses, unknown, ThrowOnError>({
+export const postApiWorkflows = <ThrowOnError extends boolean = false>(options: Options<PostApiWorkflowsData, ThrowOnError>): RequestResult<PostApiWorkflowsResponses, PostApiWorkflowsErrors, ThrowOnError> => (options.client ?? client).post<PostApiWorkflowsResponses, PostApiWorkflowsErrors, ThrowOnError>({
     url: '/api/workflows',
     ...options,
     headers: {

@@ -5,6 +5,8 @@ import type {
   NodeDtoHeadersNodeDto,
   NodeDtoRequestNodeDto,
   NodeDto,
+  SizeDto,
+  PositionDto,
 } from "$api";
 import {
   type RequestNode,
@@ -31,8 +33,9 @@ export function toWorkflowData(dto: WorkflowDataDto): WorkflowData {
 }
 
 export function toWorkflowDataDto(data: WorkflowData): WorkflowDataDto {
+  console.log(data);
   return {
-    nodes: data.nodes?.map((x) => ({ ...x.data, ...x } as NodeDto)) ?? [],
+    nodes: data.nodes?.map((x) => toWorkflowNodeDto(x)) ?? [],
     edges: data.edges?.map((x) => toWorkflowEdgeDto(x)) ?? [],
   };
 }
@@ -54,12 +57,35 @@ function toWorkflowEdgeDto(data: WorkflowEdge): EdgeDto {
 }
 
 function toWorkflowNode(dto: NodeDto): WorkflowNode {
+  const node = {
+    ...dto,
+    width: dto.size.width,
+    height: dto.size.height,
+    data: { ...dto }
+  };
+
   switch (dto.type) {
     case "RequestNode":
-      return { ...dto, data: { ...dto } } as RequestNode;
+      return node as RequestNode;
     case "HeadersNode":
-      return { ...dto, data: { ...dto } } as HeadersNode;
+    return node as HeadersNode;
     default:
       throw new Error(`Unknown NodeDto type '${dto.type}'`);
+  };
+}
+
+function toWorkflowNodeDto(node: WorkflowNode): NodeDto {
+  const size: SizeDto = { width: node.width, height: node.height };
+  const position: PositionDto = node.position;
+  const nodeData = node.data;
+  const dto = { ...nodeData, size, position };
+
+  switch (node.type) {
+    case "RequestNode":
+      return dto as NodeDtoRequestNodeDto;
+    case "HeadersNode":
+      return dto as NodeDtoHeadersNodeDto;
+    default:
+      throw new Error(`Unknown node type '${node.type}'`);
   };
 }
