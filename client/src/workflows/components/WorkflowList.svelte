@@ -75,7 +75,7 @@
 
   async function selectWorkflow(id?: string) {
     await workflowsAppState.setSelectedWorkflow(id);
-    fitView();
+    await fitView({ nodes: workflowsAppState.flowCanvasNodes });
   }
 
   function hideContextMenu() {
