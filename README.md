@@ -13,7 +13,7 @@ App (server + UI client) is expected to be deployed and released as nuget packag
   - [x] Topological sorter (server)
   - [x] Workflow management (CRUD)
   - [x] Nodes drag and drop to canvas
-  - [x] Node result references in other nodes (referenced node must run before the node where it is used) - i.e. reference to node1 json result with access token property `#{node:1}.access_token`
+  - [x] Node result references in other nodes (referenced node must run before the node where it is used) - i.e. reference to node1 json result with access token property `#{nodeRef:1}.access_token`
   - [x] Request node (able to do http actions - GET, POST, etc.)
   - [x] Header node (can set custom headers to http client used during workflow, i.e. authorization header for authentication)
   - [ ] Result node - printing some result or part of result to console or some dialog when workflow ends
@@ -40,8 +40,19 @@ App (server + UI client) is expected to be deployed and released as nuget packag
 ## Dev Requirements
 - `Visual Studio 2026` or `Rider` that supports .net 10
 - .net 10 SDK
-- [Bun](https://bun.sh/) js toolkit (Svelte FrontEnd)
+-  [Pnpm](https://pnpm.io/installation) package manager (Svelte FrontEnd)
 
-## How to run
+## How to run (development in Rider IDE)
 1. Open `WFAssist.slnx`
-1. Select `[server + client] start` configuration (Rider only) and run it or run server and client separately.
+1. Select `[server + client] start` configuration and run it or run server and client separately.
+> [!NOTE]  
+> If there is a problem with running the client, go to client directory and install its dependencies with `pnpm i`
+
+## How to run (development and manual start)
+1. go to `[repositoryRoot]\server\_AspNetCore.Host` in terminal
+1. execute `dotnet run`
+1. open `http://localhost:7128/scalar/` to verify running server
+1. go to `[repositoryRoot]\client\` in terminal
+1. execute `pnpm i` to install dependencies
+1. execute `pnpm run dev`
+1. open `http://localhost:5173/` to verify running client
