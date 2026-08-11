@@ -1,14 +1,11 @@
 <script>
   import "./app.css";
   import Workflows from "./workflows/Workflows.svelte";
-  import { Icons } from "$lib/components/ui/icons";
-  import { TurboEdgeGradient } from "$lib/css";
   import { Toaster } from "$lib/components/ui/toaster";
+  import HiddenResources from "$lib/HiddenResources.svelte";
 </script>
 
-<div class="size-full">
-  <Icons />
-  <TurboEdgeGradient />
-  <Workflows />
-  <Toaster />
-</div>
+<HiddenResources />
+
+<Workflows />
+<Toaster />
