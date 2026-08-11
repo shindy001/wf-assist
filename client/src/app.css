@@ -1,8 +1,11 @@
 @import "tailwindcss";
-
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+
+/************************************************************/
+/**** Modern Minimal Theme preset (https://tweakcn.com/) ****/
+/************************************************************/
 
 :root {
   --background: oklch(1 0 0);
@@ -49,15 +52,11 @@
   --shadow-color: oklch(0 0 0);
   --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
   --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
   --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow-md:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-  --shadow-lg:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-  --shadow-xl:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
+  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
+  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
+  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
   --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
@@ -108,15 +107,11 @@
   --shadow-color: oklch(0 0 0);
   --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
   --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
   --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow-md:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-  --shadow-lg:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-  --shadow-xl:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
+  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
+  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
+  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
   --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
 }
 
@@ -181,16 +176,26 @@
   body {
     @apply bg-background text-foreground;
   }
-
-  html,
-  body,
-  #app {
-    width: 100%;
-    height: 100%;
-  }
 }
 
-/* Turbo style - inspired by https://turborepo.com/ */
+/************************************************************/
+/**** Modern Minimal Theme preset END ***********************/
+/************************************************************/
+
+/************************************************************/
+/**** Custom App CSS ****************************************/
+/************************************************************/
+
+html, body, #app {
+  width: 100%;
+  height: 100%;
+}
+
+/************************************************************/
+/**** Workflow Turbo style **********************************/
+/**** https://svelteflow.dev/examples/styling/turbo-flow ****/
+/************************************************************/
+
 .turbo-node {
   width: 100%;
   height: 100%;
@@ -266,8 +271,24 @@
   stroke-opacity: 0.75;
 }
 
+/************************************************************/
+/**** Turbo style END ***************************************/
+/************************************************************/
+
+/************************************************************/
+/**** Custom App CSS END ************************************/
+/************************************************************/
+
+/************************************************************/
+/**** Shadcn fixes (https://www.shadcn-svelte.com/) *********/
+/************************************************************/
+
 /* Handle element left by shadcn svelte(bits-ui) Dialog which has 1x1 size which causes body overflow after dialog disappears */
 [id="1p-live-region"] {
   width: 0 !important;
   height: 0 !important;
 }
+
+/************************************************************/
+/**** Shadcn fixes END **************************************/
+/************************************************************/
