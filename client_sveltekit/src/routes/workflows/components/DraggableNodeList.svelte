@@ -1,0 +1,43 @@
+<script lang="ts">
+  import type { ClassValue } from "svelte/elements";
+  import { Button } from "$lib/components/ui/button";
+  import { useWorkflowsAppState } from "../state";
+  import { WorkflowNodeType } from "$lib/types";
+
+  const props: { class?: ClassValue } = $props();
+  const workflowsAppState = useWorkflowsAppState();
+
+  const onDragStart = (
+    event: DragEvent,
+    selectedNodeType: WorkflowNodeType,
+  ) => {
+    if (!event.dataTransfer) {
+      return null;
+    }
+
+    workflowsAppState.selectedNodeType = selectedNodeType;
+    event.dataTransfer.effectAllowed = "move";
+  };
+
+  const nodeTypes = [
+      ...Object.values(WorkflowNodeType),
+    ];
+</script>
+
+<div class={props.class}>
+  <p class="text-lg">Nodes</p>
+  {#if !workflowsAppState.selectedWorkflowIdentity}
+    <p>Select a workflow to see available nodes.</p>
+  {:else}
+    <div class="w-full flex flex-wrap gap-3 px-2 py-4 rounded-md">
+      {#each nodeTypes as nodeType (nodeType)}
+        <Button
+          variant="outline"
+          class="p-4 cursor-grab translate-px"
+          ondragstart={(event) => onDragStart(event, nodeType)}
+          draggable={true}>{nodeType}</Button
+        >
+      {/each}
+    </div>
+  {/if}
+</div>

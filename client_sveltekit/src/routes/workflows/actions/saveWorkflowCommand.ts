@@ -1,0 +1,18 @@
+import { postApiWorkflowsByIdUpdateData } from "$lib/api";
+import { failed, successful, type WorkflowData } from "$lib/types";
+import { toWorkflowDataDto } from "$lib/types/workflowMapper";
+import pkg from 'lodash';
+const {throttle} = pkg;
+
+export function createSaveWorkflowCommand(saveRateLimitInMilliseconds: number) {
+  return throttle(async (id: string, workflowData: WorkflowData) => {
+    const result = await postApiWorkflowsByIdUpdateData({
+      path: {
+        id: id,
+      },
+      body: { data: toWorkflowDataDto(workflowData) },
+    });
+
+    return result.error ? failed(result.error.toString()) : successful();
+  }, saveRateLimitInMilliseconds);
+}
