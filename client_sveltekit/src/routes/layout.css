@@ -3,8 +3,6 @@
 @import "shadcn-svelte/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
-@plugin '@tailwindcss/forms';
-@plugin '@tailwindcss/typography';
 
 /************************************************************/
 /**** Modern Minimal Theme preset (https://tweakcn.com/) ****/
