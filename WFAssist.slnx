@@ -4,6 +4,10 @@
       <BuildType Project="Debug" />
       <Build />
     </Project>
+    <Project Path="client_sveltekit/client_sveltekit.esproj">
+      <BuildType Project="Debug" />
+      <Build />
+    </Project>
   </Folder>
   <Folder Name="/nuget/">
     <Project Path="nuget/nuget.csproj" />
