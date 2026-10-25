@@ -12,6 +12,18 @@
         <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
     </PropertyGroup>
 
+    <!-- packages used by whole server app, copied from server/Shared.csproj -->
+    <!-- TODO - script to probe all csprojs and add packages to local nuspec file would be nice in the future -->
+    <ItemGroup>
+        <PackageReference Include="JsonPath.Net" Version="2.1.1" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.13" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.5" />
+        <PackageReference Include="OneOf" Version="3.0.271" />
+        <PackageReference Include="Scrutor" Version="7.0.0" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.10.3" />
+        <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    </ItemGroup>
+
     <!-- Copy referenced project binaries to package -->
     <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
         <ItemGroup>
@@ -19,9 +31,9 @@
         </ItemGroup>
     </Target>
 
-    <!-- Build client and include its binaries to package -->
+    <!-- Build client and include its binaries in package -->
     <Target Name="BuildAndIncludeClient" BeforeTargets="BeforeBuild">
-        <Exec Command="bun run build" WorkingDirectory="$(MSBuildProjectDirectory)/../client/" />
+        <Exec Command="pnpm run build" WorkingDirectory="$(MSBuildProjectDirectory)/../client/" />
         <ItemGroup>
             <Content Include="$(MSBuildProjectDirectory)/../client/dist/**/*.*">
                 <Pack>true</Pack>
@@ -31,10 +43,17 @@
         </ItemGroup>
     </Target>
 
+    <!-- Copy referenced project binaries to package, project references otherwise does not work in during dotnet pack -->
+    <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+        <ItemGroup>
+            <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+        </ItemGroup>
+    </Target>
+
     <ItemGroup>
         <!-- Transitive build targets like copying nuget contents to project output directory on build, etc. -->
         <None Include="buildTransitive\WfAssist.targets" Pack="true" PackagePath="buildTransitive\WfAssist.targets" />
 
-        <ProjectReference Include="..\server\AspNetCore.App\AspNetCore.App.csproj" IncludeAssets="all" />
+        <ProjectReference Include="..\server\ServerBootstrapper\ServerBootstrapper.csproj" PrivateAssets="all" />
     </ItemGroup>
 </Project>
