@@ -5,7 +5,7 @@ public static class Constants
     private const string WwwRootDirectory = "wwwroot";
 
     public const string AppName = "WfAssist";
-    public const string AppRoute = "wfAssist";
+    public const string AppRoute = "wfassist";
     public const string ApiRoute = "api";
 
     // WFAssist js client files

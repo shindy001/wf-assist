@@ -4,14 +4,9 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <RootNamespace>WfAssist.AspNetCore</RootNamespace>
+        <RootNamespace>WfAssistServerBootstrapper</RootNamespace>
+        <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.AspNetCore.OpenApi.Generated</InterceptorsNamespaces>
     </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
-        <PackageReference Include="Scalar.AspNetCore" Version="2.10.3" />
-        <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
-    </ItemGroup>
     
     <ItemGroup>
         <InternalsVisibleTo Include="_AspNetCore.Host" />

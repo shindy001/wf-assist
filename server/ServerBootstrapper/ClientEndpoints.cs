@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using WfAssist.Shared;
 
-namespace WfAssist.AspNetCore;
+namespace WfAssistServerBootstrapper;
 
 internal static class ClientEndpoints
 {

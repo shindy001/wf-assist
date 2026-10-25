@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi;
@@ -16,8 +17,7 @@ using WfAssist.Shared.CQRS;
 using WfAssist.Shared.Notifications;
 using WfAssist.Workflows;
 
-namespace WfAssist.AspNetCore;
-
+namespace WfAssistServerBootstrapper;
 
 public static class WfAssistApp
 {
@@ -41,7 +41,7 @@ public static class WfAssistApp
                 var url = $"http://localhost:{httpPort}";
                 Log.Logger.Information("Starting WfAssist api server - {Url}/scalar.", url);
                 Log.Logger.Information("Starting WfAssist app - {Url}/wfAssist.", url);
-                wfAssistApp.Run(url);
+                wfAssistApp.RunAsync(url);
             }
         );
 

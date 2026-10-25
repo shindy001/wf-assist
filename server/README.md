@@ -1,14 +1,17 @@
 # WF Assist server
 
-## AspNetCore.App
-Contains WF Assist api and js client endpoint and service registrations that can be used in actual hosting app like ```_AspNetCore.Host (aspnetcore webapi)```.</br>
-Will be published as part of the WF Assist nuget, these endpoints will be used by WF Assists client app for processing on backend.
+## ServerBootstrapper
+Contains WF Assist client and server bootstrapping code (js client endpoint and service registrations that can be used in actual hosting app like `_AspNetCore.Host`).</br>
+Will be published as part of the WF Assist nuget.
 
-## _AspNetCore.Host project (for debugging and auto generating openapi specifications only)
-Empty host app that just maps WF Assist endpoints and uses openapi middleware.
+## _AspNetCore.Host project (for debugging and auto generating open api specifications only)
+Empty host app that just maps WF Assist endpoints and uses open api middleware.
 
 ## Shared
 Project with shared infrastructure and utilities.
 
 ## Workflows
 Module related to workflows - workflow storage and means of workflow execution.
+
+## Executions
+Module related to executions - execution management and storage.
