@@ -69,7 +69,7 @@ function toWorkflowNode(dto: NodeDto): WorkflowNode {
     case "HeadersNode":
     return node as HeadersNode;
     default:
-      throw new Error(`Unknown NodeDto type '${dto.type}'`);
+      throw new Error(`Unknown NodeDto type, node object value: '${JSON.stringify(dto)}'`);
   };
 }
 
@@ -81,9 +81,9 @@ function toWorkflowNodeDto(node: WorkflowNode): NodeDto {
 
   switch (node.type) {
     case "RequestNode":
-      return dto as NodeDtoRequestNodeDto;
+      return { ...dto as NodeDtoRequestNodeDto, type: node.type };
     case "HeadersNode":
-      return dto as NodeDtoHeadersNodeDto;
+    return { ...dto as NodeDtoHeadersNodeDto, type: node.type };
     default:
       throw new Error(`Unknown node type '${node.type}'`);
   };

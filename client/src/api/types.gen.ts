@@ -50,9 +50,9 @@ export type HttpHeaderDto = {
 export type JsonDocument = unknown;
 
 export type NodeDto = ({
-    type?: 'RequestNode';
+    type: 'RequestNode';
 } & NodeDtoRequestNodeDto) | ({
-    type?: 'HeadersNode';
+    type: 'HeadersNode';
 } & NodeDtoHeadersNodeDto);
 
 export type NodeDtoHeadersNodeDto = {
@@ -76,9 +76,9 @@ export type NodeDtoRequestNodeDto = {
 };
 
 export type Notification = ({
-    type?: 'WorkflowExecutionEnded';
+    type: 'WorkflowExecutionEnded';
 } & NotificationWorkflowExecutionEnded) | ({
-    type?: 'WorkflowExecutionStarted';
+    type: 'WorkflowExecutionStarted';
 } & NotificationWorkflowExecutionStarted);
 
 export type NotificationWorkflowExecutionEnded = {
