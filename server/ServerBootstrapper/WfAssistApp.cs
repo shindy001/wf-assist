@@ -108,8 +108,12 @@ public static class WfAssistApp
             app.MapOpenApi();
             app.MapScalarApiReference(options =>
             {
-                options.WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Axios);
-                options.EnabledClients = [ScalarClient.Curl, ScalarClient.Axios];
+                options.DisableAgent();
+                options.DisableMcp();
+                options.DisableTelemetry();
+                options.HideClientButton();
+                options.WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Fetch);
+                options.EnabledClients = [ScalarClient.Curl, ScalarClient.Fetch];
                 options.EnabledTargets = [ScalarTarget.Shell, ScalarTarget.JavaScript];
 
             });
