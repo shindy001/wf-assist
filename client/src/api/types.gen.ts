@@ -75,27 +75,6 @@ export type NodeDtoRequestNodeDto = {
     position: PositionDto;
 };
 
-export type Notification = ({
-    type: 'WorkflowExecutionEnded';
-} & NotificationWorkflowExecutionEnded) | ({
-    type: 'WorkflowExecutionStarted';
-} & NotificationWorkflowExecutionStarted);
-
-export type NotificationWorkflowExecutionEnded = {
-    type?: 'WorkflowExecutionEnded';
-    executionId: string;
-    workflowId: string;
-    workflowName: string;
-    status: string;
-};
-
-export type NotificationWorkflowExecutionStarted = {
-    type?: 'WorkflowExecutionStarted';
-    executionId: string;
-    workflowId: string;
-    workflowName: string;
-};
-
 export type PositionDto = {
     x: number;
     y: number;
@@ -123,13 +102,6 @@ export type RunWorkflowResponse = {
 export type SizeDto = {
     width: number;
     height: number;
-};
-
-export type SseItemOfNotification = {
-    data?: Notification;
-    eventType?: null | string;
-    eventId?: null | string;
-    reconnectionInterval?: null | string;
 };
 
 export type UpdateWorkflowDataRequest = {
@@ -326,22 +298,6 @@ export type PostApiWorkflowsByIdUpdateDataResponses = {
 };
 
 export type PostApiWorkflowsByIdUpdateDataResponse = PostApiWorkflowsByIdUpdateDataResponses[keyof PostApiWorkflowsByIdUpdateDataResponses];
-
-export type GetApiWorkflowsEventsData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/workflows/events';
-};
-
-export type GetApiWorkflowsEventsResponses = {
-    /**
-     * OK
-     */
-    200: SseItemOfNotification;
-};
-
-export type GetApiWorkflowsEventsResponse = GetApiWorkflowsEventsResponses[keyof GetApiWorkflowsEventsResponses];
 
 export type PostApiWorkflowsByIdQueueExecutionData = {
     body?: never;
