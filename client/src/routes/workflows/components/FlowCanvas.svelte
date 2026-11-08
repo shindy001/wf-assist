@@ -9,9 +9,11 @@
   import RequestNode from "./nodes/RequestNode.svelte";
   import HeadersNode from "./nodes/HeadersNode.svelte";
   import {
-    createWorkflowNode, WorkflowNodeType, type WorkflowNode
+    createWorkflowNode,
+    WorkflowNodeType,
+    type WorkflowNode,
   } from "$lib/types";
-  import { useWorkflowEvents, useWorkflowsAppState } from "../state/";
+  import { useWorkflowsAppState } from "../state/";
   import TurboEdge from "./nodes/TurboEdge.svelte";
   import { Button } from "$lib/components/ui/button";
   import { Icon } from "$lib/components/ui/icons";
@@ -24,25 +26,10 @@
   };
 
   const { screenToFlowPosition } = $derived(useSvelteFlow());
-  const { lastEvent } = $derived(useWorkflowEvents());
-  let executingWorkflow = $state(false);
-  let executingWorkflowId = $state<string | undefined>();
-  let executingWorkflowExecutionId = $state<string | undefined>();
+  let executeWorkflowBtnDisabled = $state(false);
 
   $effect(() => {
     workflowsAppState.saveWorkflowData();
-  });
-
-  $effect(() => {
-    if (
-      lastEvent?.executionId === executingWorkflowExecutionId &&
-      lastEvent?.type === "WorkflowExecutionEnded" &&
-      lastEvent?.workflowId === executingWorkflowId
-    ) {
-      executingWorkflow = false;
-      executingWorkflowId = undefined;
-      executingWorkflowExecutionId = undefined;
-    }
   });
 
   const onDragOver = (event: DragEvent) => {
@@ -63,7 +50,7 @@
 
     const newNode = createWorkflowNode(
       workflowsAppState.selectedNodeType,
-      position
+      position,
     );
 
     workflowsAppState.addFlowCanvasNode(newNode);
@@ -75,13 +62,11 @@
       return;
     }
 
+    executeWorkflowBtnDisabled = true;
+    setTimeout(() => (executeWorkflowBtnDisabled = false), 2000);
+
     const executeWorkflowCommand = createExecuteWorkflowCommand();
-    const result = await executeWorkflowCommand(workflowId);
-    executingWorkflow = true;
-    executingWorkflowId = workflowId;
-    executingWorkflowExecutionId = result.data?.executionId;
-    // TODO - use execution ID to subscribe to events (when api is available) and propagate state of execution to flow canvas (set animation for node that is executed)
-    console.log("executionId: " + result.data?.executionId);
+    await executeWorkflowCommand(workflowId);
   }
 </script>
 
@@ -104,7 +89,7 @@
           variant="default"
           size="xl"
           onclick={executeCurrentWorkflow}
-          disabled={executingWorkflow}
+          disabled={executeWorkflowBtnDisabled}
         >
           <Icon name="material-symbols--electric-bolt-outline" />
           <span>Execute workflow</span>

@@ -3,7 +3,6 @@
   import FlowSidebar from "./components/FlowSidebar.svelte";
   import FlowCanvas from "./components/FlowCanvas.svelte";
   import { useWorkflowsAppState } from "./state";
-  import WorkflowEventToasts from "./components/WorkflowEventToasts.svelte";
 
   const workflowsAppState = useWorkflowsAppState();
   await workflowsAppState.fetchWorkflowIdentities();
@@ -14,5 +13,4 @@
     <FlowSidebar />
     <FlowCanvas />
   </div>
-  <WorkflowEventToasts />
 </SvelteFlowProvider>
