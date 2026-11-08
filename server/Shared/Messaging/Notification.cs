@@ -1,4 +1,4 @@
-namespace WfAssist.Shared.Notifications;
+﻿namespace WfAssist.Shared.Messaging;
 
 /// <summary>
 /// Abstract notification used as base for WfAssist app notification, derived notification types are automatically
