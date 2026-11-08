@@ -22,7 +22,6 @@ internal static class Endpoints
         workflowsGroup.MapUpdateWorkflowDataEndpoint();
         workflowsGroup.MapDeleteWorkflowEndpoint();
 
-        workflowsGroup.MapSubscribeToWorkflowEventsEndpoint();
         workflowsGroup.MapQueueWorkflowExecutionEndpoint();
     }
 }

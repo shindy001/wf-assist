@@ -7,6 +7,7 @@ public static class Constants
     public const string AppName = "WfAssist";
     public const string AppRoute = "wfassist";
     public const string ApiRoute = "api";
+    public const string ApiWebSocketRoute = $"{ApiRoute}/ws";
 
     // WFAssist js client files
     public const string IndexHtmlFile = "index.html";

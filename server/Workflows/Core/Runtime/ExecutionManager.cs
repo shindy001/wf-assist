@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 using Microsoft.Extensions.Logging;
 using WfAssist.Executions.Contracts;
 using WfAssist.Shared.Contracts;
-using WfAssist.Shared.Notifications;
+using WfAssist.Shared.Messaging;
 using WfAssist.Workflows.Core.Models;
 using WfAssist.Workflows.Core.Models.Notifications;
 
@@ -11,20 +11,20 @@ namespace WfAssist.Workflows.Core.Runtime;
 internal sealed partial class ExecutionManager
 {
     private readonly IExecutionsFacade _executionsFacade;
-    private readonly INotificationDispatcher _notificationDispatcher;
+    private readonly INotificationSender _notificationSender;
     private readonly WorkflowExecutor _workflowExecutor;
     private readonly ProcessingContext _processingContext;
     private readonly ILogger<ExecutionManager> _logger;
 
     public ExecutionManager(
         IExecutionsFacade executionsFacade,
-        INotificationDispatcher notificationDispatcher,
+        INotificationSender notificationSender,
         WorkflowExecutor workflowExecutor,
         ProcessingContext processingContext,
         ILogger<ExecutionManager> logger)
     {
         _executionsFacade = executionsFacade;
-        _notificationDispatcher = notificationDispatcher;
+        _notificationSender = notificationSender;
         _workflowExecutor = workflowExecutor;
         _processingContext = processingContext;
         _logger = logger;
@@ -96,23 +96,25 @@ internal sealed partial class ExecutionManager
 
     private async Task NotifyWorkflowExecutionEnd(Guid executionId, Workflow workflow, string status)
     {
-        await _notificationDispatcher.Dispatch(new WorkflowExecutionEnded
+        var notification = new WorkflowExecutionEnded
         {
             ExecutionId = executionId,
             WorkflowId = workflow.Id,
             WorkflowName = workflow.Name,
             Status = status
-        });
+        };
+        await _notificationSender.Send(notification);
     }
 
     private async Task NotifyWorkflowExecutionStart(Guid executionId, Workflow workflow)
     {
-        await _notificationDispatcher.Dispatch(new WorkflowExecutionStarted
+        var notification = new WorkflowExecutionStarted
         {
             ExecutionId = executionId,
             WorkflowId = workflow.Id,
             WorkflowName = workflow.Name
-        });
+        };
+        await _notificationSender.Send(notification);
     }
 
     [LoggerMessage(LogLevel.Information, "Execution {runId} started.")]

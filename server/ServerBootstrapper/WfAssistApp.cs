@@ -14,7 +14,7 @@ using Serilog.Events;
 using WfAssist.Executions;
 using WfAssist.Shared;
 using WfAssist.Shared.CQRS;
-using WfAssist.Shared.Notifications;
+using WfAssist.Shared.Messaging;
 using WfAssist.Workflows;
 
 namespace WfAssistServerBootstrapper;
@@ -91,7 +91,7 @@ public static class WfAssistApp
         });
 
         builder.Services.AddCqrs();
-        builder.Services.AddNotifications();
+        builder.Services.AddMessaging();
         builder.Services.AddSqliteDbConnectionStringProvider();
         builder.Services.AddHttpClient();
 
@@ -104,7 +104,6 @@ public static class WfAssistApp
     {
         if (app.Environment.IsDevelopment())
         {
-            app.UseCors(CorsAllowAllPolicy);
             app.MapOpenApi();
             app.MapScalarApiReference(options =>
             {
@@ -121,6 +120,10 @@ public static class WfAssistApp
 
         app.UseExceptionHandler();
         app.UseStatusCodePages();
+
+        app.UseCors(CorsAllowAllPolicy);
+
+        app.UseMessaging();
 
         // JS client
         app.MapWfAssistAppClient();

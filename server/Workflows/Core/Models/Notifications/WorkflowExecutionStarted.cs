@@ -1,4 +1,4 @@
-using WfAssist.Shared.Notifications;
+using WfAssist.Shared.Messaging;
 
 namespace WfAssist.Workflows.Core.Models.Notifications;
 
